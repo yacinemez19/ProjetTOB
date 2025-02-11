@@ -5,7 +5,12 @@ Simulation 2D d'une ville intelligente, vue du dessus. Contient la simulation de
 
 
 ## 2 Logiciel de montage vidéo
-Logiciel de montage video simpliste au début avec possibilité d'ajout de différentes fonctionnalités au fur et à mesure.
+Logiciel de montage video logiciel de montage vidéo simple et intuitif prenant en charge les fonctionnalité de base : 
+- Compatibilité multimédia : prise en charge des formats courants de vidéo, audio et image.
+-  Timeline interactive : déplacement et superposition des clips avec la possibilité de couper.
+-  Compositing de base : ajustement et transformation des clips (zoom, translation, opacité).
+
+On garde la possibilité d'ajouter des fonctionnalités avancées si le temps le permet (ex. fond vert).
 
 
 ## 3 Moteur de voxels et génération procédurale
