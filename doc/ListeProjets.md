@@ -1,10 +1,23 @@
 # Liste des projets par préférence 
 
 ## 1 Simcity 
-jeu mobile ? 
+Simulation 2D d'une ville intelligente, vue du dessus. Contient la simulation des individus qui y évoluent ainsi que leurs intération. Simulation du traffic routier, des comportemenents dans les carrefours, feux rouges, etc...
+
+
 ## 2 Création d’un logiciel de montage vidéo
-## 3 Génération procédurale dans Minecraft
-## 4 Paint (logiciel de dessin sur ordinateur)
+Logiciel de montage video simpliste au début avec possibilité d'ajout de différentes fonctionnalités au fur et à mesure.
+
+
+## 3 Moteur de voxels et génération procédurale
+Clone du jeu Minecraft. Au début, on se concentre uniquement sur la création du moteur 3D permettant d'afficher des voxels (pixels en 3 dimentions) puis si le temps le permet ajout de la possibilité de générer le terrain de manière procédurale.
+
+## 4 Paint (logiciel de dessin et de montage photo sur ordinateur)
+Logiciel permettant à l'utilisateur de dessiner sur une image, puis ajout d'autres fonctionnalités si le temps le permet. Les fonctionnalités (liste non exhaustive) :
+* Ajout d'une logique de calques
+* Application de masques
+* Selection de pixels similaires
+
+
 ## 5 Générateur de colloscope
 Créer une application pour générer des programmes de colle en prépa.
  
