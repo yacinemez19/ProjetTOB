@@ -4,7 +4,7 @@
 Simulation 2D d'une ville intelligente, vue du dessus. Contient la simulation des individus qui y évoluent ainsi que leurs intération. Simulation du traffic routier, des comportemenents dans les carrefours, feux rouges, etc...
 
 
-## 2 Création d’un logiciel de montage vidéo
+## 2 Logiciel de montage vidéo
 Logiciel de montage video simpliste au début avec possibilité d'ajout de différentes fonctionnalités au fur et à mesure.
 
 
