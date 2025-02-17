@@ -1,0 +1,19 @@
+Sujet retenu : sujet n° 2 - logiciel de montage vidéo
+
+Conseil : attention, c'est un sujet difficile (mais réalisable). Vous devrez
+réfléchir en amont et vous renseigner sur ce qui existe pour charger et modifier
+des vidéos en Java (il doit y avoir des librairies "communes", à vous de
+chercher). Réfléchissez aussi très précisément aux features de votre outil, ne
+supposez pas que tout le monde s'y connaît en montage (qu'est-ce qu'une timeline
+? Qu'est-ce que du compositing ? etc.).
+
+
+Remarques : votre document laisse à désirer. Je vous demande de faire très très
+attention aux consignes pour la suite, car cela risque de vous pénaliser. Vous
+devez avoir une page de garde, avec le titre du document et le groupe (numéro +
+membres) sur chaque document. Veillez à rédiger proprement, à faire des sections
+et des sous-sections. Vous ne pouvez pas présenter un sujet avec deux lignes
+comme vous l'avez fait.
+
+S'il vous plaît faites un effort.
+
