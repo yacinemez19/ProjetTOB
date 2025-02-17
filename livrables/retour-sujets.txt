@@ -13,7 +13,8 @@ attention aux consignes pour la suite, car cela risque de vous pénaliser. Vous
 devez avoir une page de garde, avec le titre du document et le groupe (numéro +
 membres) sur chaque document. Veillez à rédiger proprement, à faire des sections
 et des sous-sections. Vous ne pouvez pas présenter un sujet avec deux lignes
-comme vous l'avez fait.
+comme vous l'avez fait. Notez que la consigne vous impose aussi un nom de fichier,
+à respecter ABSOLUMENT.
 
 S'il vous plaît faites un effort.
 
