@@ -1,0 +1,98 @@
+\documentclass{rapport}
+\usepackage{subcaption}
+\usepackage{adjustbox}
+\usepackage{lipsum}
+\usepackage{gensymb}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{amsmath} % Pour les environnements mathématiques
+\usepackage{amssymb} % Pour les symboles supplémentaires comme R (réels)
+\usepackage{graphicx} % Required for inserting images
+\title{BE Automatique} %title of the file
+
+\begin{document}
+
+%----------- Report information ---------
+
+\logo{logos/logo_n7.png}
+\uni{\textbf{ENSEEIHT}}
+\ttitle{Liste des sujets - Projet long TOB} %title of the file
+\subject{Sujets} % Subject name
+\topic{Projet Long - TOB} % Topic name
+
+\professor{G. \textsc{Dupont}} % information related to the professor
+
+\students{Alexandre \textsc{Lescot}\\
+          Camille \textsc{Meyer}\\
+          Doryan \textsc{Benoit}\\
+          Iman-Norr \textsc{Draou}\\
+          Mathier \textsc{Trahand}\\
+          Oscar \textsc{Mautin}\\
+          Sophie \textsc{Girardot}\\
+          Yacine  \textsc{Meziani}} % information related to the students
+
+%----------- Init -------------------
+        
+\buildmargins % display margins
+\buildcover % create the front cover of the document
+\toc % creates the table of contents
+
+%------------ Report body ----------------
+
+\section{Liste des projets par préférence}
+
+\hypertarget{simcity}{%
+\subsection{Simcity}\label{simcity}}
+
+Simulation 2D d'une ville intelligente, vue du dessus. Contient la
+simulation des individus qui y évoluent ainsi que leurs interactions.
+Simulation du trafic routier, des comportements dans les carrefours,
+feux rouges, etc\ldots{}
+
+\hypertarget{logiciel-de-montage-viduxe9o}{%
+\subsection{Logiciel de montage vidéo}\label{logiciel-de-montage-viduxe9o}}
+
+Logiciel de montage vidéo logiciel de montage vidéo simple et intuitif
+prenant en charge les fonctionnalités de base :
+\begin{itemize}
+    \item Compatibilité multimédia : prise en charge des formats courants de vidéo, audio et image. 
+    \item Timeline interactive : déplacement et superposition des clips avec la possibilité de couper. 
+    \item Compositing de base : ajustement et transformation des clips (zoom, translation, opacité).
+\end{itemize}
+
+On garde la possibilité d'ajouter des fonctionnalités avancées si le temps le permet (ex. fond vert).
+
+\hypertarget{moteur-de-voxels-et-guxe9nuxe9ration-procuxe9durale}{%
+\subsection{Moteur de voxels et génération procédurale}\label{moteur-de-voxels-et-guxe9nuxe9ration-procuxe9durale}}
+
+Clone du jeu Minecraft. Au début, on se concentre uniquement sur la
+création du moteur 3D permettant d'afficher des voxels (pixels en 3
+dimensions) puis, si le temps le permet, ajout de la possibilité de
+générer le terrain de manière procédurale.
+
+\hypertarget{paint-logiciel-de-dessin-et-de-montage-photo-sur-ordinateur}{%
+\subsection{Paint (logiciel de dessin et de montage photo sur
+ordinateur)}\label{paint-logiciel-de-dessin-et-de-montage-photo-sur-ordinateur}}
+
+Logiciel permettant à l'utilisateur de dessiner sur une image, puis ajout d'autres fonctionnalités si le temps le permet. Les fonctionnalités (liste non exhaustive) : 
+\begin{itemize}
+    \item Ajout d'une logique de calques
+    \item Application de masques
+    \item Selection de pixels similaires
+\end{itemize}
+
+\hypertarget{guxe9nuxe9rateur-de-colloscope}{%
+\subsection{Générateur de colloscope}\label{guxe9nuxe9rateur-de-colloscope}}
+
+Créer une application pour générer des programmes de colles en prépa.
+
+L'utilisateur renseigne les groupes de colles, les colleurs, leurs
+disponibilités et les emplois du temps des élèves (selon les options).
+Ensuite, il définit le nombre de colles par semaine et la fréquence dans
+chaque matière.
+
+L'algorithme génère un emploi du temps optimisé qui respecte au mieux
+les contraintes et fait varier les colleurs. Une version PDF du planning
+est téléchargeable pour un partage facile.
+
+\end{document}
