@@ -17,3 +17,4 @@ src-gen/
 *.zip
 
 .DS_Store
+packages/javafx-sdk-21.0.6/
