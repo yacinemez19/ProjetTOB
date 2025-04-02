@@ -7,6 +7,17 @@ Chaque dossier contient le code latex permettant de générer "nom du fichier".p
 ### SDK
 Le projet fonctionne actuellement avec Amazon Corretto 21.
 
+### ✅ Étapes d'installation de JavaFX
+
+**Télécharger JavaFX SDK**
+
+   Rendez-vous sur le site officiel de JavaFX (OpenJFX) :  
+   👉 [https://gluonhq.com/products/javafx/](https://gluonhq.com/products/javafx/)
+
+   - Choisissez votre système d’exploitation.
+   - Téléchargez la version **SDK** (ex : `javafx-sdk-21.0.6.zip`).
+   - Décompressez le dossier dans un emplacement de votre choix (par exemple `C:\javafx-sdk-21.0.6` ou `/home/votre_user/javafx-sdk-21.0.6`).
+
 ### IntelliJ Configuration
 Ajouter ça dans les VM options (On utilise la version 21.0.6.
 
