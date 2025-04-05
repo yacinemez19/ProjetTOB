@@ -19,6 +19,7 @@ Le projet fonctionne actuellement avec Amazon Corretto 21.
    - Décompressez le dossier dans un emplacement de votre choix (par exemple `C:\javafx-sdk-21.0.6` ou `/home/votre_user/javafx-sdk-21.0.6`).
 
 ### IntelliJ Configuration
+
 Ajouter ça dans les VM options (On utilise la version 21.0.6.
 
 ```
@@ -27,15 +28,32 @@ Ajouter ça dans les VM options (On utilise la version 21.0.6.
 
 ## 🛠️ Configuration JavaFX sur Eclipse
 
-1. **Ouvrir Eclipse** et **charger votre projet JavaFX**.
+### 1. Ajouter les JARs JavaFX
 
-2. Clic droit sur le projet → **Run As** → **Run Configurations...**
+1. Fais un clic droit sur ton projet dans l’**Explorer** Eclipse.
+2. Sélectionne **Build Path** > **Configure Build Path**.
+3. Va dans l’onglet **Libraries**.
+4. Clique sur **Add External JARs…**.
+5. Navigue jusqu’au dossier `lib` du SDK JavaFX (ex. `C:\javafx-sdk-21\lib`).
+6. Sélectionne **tous les fichiers `.jar`** dans ce dossier et clique sur **Ouvrir**.
+7. Clique sur **Apply and Close**.
 
-3. Dans la fenêtre qui s’ouvre :
-   - Sélectionner votre classe principale (sous "Java Application" à gauche).
-   - Aller dans l'onglet **Arguments**.
+---
 
-4. Dans la section **VM arguments**, ajouter la ligne suivante :
+### 2. Ajouter les options VM pour l'exécution
+
+1. Va dans **Run > Run Configurations…**
+2. Sélectionne ta configuration de lancement dans la liste à gauche.
+3. Va dans l’onglet **Arguments**.
+4. Dans la section **VM arguments**, ajoute :
+
+#### Pour Windows :
+   ```bash
+   --module-path "C:\javafx-sdk-21.0.6\lib" --add-modules javafx.controls
+   ```
+
+#### Pour macOS/Linux :
 
    ```bash
    --module-path "/chemin/vers/javafx-sdk-21.0.6/lib" --add-modules javafx.controls
+   ```
