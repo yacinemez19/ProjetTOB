@@ -7,6 +7,29 @@ Chaque dossier contient le code latex permettant de générer "nom du fichier".p
 ### SDK
 Le projet fonctionne actuellement avec Amazon Corretto 21.
 
+### Structure du projet
+Comme librairie pour gérer le vidéo nous utiliserons Gstream c’est très modulaire et plutôt performant, et pour l'interface JavaFX.
+
+Notre architecture repose sur plusieurs couches afin de faciliter l'intégration de GStreamer dans une application JavaFX :
+
+- GStreamer (librairie bas niveau à installer sur la machine)
+- Une API Java pour manipuler GStreamer sans gérer les détails bas niveau
+- Une API Java pour intégrer GStreamer dans JavaFX
+- JavaFX pour l'interface graphique
+
+### Installation 
+
+Pour installer les packages Java j'ai fait un zip avec les jar que j'ai utilisé : https://drive.google.com/file/d/1asHt_QlrIhION2OYhZEofzvkUA2bWqwi/view?usp=sharing
+il faut les ajouter dans IntelliJ. Notez que la mon zip JavaFX est configuré pour mac, installez plutôt la version corespondante avec les instructions en dessous.
+
+Pour Gstreamer il faut aller sur le site et télécharger la version adaptée a votre machine : https://gstreamer.freedesktop.org/download/
+
+J'ai mis dans le projet un exemple avec Gstreamer qui lit juste une courte vidéo.
+ 
+
+
+
+
 ### ✅ Étapes d'installation de JavaFX
 
 **Télécharger JavaFX SDK**
