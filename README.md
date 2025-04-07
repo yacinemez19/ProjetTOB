@@ -72,11 +72,11 @@ Ajouter ça dans les VM options (On utilise la version 21.0.6.
 
 #### Pour Windows :
    ```bash
-   --module-path "C:\javafx-sdk-21.0.6\lib" --add-modules javafx.controls
+   --module-path "C:\javafx-sdk-21.0.6\lib" --add-modules javafx.controls,javafx.graphics,javafx.fxml,javafx.media 
    ```
 
 #### Pour macOS/Linux :
 
    ```bash
-   --module-path "/chemin/vers/javafx-sdk-21.0.6/lib" --add-modules javafx.controls
+   --module-path "/chemin/vers/javafx-sdk-21.0.6/lib" --add-modules javafx.controls,javafx.graphics,javafx.fxml,javafx.media 
    ```
