@@ -46,7 +46,7 @@ J'ai mis dans le projet un exemple avec Gstreamer qui lit juste une courte vidé
 Ajouter ça dans les VM options (On utilise la version 21.0.6.
 
 ```
---module-path "/chemin/vers/javaFX/SDK/javafx-sdk-21.0.6/lib" --add-modules javafx.controls
+--module-path "/Users/alex/Documents/Scolarité/N7/Annee_1/Java/Projet Long TOB/packages/javafx-sdk-21.0.6/lib" --add-modules javafx.controls,javafx.graphics,javafx.fxml,javafx.media 
 ```
 
 ## 🛠️ Configuration JavaFX sur Eclipse
