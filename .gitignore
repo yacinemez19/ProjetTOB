@@ -15,6 +15,7 @@ local.properties
 src-gen/
 *.xml
 *.zip
+*.iml
 
 .DS_Store
 packages/javafx-sdk-21.0.6/
