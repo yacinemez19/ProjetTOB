@@ -27,6 +27,16 @@ Pour Gstreamer il faut aller sur le site et télécharger la version adaptée a 
 J'ai mis dans le projet un exemple avec Gstreamer qui lit juste une courte vidéo.
  
 
+## Windows 
+
+Lancer le docker avec 
+```bash
+docker run -it ^
+  -e DISPLAY=<IP>:0.0 ^
+  -v /tmp/.X11-unix:/tmp/.X11-unix ^
+  javafx-gstream
+```
+
 
 
 
