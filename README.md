@@ -20,23 +20,36 @@ Notre architecture repose sur plusieurs couches afin de faciliter l'intégration
 ### Installation 
 
 Pour installer les packages Java j'ai fait un zip avec les jar que j'ai utilisé : https://drive.google.com/file/d/1asHt_QlrIhION2OYhZEofzvkUA2bWqwi/view?usp=sharing
-il faut les ajouter dans IntelliJ. Notez que la mon zip JavaFX est configuré pour mac, installez plutôt la version corespondante avec les instructions en dessous.
+il faut les ajouter dans le projet dans un dossier `./packages/`. Notez que la mon zip JavaFX est configuré pour mac. 
 
-Pour Gstreamer il faut aller sur le site et télécharger la version adaptée a votre machine : https://gstreamer.freedesktop.org/download/
-
-J'ai mis dans le projet un exemple avec Gstreamer qui lit juste une courte vidéo.
- 
+Suivez les instructions selon votre platforme.
 
 ## Windows 
 
-Lancer le docker avec 
-```bash
-docker run -it ^
-  -e DISPLAY=<IP>:0.0 ^
-  -v /tmp/.X11-unix:/tmp/.X11-unix ^
-  javafx-gstream
+La première étape est d'avoir WSL. Vous pouvez l'installer dans un terminal avec la commande suivante. 
+```
+wsl --install
 ```
 
+On va émuler le projet dans un docker mais pour l'interface graphique il faut que Docker puisse communiquer avec celle de Windows. Pour ça il faut installer *VcXsrv*. Pour ça vous pouvez suivre ce tuto : https://www.youtube.com/watch?v=4SZXbl9KVsw.
+
+Une fois cela fait allez à la racine du projet et tapez 
+```bash
+docker build -t ProjetTOB .
+```
+Ensuite pour le serveur VcXsrv il faut récupérer l'ip local du pc. Vous pouvez la trouver en tapant 
+```
+ipconfig
+```
+Et vous chercher l'ip en face de IPv4. Une fois cela fait vous pouvez lancer le docker en tapant (il faut remplacer <IP> par l'IP que vous venez de copier : 
+
+```bash
+docker run -it -e DISPLAY=<IP>:0.0 -v /tmp/.X11-unix:/tmp/.X11-unix ProjetTOB
+```
+
+## Linux/MacOS
+
+Pour Gstreamer il faut aller sur le site et télécharger la version adaptée a votre machine : https://gstreamer.freedesktop.org/download/
 
 
 
