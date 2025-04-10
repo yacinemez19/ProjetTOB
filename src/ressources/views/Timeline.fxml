@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
-            prefHeight="400.0" prefWidth="600.0" >
+            prefHeight="200.0" prefWidth="600.0" >
 
-    <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Preview" textAlignment="CENTER" wrapText="false">
+    <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Timeline" textAlignment="CENTER" wrapText="false">
     </Label>
 </AnchorPane>
