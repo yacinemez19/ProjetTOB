@@ -3,8 +3,6 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.fxml.FXML?>
-<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefWidth="1920" prefHeight="1080">
   <!-- Inclusion de la barre de menu en haut -->
@@ -15,26 +13,22 @@
   <!-- Zone centrale avec la structure split pane -->
   <center>
     <SplitPane orientation="VERTICAL">
-      <items>
-        <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
-        <SplitPane orientation="HORIZONTAL">
-          <items>
-            <AnchorPane fx:id="leftPanel" prefWidth="300">
-              <!-- Contenu du panneau gauche -->
-            </AnchorPane>
-            <AnchorPane fx:id="centerPanel" prefWidth="800">
-              <!-- Contenu du panneau central -->
-            </AnchorPane>
-            <AnchorPane fx:id="rightPanel" prefWidth="300">
-              <!-- Contenu du panneau droit -->
-            </AnchorPane>
-          </items>
-        </SplitPane>
-        <!-- Partie inférieure : par exemple la timeline -->
-        <AnchorPane fx:id="bottomPanel" prefHeight="200">
-          <!-- Contenu du panneau inférieur -->
+      <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
+      <SplitPane>
+        <AnchorPane fx:id="importPanel" prefWidth="300">
+          <fx:include source="Import.fxml"/>
         </AnchorPane>
-      </items>
+        <AnchorPane fx:id="previewPanel" prefWidth="800">
+          <fx:include source="Preview.fxml"/>
+        </AnchorPane>
+        <AnchorPane fx:id="inspectorPanel" prefWidth="300">
+         <fx:include source="Inspector.fxml"/>
+        </AnchorPane>
+      </SplitPane>
+      <!-- Partie inférieure : par exemple la timeline -->
+      <AnchorPane fx:id="timelinePanel" prefHeight="200">
+        <fx:include source="Timeline.fxml"/>
+      </AnchorPane>
     </SplitPane>
   </center>
 </BorderPane>
