@@ -16,18 +16,18 @@
       <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
       <SplitPane>
         <AnchorPane fx:id="importPanel" prefWidth="300">
-          <!-- Contenu du panneau gauche -->
+          <fx:include source="Import.fxml"/>
         </AnchorPane>
         <AnchorPane fx:id="previewPanel" prefWidth="800">
-          <!-- Contenu du panneau central -->
+          <fx:include source="Preview.fxml"/>
         </AnchorPane>
         <AnchorPane fx:id="inspectorPanel" prefWidth="300">
-          <!-- Contenu du panneau droit -->
+         <fx:include source="Inspector.fxml"/>
         </AnchorPane>
       </SplitPane>
       <!-- Partie inférieure : par exemple la timeline -->
-      <AnchorPane fx:id="bottomPanel" prefHeight="200">
-        <!-- Contenu du panneau inférieur -->
+      <AnchorPane fx:id="timelinePanel" prefHeight="200">
+        <fx:include source="Timeline.fxml"/>
       </AnchorPane>
     </SplitPane>
   </center>
