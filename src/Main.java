@@ -4,7 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -13,10 +13,10 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws java. io. IOException {
+    public void start(Stage primaryStage) throws java.io.IOException {
         // Charger le fichier FXML
-        Parent root = null;
-        root = FXMLLoader.load(getClass().getResource("ressources/views/Main.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(
+                getClass().getResource("ressources/views/Main.fxml")));
 
         // Créer la scène avec le root obtenu
         Scene scene = new Scene(root);
