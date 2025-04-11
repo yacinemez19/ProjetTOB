@@ -5,27 +5,19 @@
 <?import javafx.scene.control.MenuItem?>
 
 <MenuBar xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <menus>
-        <Menu text="Fichier">
-            <items>
-                <MenuItem text="Nouveau"/>
-                <MenuItem text="Ouvrir"/>
-                <MenuItem text="Enregistrer"/>
-                <MenuItem text="Quitter"/>
-            </items>
-        </Menu>
-        <Menu text="Édition">
-            <items>
-                <MenuItem text="Annuler"/>
-                <MenuItem text="Rétablir"/>
-                <MenuItem text="Copier"/>
-                <MenuItem text="Coller"/>
-            </items>
-        </Menu>
-        <Menu text="Aide">
-            <items>
-                <MenuItem text="À propos"/>
-            </items>
-        </Menu>
-    </menus>
+    <Menu text="Fichier">
+        <MenuItem text="Nouveau"/>
+        <MenuItem text="Ouvrir"/>
+        <MenuItem text="Enregistrer"/>
+        <MenuItem text="Quitter"/>
+    </Menu>
+    <Menu text="Édition">
+        <MenuItem text="Annuler"/>
+        <MenuItem text="Rétablir"/>
+        <MenuItem text="Copier"/>
+        <MenuItem text="Coller"/>
+    </Menu>
+    <Menu text="Aide">
+        <MenuItem text="À propos"/>
+    </Menu>
 </MenuBar>
