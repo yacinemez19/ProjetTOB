@@ -52,4 +52,4 @@ packages/javafx-sdk-21.0.6/
 
 # --- Fichiers de configuration utilisateur ou IDE spécifiques ---
 .vscode/
-/classes/
+classes/
