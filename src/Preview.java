@@ -21,7 +21,7 @@ public class Preview {
     @FXML
     private ImageView videoView;
 
-    private PlayBin pipeline;
+    private Pipeline pipeline;
     private FXImageSink fxSink;
 
     @FXML
@@ -108,18 +108,20 @@ public class Preview {
         Gst.init(Version.BASELINE, "BasicPipeline");
 
         /**
-         * Use Gst.parseLaunch() to create a pipeline from a GStreamer string
-         * definition. This method returns Pipeline when more than one element
-         * is specified.
+         * ON cook ici
          */
-        //pipeline = new PlayBin("playbin", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
-        pipeline = (PlayBin) Gst.parseLaunch("playbin uri=https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
+        Element source = ElementFactory.make("videotestsrc", "source");
+        source.set("pattern", 18);
         fxSink = new FXImageSink();
-        pipeline.setVideoSink(fxSink.getSinkElement());
+        pipeline = new Pipeline("testPipeline");
+        pipeline.add(source);
+        pipeline.add(fxSink.getSinkElement());
+        Pipeline.linkMany(source,  fxSink.getSinkElement());
         videoView.imageProperty().bind(fxSink.imageProperty());
+        //pipeline.play();
 
         // loop on EOS if button selected
-        pipeline.getBus().connect((Bus.EOS) source -> {
+        pipeline.getBus().connect((Bus.EOS) source1 -> {
             // handle on event thread!
                     pipeline.stop();
         });
@@ -131,7 +133,7 @@ public class Preview {
          * is called. Here we use the built-in executor to schedule a quit after
          * 10 seconds.
          */
-        Gst.getExecutor().schedule(Gst::quit, 10, TimeUnit.SECONDS);
-        Gst.main();
+        //Gst.getExecutor().schedule(Gst::quit, 10, TimeUnit.SECONDS);
+        //Gst.main();
     }
 }
