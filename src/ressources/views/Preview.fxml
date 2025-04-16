@@ -7,8 +7,16 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
-            prefHeight="400.0" prefWidth="600.0" >
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0">
 
-    <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Preview" textAlignment="CENTER" wrapText="false">
-    </Label>
+    <Label layoutX="14.0" layoutY="14.0" text="Preview" />
+
+    <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <Button fx:id="lastFrameButton" text="Last Frame" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button fx:id="playButton" text="Play" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button fx:id="reverseButton" text="Reverse" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button fx:id="nextFrameButton" text="Next Frame" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+    </HBox>
+
 </AnchorPane>
