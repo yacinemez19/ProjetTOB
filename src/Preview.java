@@ -109,22 +109,76 @@ public class Preview {
 
         /**
          * ON cook ici
-         */
         Element source = ElementFactory.make("videotestsrc", "source");
         source.set("pattern", 18);
+         */
+        Element source = ElementFactory.make("uridecodebin", "source");
+        // Audio Sink
+        Element converter = ElementFactory.make("audioconvert", "audioconverter");
+        Element resample = ElementFactory.make("audioresample", "audiosample");
+        Element audioSink = ElementFactory.make("autoaudiosink", "audiosink");
+        // Video Sink
+        Element videoConverter = ElementFactory.make("videoconvert", "videoconverter");
         fxSink = new FXImageSink();
+        // On créé une pipelin vide et on lui ajoute tout les éléments
         pipeline = new Pipeline("testPipeline");
         pipeline.add(source);
+        pipeline.add(converter);
+        pipeline.add(resample);
+        pipeline.add(audioSink);
+        pipeline.add(videoConverter);
         pipeline.add(fxSink.getSinkElement());
-        Pipeline.linkMany(source,  fxSink.getSinkElement());
+        // On link l'audio
+        converter.link(resample);
+        resample.link(audioSink);
+        // On link la vidéo
+        videoConverter.link(fxSink.getSinkElement());
         videoView.imageProperty().bind(fxSink.imageProperty());
-        //pipeline.play();
+        // On set la source et on ajoute le pad-added signal
+        source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
+        source.connect(
+                new Element.PAD_ADDED() {
+                    @Override
+                    public void padAdded(Element element, Pad pad) {
+                        Pad audioSinkPad = converter.getSinkPads().getFirst();
+                        Pad videoSinkPad = videoConverter.getSinkPads().getFirst();
 
-        // loop on EOS if button selected
+                        System.out.println("New pad received " + pad.getName() + " from " + element.getName());
+
+                        // On récupère le type de fichier
+                        Caps caps = pad.getCurrentCaps();
+                        String type = caps.getStructure(0).getName();
+                        System.out.println(type);
+
+                        if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
+                            System.out.println("Audio Sink Pad not linked");
+                            pad.link(audioSinkPad);
+                        }
+                        if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
+                            System.out.println("Video Sink Pad not linked");
+                            pad.link(videoSinkPad);
+                        }
+                    }
+                }
+        );
+        pipeline.setState(State.PAUSED);
+        // attendre que les pads soient liés
+        try {Thread.sleep(1500);}
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("on lance la pipeline");
+        //pipeline.setState(State.PLAYING);
+/*        pipeline.getBus().connect((Bus.ASYNC_DONE) bus -> {
+            System.out.println("Pipeline ready — now playing.");
+            pipeline.play();
+        });*/
+
+/*        // loop on EOS if button selected
         pipeline.getBus().connect((Bus.EOS) source1 -> {
             // handle on event thread!
                     pipeline.stop();
-        });
+        });*/
 
         /**
          * GStreamer native threads will not be taken into account by the JVM
