@@ -135,8 +135,8 @@ public class Preview {
 
         /**
          * ON cook ici
-         Element source = ElementFactory.make("videotestsrc", "source");
-         source.set("pattern", 18);
+         * Création des éléments GStreamer (source, convertisseurs, sinks audio et vidéo)
+         * audioconvert et audioresample permette d'avoir un son correct en sortie dans le audiosink
          */
         Element source = ElementFactory.make("uridecodebin", "source");
         // Audio Sink
@@ -154,13 +154,13 @@ public class Preview {
         pipeline.add(audioSink);
         pipeline.add(videoConverter);
         pipeline.add(fxSink.getSinkElement());
-        // On link l'audio
+        // On link la fin de la pipeline audio converter->resample->audiosink
         converter.link(resample);
         resample.link(audioSink);
-        // On link la vidéo
+        // On link la vidéo videoConverter->fxSink
         videoConverter.link(fxSink.getSinkElement());
         videoView.imageProperty().bind(fxSink.imageProperty());
-        // On set la source et on ajoute le pad-added signal
+        // On set la source et on ajoute le pad-added signal qui permettera de connecter la source aux sorties son et audio
         source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
         source.connect(
                 new Element.PAD_ADDED() {
