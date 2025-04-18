@@ -6,6 +6,11 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
+/**
+ * Class principale de l'application.
+ * Utilise les fichiers FXML (dans src/ressources/views) pour créer l'interface
+ * utilisateur.
+ */
 public class Main extends Application {
 
     public static void main(String[] args) {
