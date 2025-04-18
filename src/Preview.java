@@ -1,11 +1,15 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.freedesktop.gstreamer.*;
 import org.freedesktop.gstreamer.elements.PlayBin;
 import org.freedesktop.gstreamer.event.SeekFlags;
@@ -14,67 +18,78 @@ import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.Message;
 
 import java.util.EnumSet;
-import java.util.concurrent.TimeUnit;
 
 public class Preview {
 
+    // Label pour afficher le temps écoulé
+    @FXML
+    private Label timerLabel;
+
+    // Animation Timeline pour gérer le timer en JavaFX
+    private Timeline timerTimeline;
+
+    // Composant JavaFX pour afficher la vidéo
     @FXML
     private ImageView videoView;
 
+    // Pipeline GStreamer et son sink vidéo pour l’intégration JavaFX
     private Pipeline pipeline;
     private FXImageSink fxSink;
 
+    // Lance la lecture de la vidéo
     @FXML
     private void handlePlay() {
         pipeline.play();
     }
 
+    // Lance la lecture en reverse à vitesse normale
     @FXML
     private void handleReverse() {
         pipeline.play();
-        // Seek avec une vitesse négative : -1.0 pour vitesse normale à l'envers
         boolean result = pipeline.seek(
-                -1.0, // rate négatif = lecture en reverse
+                -1.0, // Lecture en arrière
                 Format.TIME,
                 EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
                 SeekType.SET, pipeline.queryPosition(Format.TIME),
                 SeekType.NONE, -1
         );
-
         if (!result) {
             System.out.println("Seek reverse failed");
         }
     }
+
+    // Met la vidéo en pause
     @FXML
     private void handlePause() {
         pipeline.pause();
     }
 
+    // Affiche l’image précédente en mettant la vidéo en pause
     @FXML
     private void handleLastFrame() {
         pipeline.pause();
         long currentPosition = pipeline.queryPosition(Format.TIME);
-        long frameDuration = (long)(1_000_000_000 / 25.0); // 25 fps → 40ms par frame
+        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
         long newPosition = Math.max(0, currentPosition - frameDuration);
 
         boolean result = pipeline.seek(
-                1.0, // normal rate
+                1.0, // Lecture normale
                 Format.TIME,
                 EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
                 SeekType.SET, newPosition,
                 SeekType.NONE, -1
         );
-
         if (!result) {
             System.out.println("Previous frame seek failed");
         }
     }
 
+    // Affiche l’image suivante en mettant la vidéo en pause
     @FXML
     private void handleNextFrame() {
         pipeline.pause();
         long currentPosition = pipeline.queryPosition(Format.TIME);
-        long frameDuration = (long)(1_000_000_000 / 25.0); // 40ms
+        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
         long newPosition = currentPosition + frameDuration;
 
         boolean result = pipeline.seek(
@@ -84,15 +99,26 @@ public class Preview {
                 SeekType.SET, newPosition,
                 SeekType.NONE, -1
         );
-
         if (!result) {
             System.out.println("Next frame seek failed");
         }
-
     }
 
+    // Compteur en secondes depuis le début de la vidéo
+    private int secondsElapsed = 0;
+
+    // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
+        timerTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            secondsElapsed++;
+            int minutes = secondsElapsed / 60;
+            int seconds = secondsElapsed % 60;
+            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+        }));
+        timerTimeline.setCycleCount(Timeline.INDEFINITE);
+        timerTimeline.play();
+
         /**
          * Set up paths to native GStreamer libraries - see adjacent file.
          */
@@ -109,8 +135,8 @@ public class Preview {
 
         /**
          * ON cook ici
-        Element source = ElementFactory.make("videotestsrc", "source");
-        source.set("pattern", 18);
+         Element source = ElementFactory.make("videotestsrc", "source");
+         source.set("pattern", 18);
          */
         Element source = ElementFactory.make("uridecodebin", "source");
         // Audio Sink
@@ -163,12 +189,14 @@ public class Preview {
         );
         pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
-        try {Thread.sleep(1500);}
-        catch (InterruptedException e) {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         System.out.println("on lance la pipeline");
-        //pipeline.setState(State.PLAYING);
+        pipeline.setState(State.PLAYING);
 /*        pipeline.getBus().connect((Bus.ASYNC_DONE) bus -> {
             System.out.println("Pipeline ready — now playing.");
             pipeline.play();
@@ -179,15 +207,5 @@ public class Preview {
             // handle on event thread!
                     pipeline.stop();
         });*/
-
-        /**
-         * GStreamer native threads will not be taken into account by the JVM
-         * when deciding whether to shutdown, so we have to keep the main thread
-         * alive. Gst.main() will keep the calling thread alive until Gst.quit()
-         * is called. Here we use the built-in executor to schedule a quit after
-         * 10 seconds.
-         */
-        //Gst.getExecutor().schedule(Gst::quit, 10, TimeUnit.SECONDS);
-        //Gst.main();
     }
 }
