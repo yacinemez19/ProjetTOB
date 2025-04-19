@@ -1,21 +1,55 @@
+# --- Fichiers générés par Eclipse ---
 .metadata/
 bin/
-.settings
-*.class
+.settings/
+.project
 .classpath
 .loadpath
+.factorypath
+
+# --- Fichiers générés par IntelliJ IDEA ---
+.idea/
+*.iml
+out/
+*.ipr
+
+# --- Fichiers générés par NetBeans ---
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nbm/
+
+# --- Fichiers de build (Maven, Gradle, etc.) ---
+target/
+.gradle/
+
+# --- Fichiers temporaires et backups ---
 tmp/
 *.tmp
-.settings/
 *.swp
 *.bak
+
+# --- Fichiers Java compilés ---
+*.class
 *.jar
+
+# --- Fichiers de configuration spécifique ---
 local.properties
-.factorypath
+
+# --- Dossier généré par certains plugins (ex: génération de code) ---
 src-gen/
+
+# --- D'autres fichiers et dossiers à ignorer ---
 *.xml
 *.zip
-*.iml
-
 .DS_Store
 packages/javafx-sdk-21.0.6/
+
+# --- Fichiers de logs ---
+*.log
+
+# --- Fichiers de configuration utilisateur ou IDE spécifiques ---
+.vscode/
+/classes/
