@@ -16,6 +16,7 @@ import org.freedesktop.gstreamer.event.SeekFlags;
 import org.freedesktop.gstreamer.event.SeekType;
 import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.Message;
+import org.freedesktop.gstreamer.message.StateChangedMessage;
 
 import java.util.EnumSet;
 
@@ -203,7 +204,6 @@ public class Preview {
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter.");
             pipeline.setState(State.PLAYING);
-            timerTimeline.play();
         });
 
        // loop on EOS if button selected
@@ -215,6 +215,15 @@ public class Preview {
                 case ASYNC_DONE:
                     System.out.println("Async done sur : " + message.getSource());
                     break;
+                case STATE_CHANGED:
+                    StateChangedMessage stateChangedMsg = (StateChangedMessage) message;
+                    //State oldState = stateChangedMsg.getOldState();
+                    State newState = stateChangedMsg.getNewState();
+                    if (newState == State.PLAYING) {
+                        timerTimeline.play();
+                    } else {
+                        timerTimeline.stop();
+                    }
             }
         });
     }
