@@ -110,14 +110,16 @@ public class Preview {
     // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
-        timerTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            secondsElapsed++;
-            int minutes = secondsElapsed / 60;
-            int seconds = secondsElapsed % 60;
-            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+
+        // Création d'une timeline pour l'animation du timer
+        timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+            long[] position = new long[1];
+            position[0] = pipeline.queryPosition(Format.TIME);
+            if(position[0] != -1) {
+                timerLabel.setText(String.format(ClockTime.toString(position[0])));
+            }
         }));
-        timerTimeline.setCycleCount(Timeline.INDEFINITE);
-        timerTimeline.play();
+        timerTimeline.setCycleCount(Timeline.INDEFINITE); // on lance la timeline que quand la vidéo est prête
 
         /**
          * Set up paths to native GStreamer libraries - see adjacent file.
@@ -175,11 +177,12 @@ public class Preview {
                         Caps caps = pad.getCurrentCaps();
                         String type = caps.getStructure(0).getName();
                         System.out.println(type);
-
+                        // On link l'audio
                         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
                             System.out.println("Audio Sink Pad not linked");
                             pad.link(audioSinkPad);
                         }
+                        // On link la vidéo
                         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
                             System.out.println("Video Sink Pad not linked");
                             pad.link(videoSinkPad);
@@ -189,23 +192,30 @@ public class Preview {
         );
         pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
-        try {
+/*        try {
             Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         System.out.println("on lance la pipeline");
-        pipeline.setState(State.PLAYING);
-/*        pipeline.getBus().connect((Bus.ASYNC_DONE) bus -> {
-            System.out.println("Pipeline ready — now playing.");
-            pipeline.play();
-        });*/
+        pipeline.setState(State.PLAYING);*/
+        source.connect((Element.NO_MORE_PADS) (elem) -> {
+            System.out.println("Plus de pads à ajouter.");
+            pipeline.setState(State.PLAYING);
+            timerTimeline.play();
+        });
 
-/*        // loop on EOS if button selected
-        pipeline.getBus().connect((Bus.EOS) source1 -> {
-            // handle on event thread!
-                    pipeline.stop();
-        });*/
+       // loop on EOS if button selected
+        pipeline.getBus().connect((Bus.MESSAGE) (bus, message) -> {
+            switch (message.getType()) {
+                case ASYNC_START:
+                    System.out.println("Async start sur : " + message.getSource());
+                    break;
+                case ASYNC_DONE:
+                    System.out.println("Async done sur : " + message.getSource());
+                    break;
+            }
+        });
     }
 }
