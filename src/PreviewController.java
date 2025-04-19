@@ -20,7 +20,7 @@ import org.freedesktop.gstreamer.message.StateChangedMessage;
 
 import java.util.EnumSet;
 
-public class Preview {
+public class PreviewController {
 
     // Label pour afficher le temps écoulé
     @FXML
@@ -102,6 +102,16 @@ public class Preview {
         );
         if (!result) {
             System.out.println("Next frame seek failed");
+        }
+    }
+
+    public void togglePlayPause(){
+        System.out.println("togglePlayPause");
+        State currentState = pipeline.getState();
+        if (currentState == State.PAUSED) {
+            pipeline.setState(State.PLAYING);
+        } else {
+            pipeline.setState(State.PAUSED);
         }
     }
 
@@ -193,14 +203,6 @@ public class Preview {
         );
         pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
-/*        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("on lance la pipeline");
-        pipeline.setState(State.PLAYING);*/
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter.");
             pipeline.setState(State.PLAYING);
