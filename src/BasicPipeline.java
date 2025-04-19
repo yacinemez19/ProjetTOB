@@ -10,10 +10,12 @@
  *
  */
 
+import java.sql.Struct;
 import java.util.concurrent.TimeUnit;
-import org.freedesktop.gstreamer.Gst;
-import org.freedesktop.gstreamer.Pipeline;
-import org.freedesktop.gstreamer.Version;
+
+import org.freedesktop.gstreamer.*;
+import org.freedesktop.gstreamer.fx.FXImageSink;
+import org.freedesktop.gstreamer.message.Message;
 
 /**
  * Simply launches a test GStreamer pipeline using the Java bindings.
@@ -52,11 +54,70 @@ public class BasicPipeline {
          * definition. This method returns Pipeline when more than one element
          * is specified.
          */
-        pipeline = (Pipeline) Gst.parseLaunch("videotestsrc ! autovideosink");
+        //pipeline = (Pipeline) Gst.parseLaunch("videotestsrc ! autovideosink");
 
+        Element source = ElementFactory.make("videotestsrc", "source");
+        // Video Sink
+        Element videoConverter = ElementFactory.make("videoconvert", "videoconverter");
+
+        Element fxSink = ElementFactory.make("autovideosink", "videosink");
+        // On créé une pipelin vide et on lui ajoute tout les éléments
+        pipeline = new Pipeline("testPipeline");
+        pipeline.add(source);
+        pipeline.add(videoConverter);
+        pipeline.add(fxSink);
+        // On link la vidéo
+        source.link(videoConverter);
+        videoConverter.link(fxSink);
+
+        Bus bus = pipeline.getBus();
+        bus.connect((Bus.MESSAGE) (Bus bus1, Message message) -> {
+            switch (message.getType()) {
+                case ERROR:
+                    // Parse l'erreur
+                    Structure err = message.getStructure();
+                    if (err.hasField("details")) {
+                        System.out.println("On a les details");
+                        Structure details = (Structure) err.getValue("details");
+                        System.err.println(details.toString());
+                    }
+                    System.err.println("Erreur : " + err.toString());
+                    break;
+                case WARNING:
+                    System.out.println("Warning : ");
+                    break;
+                case INFO:
+                    Structure info = message.getStructure();
+                    System.out.println("Info : " + info.toString());
+                    break;
+                case EOS:
+                    System.out.println("Fin du stream !");
+                    Gst.quit();
+                    break;
+                default:
+                    break;
+            }
+        });
+        pipeline.setState(State.PAUSED);
+        // attendre que les pads soient liés
+        try {Thread.sleep(1500);}
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("on lance la pipeline");
+        pipeline.setState(State.PLAYING);
         /**
          * Start the pipeline.
          */
+        // ON CHECK LES PADS
+        Pad videoConvertSinkPad = videoConverter.getStaticPad("sink");
+        Pad videoConvertSrcPad = videoConverter.getStaticPad("src");
+        Pad sourceSrxPad = source.getStaticPad("src");
+
+        // Regarder ce que le pad accepte et propose :
+        System.out.println("videoconvert sink caps: " + videoConvertSinkPad.getCurrentCaps());
+        System.out.println("videoconvert src caps: " + videoConvertSrcPad.getCurrentCaps());
+        System.out.println("videotestsrc src caps: " + sourceSrxPad.getCurrentCaps());
         pipeline.play();
 
         /**
