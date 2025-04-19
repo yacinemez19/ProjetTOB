@@ -10,7 +10,6 @@
  *
  */
 
-import java.sql.Struct;
 import java.util.concurrent.TimeUnit;
 
 import org.freedesktop.gstreamer.*;
@@ -22,7 +21,7 @@ import org.freedesktop.gstreamer.message.Message;
  *
  * @author Neil C Smith ( https://www.codelerity.com )
  */
-public class BasicPipeline {
+public class ComplexPipeline {
 
     /**
      * Always store the top-level pipeline reference to stop it being garbage
@@ -56,32 +55,76 @@ public class BasicPipeline {
          */
         //pipeline = (Pipeline) Gst.parseLaunch("videotestsrc ! autovideosink");
 
-        Element source = ElementFactory.make("videotestsrc", "source");
+        Element source = ElementFactory.make("uridecodebin", "source");
+        // Audio Sink
+        Element converter = ElementFactory.make("audioconvert", "audioconverter");
+        if (converter == null) {
+            System.err.println("Erreur : impossible de créer audioconvert");
+        }
+        Element resample = ElementFactory.make("audioresample", "audiosample");
+        if (resample == null) {
+            System.err.println("Erreur : impossible de créer audioconvert");
+        }
+        Element audioSink = ElementFactory.make("autoaudiosink", "audiosink");
+        if (audioSink == null) {
+            System.err.println("Erreur : impossible de créer audioconvert");
+        }
         // Video Sink
         Element videoConverter = ElementFactory.make("videoconvert", "videoconverter");
-
         Element fxSink = ElementFactory.make("autovideosink", "videosink");
         // On créé une pipelin vide et on lui ajoute tout les éléments
         pipeline = new Pipeline("testPipeline");
         pipeline.add(source);
+        pipeline.add(converter);
+        pipeline.add(resample);
+        pipeline.add(audioSink);
         pipeline.add(videoConverter);
         pipeline.add(fxSink);
+        // On link l'audio
+        converter.link(resample);
+        resample.link(audioSink);
         // On link la vidéo
-        source.link(videoConverter);
         videoConverter.link(fxSink);
+        // On set la source et on ajoute le pad-added signal
+        source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
+        source.connect(
+                new Element.PAD_ADDED() {
+                    @Override
+                    public void padAdded(Element element, Pad pad) {
+                        Pad audioSinkPad = converter.getStaticPad("sink");
+                        Pad videoSinkPad = videoConverter.getStaticPad("sink");
+                        if (audioSinkPad == null) {
+                            System.err.println("audioSinkPad est null !");
+                        }
+                        if (videoSinkPad == null) {
+                            System.err.println("videoSinkPad est null !");
+                        }
+
+                        System.out.println("New pad received " + pad.getName() + " from " + element.getName());
+
+                        // On récupère le type de fichier
+                        Caps caps = pad.getCurrentCaps();
+                        String type = caps.getStructure(0).getName();
+                        System.out.println(type);
+
+                        if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
+                            pad.link(audioSinkPad);
+                            System.out.println("Audio Sink Pad linked");
+                        }
+                        if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
+                            pad.link(videoSinkPad);
+                            System.out.println("Video Sink Pad linked");
+                        }
+                    }
+                }
+        );
 
         Bus bus = pipeline.getBus();
         bus.connect((Bus.MESSAGE) (Bus bus1, Message message) -> {
             switch (message.getType()) {
                 case ERROR:
                     // Parse l'erreur
-                    Structure err = message.getStructure();
-                    if (err.hasField("details")) {
-                        System.out.println("On a les details");
-                        Structure details = (Structure) err.getValue("details");
-                        System.err.println(details.toString());
-                    }
-                    System.err.println("Erreur : " + err.toString());
+                    System.err.println("Erreur : ");
                     break;
                 case WARNING:
                     System.out.println("Warning : ");
@@ -109,15 +152,6 @@ public class BasicPipeline {
         /**
          * Start the pipeline.
          */
-        // ON CHECK LES PADS
-        Pad videoConvertSinkPad = videoConverter.getStaticPad("sink");
-        Pad videoConvertSrcPad = videoConverter.getStaticPad("src");
-        Pad sourceSrxPad = source.getStaticPad("src");
-
-        // Regarder ce que le pad accepte et propose :
-        System.out.println("videoconvert sink caps: " + videoConvertSinkPad.getCurrentCaps());
-        System.out.println("videoconvert src caps: " + videoConvertSrcPad.getCurrentCaps());
-        System.out.println("videotestsrc src caps: " + sourceSrxPad.getCurrentCaps());
         pipeline.play();
 
         /**
