@@ -26,8 +26,7 @@ ENV JAVAFX_LIB="/opt/javafx/lib"
 
 # Ajoute app dans le conteneur
 WORKDIR /app
-COPY ./src/FXPlayer.java .
-COPY ./src/Utils.java .
+COPY ./src/ .
 COPY packages/ ./libs
 
 # Compiler avec le classpath contenant les jars
