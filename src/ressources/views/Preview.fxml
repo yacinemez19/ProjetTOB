@@ -8,13 +8,12 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Preview"
+            fx:controller="PreviewController"
             prefHeight="400.0" prefWidth="600.0">
     <Label layoutX="14.0" layoutY="14.0" text="Preview" />
     <Label fx:id="timerLabel"
            AnchorPane.leftAnchor="14.0"
            AnchorPane.bottomAnchor="0.0"
-           text="00:00:00"
            style="-fx-font-size: 18px; -fx-text-fill: black;" />
     <ImageView fx:id="videoView"
                fitWidth="600.0"

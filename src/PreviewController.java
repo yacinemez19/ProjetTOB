@@ -18,9 +18,10 @@ import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.Message;
 import org.freedesktop.gstreamer.message.StateChangedMessage;
 
+import java.io.File;
 import java.util.EnumSet;
 
-public class Preview {
+public class PreviewController {
 
     // Label pour afficher le temps écoulé
     @FXML
@@ -62,7 +63,7 @@ public class Preview {
     // Met la vidéo en pause
     @FXML
     private void handlePause() {
-        pipeline.pause();
+        pipeline.setState(State.PAUSED);
     }
 
     // Affiche l’image précédente en mettant la vidéo en pause
@@ -105,13 +106,22 @@ public class Preview {
         }
     }
 
+    public void togglePlayPause(){
+        System.out.println("togglePlayPause");
+        State currentState = pipeline.getState();
+        if (currentState == State.PAUSED) {
+            pipeline.setState(State.PLAYING);
+        } else {
+            pipeline.setState(State.PAUSED);
+        }
+    }
+
     // Compteur en secondes depuis le début de la vidéo
     private int secondsElapsed = 0;
 
     // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
-
         // Création d'une timeline pour l'animation du timer
         timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
@@ -164,7 +174,11 @@ public class Preview {
         videoConverter.link(fxSink.getSinkElement());
         videoView.imageProperty().bind(fxSink.imageProperty());
         // On set la source et on ajoute le pad-added signal qui permettera de connecter la source aux sorties son et audio
-        source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
+        File videoFile = new File("videos/nuuuuuul.MTS");
+        System.out.println("Path: " + videoFile.getAbsolutePath());
+        System.out.println("Exists: " + videoFile.exists());
+        source.set("uri", videoFile.toURI().toString());
+        //source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
         source.connect(
                 new Element.PAD_ADDED() {
                     @Override
@@ -193,17 +207,9 @@ public class Preview {
         );
         pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
-/*        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("on lance la pipeline");
-        pipeline.setState(State.PLAYING);*/
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter.");
-            pipeline.setState(State.PLAYING);
+            //pipeline.setState(State.PLAYING);
         });
 
        // loop on EOS if button selected
