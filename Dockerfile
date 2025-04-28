@@ -1,14 +1,12 @@
 FROM ubuntu:22.04
 
-# Langue
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8
-
-
 # Installe Java + JavaFX + GStreamer + dépendances GUI
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
+RUN apt-get update && \
+    apt-get install -y wget gnupg unzip libgtk-3-0 libxtst6 libxrender1 libgl1-mesa-glx && \
+    wget -O- https://apt.corretto.aws/corretto.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/corretto.gpg > /dev/null && \
+    echo "deb https://apt.corretto.aws stable main" | tee /etc/apt/sources.list.d/corretto.list && \
+    apt-get update && \
+    apt-get install -y java-21-amazon-corretto-jdk \
     wget unzip \
     libgtk-3-0 libxtst6 libxrender1 libgl1-mesa-glx \
     gstreamer1.0-tools \
@@ -32,11 +30,14 @@ ENV JAVAFX_LIB="/opt/javafx/lib"
 
 # Ajoute app dans le conteneur
 WORKDIR /app
-COPY ./src/ .
+COPY ./src/ ./src/
 COPY packages/ ./libs
 
-# Compiler avec le classpath contenant les jars
-RUN javac -cp ".:libs/*:/opt/javafx/lib/*" Main.java
+# Compiler tous les .java
+RUN find src -name "*.java" > sources.txt && \
+    javac -encoding UTF-8 -cp ".:libs/*:/opt/javafx/lib/*" -d . @sources.txt
+
+RUN cp -r src/ressources ./ressources
 
 # Commande de lancement (JavaFX a besoin du module path)
 CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "Main"]
