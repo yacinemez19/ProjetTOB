@@ -1,5 +1,11 @@
 FROM ubuntu:22.04
 
+# Langue
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8
+
+
 # Installe Java + JavaFX + GStreamer + dépendances GUI
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
