@@ -26,12 +26,11 @@ ENV JAVAFX_LIB="/opt/javafx/lib"
 
 # Ajoute app dans le conteneur
 WORKDIR /app
-COPY ./src/FXPlayer.java .
-COPY ./src/Utils.java .
+COPY ./src/ .
 COPY packages/ ./libs
 
 # Compiler avec le classpath contenant les jars
-RUN javac -cp ".:libs/*:/opt/javafx/lib/*" FXPlayer.java
+RUN javac -cp ".:libs/*:/opt/javafx/lib/*" Main.java
 
 # Commande de lancement (JavaFX a besoin du module path)
-CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "FXPlayer"]
+CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "Main"]
