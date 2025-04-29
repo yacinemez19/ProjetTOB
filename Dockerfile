@@ -31,6 +31,7 @@ ENV JAVAFX_LIB="/opt/javafx/lib"
 # Ajoute app dans le conteneur
 WORKDIR /app
 COPY ./src/ ./src/
+COPY ./videos/ ./videos/
 COPY packages/ ./libs
 
 # Compiler tous les .java
