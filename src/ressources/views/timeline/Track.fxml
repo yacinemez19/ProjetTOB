@@ -9,17 +9,17 @@
 <GridPane fx:id="timelineGrid" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
           fx:controller="timeline.TrackController"
-          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
     <columnConstraints>
         <ColumnConstraints percentWidth="20"/>
         <ColumnConstraints percentWidth="50"/>
     </columnConstraints>
 
 
-    <VBox GridPane.columnIndex="0">
-        <Label fx:id="trackLabel" text="Track 1"/>
+    <VBox GridPane.columnIndex="0" maxHeight="Infinity" style="-fx-background-color: lightgray;">
+        <Label fx:id="trackLabel" text="Track 1" />
     </VBox>
-    <VBox GridPane.columnIndex="1">
-        <Label text="Reste de la timeline"/>
-    </VBox>
+    <!-- Colonne timeline, contient les médias -->
+    <Pane fx:id="mediaPane" GridPane.columnIndex="1" style="-fx-background-color: lightgray;">
+    </Pane>
 </GridPane>

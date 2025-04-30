@@ -29,6 +29,7 @@ public class TimelineController {
             }
             timelineSplitPane.setDividerPositions(positions);
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
