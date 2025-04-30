@@ -16,7 +16,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws java.io.IOException {
         // Charger le fichier FXML
         Parent root = FXMLLoader.load(Objects.requireNonNull(
-                getClass().getResource("ressources/views/Main.fxml")));
+                getClass().getResource("/ressources/views/Main.fxml")));
 
         // Créer la scène avec le root obtenu
         Scene scene = new Scene(root);
