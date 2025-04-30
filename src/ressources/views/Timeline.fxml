@@ -13,6 +13,5 @@
                AnchorPane.rightAnchor="0.0"
                fx:controller="timeline.TimelineController"
                xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-
-
+    <!-- Ici on insert les tracks (cf le controller + timeline/Track.fxml -->
     </SplitPane>
