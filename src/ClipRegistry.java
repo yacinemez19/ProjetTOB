@@ -5,6 +5,10 @@ import java.util.HashMap;
 public class ClipRegistry {
     private HashMap<URI, Clip> clipsByURI;
 
+    public ClipRegistry() {
+        clipsByURI = new HashMap<>();
+    }
+
     public void register(Clip clip) {
         if (clip == null) {
             throw new IllegalArgumentException("Clip ne peut pas être null");
@@ -14,6 +18,9 @@ public class ClipRegistry {
             throw new IllegalArgumentException("Clip déjà enregistré avec cette URI");
         }
         clipsByURI.put(uri, clip);
+
+        // Debugging output
+        System.out.println(clipsByURI);
     }
 
     public Clip getClip(URI uri) {

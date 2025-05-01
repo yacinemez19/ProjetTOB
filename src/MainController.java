@@ -20,7 +20,6 @@ public class MainController {
 
     public void setVideoProject(VideoProject videoProject) {
         this.videoProject = videoProject;
-        // Récupérer importController
         importPaneController.setVideoProject(videoProject);
     }
 
