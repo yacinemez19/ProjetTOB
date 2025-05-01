@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            prefHeight="40.0" prefWidth="60.0" >
 
-    <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" style="&#10;" text="Import" textAlignment="CENTER">
-    </Label>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImportController">
+    <children>
+        <TextField fx:id="searchBar" layoutX="104.0" layoutY="24.0" prefHeight="35.0" prefWidth="380.0" />
+        <ListView fx:id="listView" layoutX="24.0" layoutY="69.0" prefHeight="309.0" prefWidth="553.0" />
+        <Button layoutX="489.0" layoutY="24.0" mnemonicParsing="false" onAction="#search" prefHeight="35.0" prefWidth="88.0" text="Rechercher" />
+        <Button layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#addFile" prefHeight="35.0" prefWidth="35.0" text="+" />
+        <Button layoutX="64.0" layoutY="24.0" mnemonicParsing="false" onAction="#deleteFile" prefHeight="35.0" prefWidth="35.0" text="-" />
+    </children>
 </AnchorPane>
