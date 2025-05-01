@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 public class ImportController implements Initializable {
 
     FileChooser fileChooser;
+    VideoImporter videoImporter;
+    ClipRegistry clipRegistry;
 
     ArrayList<String> words = new ArrayList<>(
             Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
@@ -50,7 +52,7 @@ public class ImportController implements Initializable {
         Window window = listView.getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
         if (file != null) {
-            // traiter le fichier…
+            clipRegistry.register(videoImporter.importVideo(file.toURI()));
         }
 
     }
@@ -85,6 +87,10 @@ public class ImportController implements Initializable {
                              "*.flv", "*.ts", "*.mxf", "*.oga", "*.wav" )
                  );
         fileChooser.setTitle("Importer un fichier vidéo");
+
+        videoImporter = new TestVideoImporter();
+
+        clipRegistry = new ClipRegistry();
     }
 
     /**
