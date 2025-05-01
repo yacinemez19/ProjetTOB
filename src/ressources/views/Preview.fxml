@@ -14,7 +14,6 @@
     <Label fx:id="timerLabel"
            AnchorPane.leftAnchor="14.0"
            AnchorPane.bottomAnchor="0.0"
-           text="00:00:00"
            style="-fx-font-size: 18px; -fx-text-fill: black;" />
     <ImageView fx:id="videoView"
                fitWidth="600.0"
