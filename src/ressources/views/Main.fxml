@@ -20,7 +20,7 @@
       <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
       <SplitPane>
         <AnchorPane fx:id="importPanel" prefWidth="300">
-          <fx:include source="Import.fxml"/>
+          <fx:include fx:id="importPane" source="Import.fxml"/>
         </AnchorPane>
         <AnchorPane fx:id="previewPanel" prefWidth="800">
           <fx:include source="Preview.fxml"/>

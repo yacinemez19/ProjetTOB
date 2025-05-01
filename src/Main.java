@@ -34,6 +34,7 @@ public class Main extends Application {
         // Injecter le modèle dans le contrôleur
         MainController mainController = loader.getController();
         mainController.setVideoProject(videoProject);
+        System.out.println("On a set VideoProject dans le MainController");
 
         // Créer la scène avec le root obtenu
         Scene scene = new Scene(root);
