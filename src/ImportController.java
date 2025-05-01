@@ -75,11 +75,13 @@ public class ImportController implements Initializable {
         if (file != null) {
             videoProject.importVideo(file.toURI());
         }
+        updateClipList();
     }
 
     @FXML
     void deleteFile(ActionEvent event) {
         System.out.println("Supprimer le fichier");
+        updateClipList();
     }
 
     /**
@@ -89,10 +91,17 @@ public class ImportController implements Initializable {
      */
     public void setVideoProject(VideoProject videoProject) {
         this.videoProject = videoProject;
-        initClipList();
+
+        // Mettre à jour la liste des clips affichée dans le tableau dès qu'on a un projet
+        // vidéo pour éviter d'avoir un problème de null pointer.
+        updateClipList();
     }
 
-    public void initClipList() {
+    /**
+     * Met à jour la liste des clips affichée dans le tableau.
+     */
+    public void updateClipList() {
+        clipTable.getItems().clear();
         clipTable.getItems().addAll(videoProject.getAllClips());
     }
 
@@ -105,9 +114,6 @@ public class ImportController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (videoProject == null) {
-            System.out.println("La video project n'existe pas");
-        }
         ConfigureClipTable();
         //listView.getItems().addAll(words);
         //configureListViewForDragAndDrop();
