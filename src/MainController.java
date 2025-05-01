@@ -7,11 +7,12 @@ import javafx.scene.input.KeyCodeCombination;
 
 public class MainController {
 
+
     @FXML
     private AnchorPane previewPanel;
 
     @FXML
-    private ImportController importController;
+    private ImportController importPaneController;
 
     private VideoProject videoProject;
 
@@ -19,7 +20,8 @@ public class MainController {
 
     public void setVideoProject(VideoProject videoProject) {
         this.videoProject = videoProject;
-        importController.setVideoProject(videoProject);
+        // Récupérer importController
+        importPaneController.setVideoProject(videoProject);
     }
 
     public void initialize() {
