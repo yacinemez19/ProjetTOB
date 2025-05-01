@@ -21,10 +21,21 @@ public class Track {
 
     public void addTimelineObject(TimelineObject obj) {
        // TO DO : il faut que les objets de la timelines soient dans l'ordre (obj.start)
+        int j=0;
+        while (j<elements.size() && elements.get(j).getStart()[0] < obj.getStart()[0]) j += 1;
+        elements.add(j, obj);
     }
 
     public TimelineObject getObjectAtTime(long[] timing) {
         // TO DO : Retourne l'objet à la position timing
+        if (timing==null) return null;
+        for (TimelineObject object : elements) {
+            long start = object.getStart()[0];
+            long end = object.getDuration()[0] + start ;
+            if (timing[0] < end && timing[0]>=start ) {
+                return object;
+            }
+        }
         return null;
     }
     public boolean modifyTimelineObject(long[] timing, String propertyName, Object newValue) {
@@ -50,7 +61,11 @@ public class Track {
     }
 
     public void removeTimelineObject(long[] timing) {
-        // TO DO : Enlever l'objet à cette date
+        TimelineObject object = getObjectAtTime(timing);
+        if (object == null) return;
+        else {
+            elements.remove(object);
+        }
     }
 
     /*FONCTIONS POUR LE NAME*/
@@ -59,5 +74,6 @@ public class Track {
     }
     public void changeTimelineName(String newName) {
         // TO DO : Changer le nom de la Timeline
+        this.name = newName;
     }
 }

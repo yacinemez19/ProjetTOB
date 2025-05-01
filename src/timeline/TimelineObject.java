@@ -42,5 +42,10 @@ public class TimelineObject {
     public void setDuration(long[] duration) {
         this.duration = duration;
     }
-
+    public long[] getStart() {
+        return start;
+    }
+    public long[] getDuration() {
+        return duration;
+    }
 }
