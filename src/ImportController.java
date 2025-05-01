@@ -14,10 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -73,7 +70,7 @@ public class ImportController implements Initializable {
 
     @FXML
     void addFile(ActionEvent event) {
-        Window window = listView.getScene().getWindow();
+        Window window = clipTable.getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
         if (file != null) {
             videoProject.importVideo(file.toURI());
@@ -92,6 +89,11 @@ public class ImportController implements Initializable {
      */
     public void setVideoProject(VideoProject videoProject) {
         this.videoProject = videoProject;
+        initClipList();
+    }
+
+    public void initClipList() {
+        clipTable.getItems().addAll(videoProject.getAllClips());
     }
 
     /**
@@ -103,9 +105,9 @@ public class ImportController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //assert videoProject != null;
-        System.out.println("ImportC : " + videoProject == null);
-        clipTable.getItems().addAll(videoProject.getAllClips());
+        if (videoProject == null) {
+            System.out.println("La video project n'existe pas");
+        }
         ConfigureClipTable();
         //listView.getItems().addAll(words);
         //configureListViewForDragAndDrop();

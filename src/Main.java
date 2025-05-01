@@ -25,12 +25,12 @@ public class Main extends Application {
                 new TrackManager(),
                 new TestVideoImporter()
         );
-        System.out.println("Main : " + videoProject == null);
 
         // Charger le fichier FXML
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
                 getClass().getResource("ressources/views/Main.fxml")));
         Parent root = loader.load();
+
 
         // Injecter le modèle dans le contrôleur
         MainController mainController = loader.getController();
