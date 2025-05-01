@@ -23,7 +23,7 @@ public class Main extends Application {
         VideoProject videoProject = new VideoProject(
                 new ClipRegistry(),
                 new TrackManager(),
-                new TestVideoImporter()
+                new GStreamerVideoImporter()
         );
 
         // Charger le fichier FXML

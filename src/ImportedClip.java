@@ -1,8 +1,20 @@
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Objects;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import java.nio.file.attribute.FileTime;
+import java.time.ZoneId;
+
+
 
 /**
  * Implémentation de l'interface Clip pour représenter un clip importé.
@@ -14,9 +26,8 @@ public class ImportedClip implements Clip {
     private final int width;
     private final int height;
     private final BufferedImage thumbnail;
-    private final long sizeBytes;
-    private final String type;
-    private final LocalDate dateCreated;
+    private final Path path;
+    private final File file;
 
     /**
      * Construit un ImportedClip.
@@ -26,26 +37,19 @@ public class ImportedClip implements Clip {
      * @param width        Largeur en pixels
      * @param height       Hauteur en pixels
      * @param thumbnail    Miniature générée
-     * @param sizeBytes    Taille du fichier en octets
-     * @param type         Type / extension ou codec (ex. "MP4")
-     * @param dateCreated  Date d'import ou de création du clip
      */
     public ImportedClip(URI source,
                         Duration duration,
                         int width,
                         int height,
-                        BufferedImage thumbnail,
-                        long sizeBytes,
-                        String type,
-                        LocalDate dateCreated) {
+                        BufferedImage thumbnail) {
         this.source      = Objects.requireNonNull(source, "source ne peut être null");
         this.duration    = Objects.requireNonNull(duration, "duration ne peut être null");
         this.width       = width;
         this.height      = height;
         this.thumbnail   = Objects.requireNonNull(thumbnail, "thumbnail ne peut être null");
-        this.sizeBytes   = sizeBytes;
-        this.type        = Objects.requireNonNull(type, "type ne peut être null");
-        this.dateCreated = Objects.requireNonNull(dateCreated, "dateCreated ne peut être null");
+        this.path        = Paths.get(this.source);
+        this.file        = path.toFile();
     }
 
     @Override
@@ -55,9 +59,13 @@ public class ImportedClip implements Clip {
 
     @Override
     public String getName() {
+        /**
         String path = source.getPath();
         int idx = path.lastIndexOf('/');
         return idx >= 0 ? path.substring(idx + 1) : path;
+         */
+
+        return file.getName();
     }
 
     @Override
@@ -82,37 +90,46 @@ public class ImportedClip implements Clip {
 
     @Override
     public long getSizeBytes() {
-        return sizeBytes;
+        return file.length();
     }
 
     @Override
     public String getType() {
-        return type;
+        try {
+            return Files.probeContentType(path);
+        } catch (IOException e) {
+            throw new RuntimeException("IOException lors de la recherche du type de " + this.getName(), e);
+        }
     }
 
     @Override
     public LocalDate getDateCreated() {
-        return dateCreated;
+        try{
+            FileTime creationTime = Files.readAttributes(path, BasicFileAttributes.class).creationTime();
+            return creationTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } catch(IOException e){
+            throw new RuntimeException("IOException lors de la recherche du type de " + this.getName(), e);
+        }
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ImportedClip)) return false;
-        ImportedClip that = (ImportedClip) o;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof ImportedClip)) return false;
+        ImportedClip that = (ImportedClip) object;
         return width == that.width &&
                 height == that.height &&
-                sizeBytes == that.sizeBytes &&
+                this.getSizeBytes() == that.getSizeBytes() &&
                 source.equals(that.source) &&
                 duration.equals(that.duration) &&
                 thumbnail.equals(that.thumbnail) &&
-                type.equals(that.type) &&
-                dateCreated.equals(that.dateCreated);
+                this.getType().equals(that.getType()) &&
+                this.getDateCreated().equals(that.getDateCreated());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(source, duration, width, height, thumbnail, sizeBytes, type, dateCreated);
+        return Objects.hash(source, duration, width, height, thumbnail, this.getSizeBytes(), this.getType(), this.getDateCreated());
     }
 
     @Override
@@ -122,8 +139,8 @@ public class ImportedClip implements Clip {
                 ", duration=" + duration +
                 ", resolution=" + width + "x" + height +
                 ", size=" + getSizeLabel() +
-                ", type=" + type +
-                ", date=" + dateCreated +
+                ", type=" + this.getType() +
+                ", date=" + this.getDateCreated() +
                 '}';
     }
 }
