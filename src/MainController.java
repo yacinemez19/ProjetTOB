@@ -2,8 +2,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -12,8 +10,17 @@ public class MainController {
     @FXML
     private AnchorPane previewPanel;
 
+    @FXML
+    private ImportController importController;
+
+    private VideoProject videoProject;
 
     private PreviewController previewController;
+
+    public void setVideoProject(VideoProject videoProject) {
+        this.videoProject = videoProject;
+        importController.setVideoProject(videoProject);
+    }
 
     public void initialize() {
         try {

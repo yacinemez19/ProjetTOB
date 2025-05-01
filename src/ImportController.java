@@ -24,8 +24,9 @@ import java.util.stream.Collectors;
 public class ImportController implements Initializable {
 
     FileChooser fileChooser;
-    VideoImporter videoImporter;
-    ClipRegistry clipRegistry;
+
+    // Le projet vidéo associé
+    VideoProject videoProject;
 
     ArrayList<String> words = new ArrayList<>(
             Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
@@ -52,14 +53,22 @@ public class ImportController implements Initializable {
         Window window = listView.getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
         if (file != null) {
-            clipRegistry.register(videoImporter.importVideo(file.toURI()));
+            videoProject.importVideo(file.toURI());
         }
-
     }
 
     @FXML
     void deleteFile(ActionEvent event) {
         System.out.println("Supprimer le fichier");
+    }
+
+    /**
+     * Setter pour le projet vidéo.
+     *
+     * @param videoProject Le projet vidéo à définir
+     */
+    public void setVideoProject(VideoProject videoProject) {
+        this.videoProject = videoProject;
     }
 
     /**
@@ -87,10 +96,6 @@ public class ImportController implements Initializable {
                              "*.flv", "*.ts", "*.mxf", "*.oga", "*.wav" )
                  );
         fileChooser.setTitle("Importer un fichier vidéo");
-
-        videoImporter = new TestVideoImporter();
-
-        clipRegistry = new ClipRegistry();
     }
 
     /**
