@@ -40,5 +40,9 @@ RUN find src -name "*.java" > sources.txt && \
 
 RUN cp -r src/ressources ./ressources
 
+# Par défaut, on suppose que l’hôte est accessible via host.docker.internal
+# (fonctionne sous WSL2 + Docker Desktop)
+ENV DISPLAY=host.docker.internal:0
+
 # Commande de lancement (JavaFX a besoin du module path)
 CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "Main"]
