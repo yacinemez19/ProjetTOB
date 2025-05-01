@@ -124,12 +124,12 @@ public class ImportController implements Initializable {
         fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         // Uniquement les vidéos pour l'instant, audio à ajouter plus tard
-        fileChooser.getExtensionFilters().add(
+        /*fileChooser.getExtensionFilters().add(
                      new FileChooser.ExtensionFilter("Vidéos", "*.asf", "*.avi",
                              "*.flv", "*.mkv", "*.mov", "*.mp4", "*.mpeg", "*.mpg",
                              "*.wmv", "*.wma", "*.webm", "*.ogg", "*.ogv", "*.3gp", "*.3g2",
                              "*.flv", "*.ts", "*.mxf", "*.oga", "*.wav" )
-                 );
+                 );*/
         fileChooser.setTitle("Importer un fichier vidéo");
     }
 
