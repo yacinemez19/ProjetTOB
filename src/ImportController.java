@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -117,75 +118,77 @@ public class ImportController implements Initializable {
      * Configure le tableClip pour afficher convenablement les données.
      */
     private void ConfigureClipTable(){
-        colName.setCellValueFactory(cell ->
-                new ReadOnlyStringWrapper(cell.getValue().getName())
+
+        setupColumn(colName, Clip::getName);
+
+        setupColumn(colDuration, clip -> formatDuration(clip.getDuration()));
+
+        setupColumn(colResolution, clip ->
+                clip.getWidth() + "x" + clip.getHeight()
         );
-        colDuration.setCellValueFactory(cell -> {
-            Duration d = cell.getValue().getDuration();
-            long h = d.toHours();
-            long m = d.minusHours(h).toMinutes();
-            long s = d.minusHours(h).minusMinutes(m).getSeconds();
-            String formatted = String.format("%02d:%02d:%02d", h, m, s);
-            return new ReadOnlyStringWrapper(formatted);
-        });
 
-        // 3. Résolution
-        colResolution.setCellValueFactory(cell -> {
-            Clip clip = cell.getValue();
-            String res = clip.getWidth() + "×" + clip.getHeight();
-            return new ReadOnlyStringWrapper(res);
-        });
+        setupColumn(colSize, clip ->
+                formatSize(clip.getSizeBytes())
+        );
 
-        // 4. Taille formatée
-        colSize.setCellValueFactory(cell -> {
-            long bytes = cell.getValue().getSizeBytes();
-            String human;
-            DecimalFormat df = new DecimalFormat("#.#");
-            if (bytes < 1024) {
-                human = bytes + " o";
-            } else if (bytes < 1024*1024) {
-                human = df.format(bytes/1024.0) + " Ko";
-            } else if (bytes < 1024*1024*1024) {
-                human = df.format(bytes/(1024.0*1024)) + " Mo";
-            } else {
-                human = df.format(bytes/(1024.0*1024*1024)) + " Go";
-            }
-            return new ReadOnlyStringWrapper(human);
-        });
+        setupColumn(colDate, clip ->
+                clip.getDateCreated()
+                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+        );
 
-
-        // 6. Date (format court local)
-        colDate.setCellValueFactory(cell -> {
-            String d = cell.getValue()
-                    .getDateCreated()
-                    .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
-            return new ReadOnlyStringWrapper(d);
-        });
-
-        // 7. Miniature : conversion BufferedImage → Image & inline cellFactory
+        // Setup la colonne pour afficher la miniature
         colThumbnail.setCellValueFactory(cell -> {
             Image fx = SwingFXUtils.toFXImage(cell.getValue().getThumbnail(), null);
             return new ReadOnlyObjectWrapper<>(fx);
         });
-        colThumbnail.setCellFactory(col -> new TableCell<>() {
-                    private final ImageView iv = new ImageView();
-                    {
-                        iv.setFitWidth(100);
-                        iv.setFitHeight(56);
-                        iv.setPreserveRatio(true);
-                    }
+        colThumbnail.setCellFactory(col -> new ImageTableCell<Clip>(100, 56));
+    }
 
-                @Override
-                protected void updateItem(Image img, boolean empty) {
-                    super.updateItem(img, empty);
-                    if (empty || img == null) {
-                        setGraphic(null);
-                    } else {
-                        iv.setImage(img);
-                        setGraphic(iv);
-                    }
-                }
-        });
+    /**
+     * Configure une colonne de la table pour afficher une valeur formatée.
+     *
+     * @param column Colonne à configurer
+     * @param mapper Fonction de mappage pour obtenir la valeur à afficher
+     */
+    private void setupColumn(TableColumn<Clip, String> column,
+                             Function <Clip, String> mapper) {
+        column.setCellValueFactory(cell ->
+                new ReadOnlyStringWrapper(mapper.apply(cell.getValue()))
+        );
+    }
+
+    /**
+     * Formate la taille en octets, Ko, Mo ou Go.
+     *
+     * @param bytes Taille en octets
+     * @return Taille formatée
+     */
+    private String formatSize(long bytes) {
+        String human;
+        DecimalFormat df = new DecimalFormat("#.#");
+        if (bytes < 1024) {
+            human = bytes + " o";
+        } else if (bytes < 1024*1024) {
+            human = df.format(bytes/1024.0) + " Ko";
+        } else if (bytes < 1024*1024*1024) {
+            human = df.format(bytes/(1024.0*1024)) + " Mo";
+        } else {
+            human = df.format(bytes/(1024.0*1024*1024)) + " Go";
+        }
+        return human;
+    }
+
+    /**
+     * Formate la durée en heures, minutes et secondes.
+     *
+     * @param d Durée à formater
+     * @return Durée formatée
+     */
+    private String formatDuration(Duration d) {
+        long h = d.toHours();
+        long m = d.minusHours(h).toMinutes();
+        long s = d.minusHours(h).minusMinutes(m).getSeconds();
+        return String.format("%02d:%02d:%02d", h, m, s);
     }
 
     /**
