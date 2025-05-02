@@ -1,29 +1,17 @@
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.image.WritableImage;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,14 +28,6 @@ public class ImportController implements Initializable {
     // Le projet vidéo associé
     VideoProject videoProject;
 
-    ArrayList<String> words = new ArrayList<>(
-            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
-                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-                    "Super Human", "Super", "Like")
-    );
-
     @FXML
     private TextField searchBar;
 
@@ -59,12 +39,10 @@ public class ImportController implements Initializable {
     @FXML private TableColumn<Clip, String> colSize;
     @FXML private TableColumn<Clip, String> colDate;
 
-    @FXML private ListView<String>      listView;
-
     @FXML
     void search(ActionEvent event) {
-        listView.getItems().clear();
-        listView.getItems().addAll(searchList(searchBar.getText(),words));
+        // TODO : implémenter la recherche
+        System.out.println("Recherche...");
     }
 
     @FXML
@@ -79,6 +57,7 @@ public class ImportController implements Initializable {
 
     @FXML
     void deleteFile(ActionEvent event) {
+        // TODO : implémenter la suppression
         System.out.println("Supprimer le fichier");
         updateClipList();
     }
@@ -114,9 +93,12 @@ public class ImportController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ConfigureClipTable();
-        //listView.getItems().addAll(words);
-        //configureListViewForDragAndDrop();
+
         ConfigureFileChooser();
+
+        ClipTableDragAndDrop clipTableDragAndDrop = new ClipTableDragAndDrop();
+
+        clipTableDragAndDrop.enableDrag(clipTable);
     }
 
     private void ConfigureFileChooser() {
@@ -130,44 +112,6 @@ public class ImportController implements Initializable {
                              "*.flv", "*.ts", "*.mxf", "*.oga", "*.wav" )
                  );*/
         fileChooser.setTitle("Importer un fichier vidéo");
-    }
-
-    /**
-     * Configure le ListView pour permettre le drag and drop.
-     */
-    private void configureListViewForDragAndDrop() {
-        listView.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? null : item);
-                }
-            };
-
-            // Détection du début du drag
-            cell.setOnDragDetected(evt -> {
-                if (cell.getItem() == null) {
-                    return;
-                }
-                Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(cell.getItem());
-                db.setContent(content);
-
-                // Snapshot pour l’animation du curseur
-                SnapshotParameters params = new SnapshotParameters();
-                WritableImage snapshot = cell.snapshot(params, null);
-                db.setDragView(snapshot, snapshot.getWidth() / 2, snapshot.getHeight() / 2);
-
-                evt.consume();
-            });
-
-            // On peut intercepter la fin du drag si besoin (ici on ignore)
-            cell.setOnDragDone(DragEvent::consume);
-
-            return cell;
-        });
     }
 
     /**
@@ -242,8 +186,6 @@ public class ImportController implements Initializable {
                 }
         });
     }
-
-
 
     /**
      * Filtre la liste de chaînes de caractères en fonction des mots-clés fournis.
