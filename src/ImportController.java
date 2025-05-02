@@ -209,10 +209,6 @@ public class ImportController implements Initializable {
         });
 
 
-
-
-
-
         // 6. Date (format court local)
         colDate.setCellValueFactory(cell -> {
             String d = cell.getValue()
