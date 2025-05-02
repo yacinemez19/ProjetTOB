@@ -10,9 +10,6 @@ public class TestVideoImporter implements VideoImporter {
                 Duration.ofSeconds(120),
                 1920,
                 1080,
-                new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB),
-                500_000_000,
-                "MP4",
-                LocalDate.now());
+                new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB));
     }
 }
