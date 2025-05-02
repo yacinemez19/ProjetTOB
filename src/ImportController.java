@@ -38,6 +38,7 @@ public class ImportController implements Initializable {
     @FXML private TableColumn<Clip, String> colResolution;
     @FXML private TableColumn<Clip, String> colSize;
     @FXML private TableColumn<Clip, String> colDate;
+    @FXML private Button btnDelete;
 
     @FXML
     void search(ActionEvent event) {
@@ -55,11 +56,23 @@ public class ImportController implements Initializable {
         updateClipList();
     }
 
+    private void ConfigureDeleteButton(){
+        btnDelete.setDisable(true);
+        clipTable.getSelectionModel().selectedItemProperty().addListener((obs, oldClip, newClip) -> {
+            btnDelete.setDisable(newClip == null);
+        });
+        btnDelete.setOnAction(event -> deleteFile());
+    }
+
     @FXML
-    void deleteFile(ActionEvent event) {
-        // TODO : implémenter la suppression
-        System.out.println("Supprimer le fichier");
+    void deleteFile() {
+        Clip selected = clipTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            videoProject.deleteVideo(selected);
+            System.out.println("Supprimer le fichier");
+        }
         updateClipList();
+
     }
 
     /**
@@ -95,6 +108,8 @@ public class ImportController implements Initializable {
         ConfigureClipTable();
 
         ConfigureFileChooser();
+
+        ConfigureDeleteButton();
 
         ClipTableDragAndDrop clipTableDragAndDrop = new ClipTableDragAndDrop();
 

@@ -22,6 +22,10 @@ public class VideoProject {
         clipRegistry.register(clip);
     }
 
+    public void deleteVideo(Clip clip) {
+        clipRegistry.unregister(clip);
+    }
+
     public Clip getClip(URI uri) {
         return clipRegistry.getClip(uri);
     }

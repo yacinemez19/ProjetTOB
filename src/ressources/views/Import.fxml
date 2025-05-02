@@ -8,6 +8,7 @@
 
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImportController">
     <children>
         <TextField fx:id="searchBar" layoutX="104.0" layoutY="8.0" prefHeight="35.0" prefWidth="380.0" />
@@ -24,8 +25,11 @@
             </columns>
         </TableView>
         <Button layoutX="489.0" layoutY="8.0" mnemonicParsing="false" onAction="#search" prefHeight="35.0" prefWidth="88.0" text="Rechercher" />
-        <Button layoutX="24.0" layoutY="8.0" mnemonicParsing="false" onAction="#addFile" prefHeight="35.0" prefWidth="35.0" text="+" />
-        <Button layoutX="64.0" layoutY="8.0" mnemonicParsing="false" onAction="#deleteFile" prefHeight="35.0" prefWidth="35.0" text="-" />
+        <Button layoutX="15.0" layoutY="8.0" mnemonicParsing="false" onAction="#addFile" prefHeight="35.0" prefWidth="85.0" text="Ajouter" />
+        <!--<Button layoutX="64.0" layoutY="8.0" mnemonicParsing="false" onAction="#deleteFile" prefHeight="35.0" prefWidth="35.0" text="-" />-->
+        <HBox spacing="10" alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10">
+            <Button fx:id="btnDelete" text="Supprimer" />
+        </HBox>
     </children>
 
 
