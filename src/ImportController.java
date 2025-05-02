@@ -146,8 +146,10 @@ public class ImportController implements Initializable {
                 human = bytes + " o";
             } else if (bytes < 1024*1024) {
                 human = df.format(bytes/1024.0) + " Ko";
-            } else {
+            } else if (bytes < 1024*1024*1024) {
                 human = df.format(bytes/(1024.0*1024)) + " Mo";
+            } else {
+                human = df.format(bytes/(1024.0*1024*1024)) + " Go";
             }
             return new ReadOnlyStringWrapper(human);
         });
