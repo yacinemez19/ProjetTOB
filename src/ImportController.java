@@ -1,10 +1,6 @@
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.scene.image.WritableImage;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -14,10 +10,8 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,14 +28,6 @@ public class ImportController implements Initializable {
     // Le projet vidéo associé
     VideoProject videoProject;
 
-    ArrayList<String> words = new ArrayList<>(
-            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
-                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-                    "Super Human", "Super", "Like")
-    );
-
     @FXML
     private TextField searchBar;
 
@@ -57,8 +43,8 @@ public class ImportController implements Initializable {
 
     @FXML
     void search(ActionEvent event) {
-        listView.getItems().clear();
-        listView.getItems().addAll(searchList(searchBar.getText(),words));
+        // TODO : implémenter la recherche
+        System.out.println("Recherche...");
     }
 
     @FXML
@@ -73,6 +59,7 @@ public class ImportController implements Initializable {
 
     @FXML
     void deleteFile(ActionEvent event) {
+        // TODO : implémenter la suppression
         System.out.println("Supprimer le fichier");
         updateClipList();
     }
@@ -167,11 +154,6 @@ public class ImportController implements Initializable {
             return new ReadOnlyStringWrapper(human);
         });
 
-
-
-
-
-
         // 6. Date (format court local)
         colDate.setCellValueFactory(cell -> {
             String d = cell.getValue()
@@ -205,8 +187,6 @@ public class ImportController implements Initializable {
                 }
         });
     }
-
-
 
     /**
      * Filtre la liste de chaînes de caractères en fonction des mots-clés fournis.
