@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
@@ -26,15 +25,66 @@ public class GStreamerVideoImporter implements VideoImporter {
 
     private static Pipeline pipeline;
 
+    /**
+     * Importe une vidéo à partir d'un URI, extrait une miniature et retourne un clip.
+     *
+     * @param source URI de la vidéo à importer.
+     * @return @return Un objet {@link Clip} représentant la vidéo importée.
+     * @throws IllegalArgumentException si l'import échoue
+     */
     @Override
     public Clip importVideo(URI source) throws IllegalArgumentException {
-        String uri = source.toString();
 
         // Configure native paths (cf. BasicPipeline)
         Utils.configurePaths();
 
-        // Initialise GStreamer
+        // Initialiser GStreamer
         Gst.init(Version.BASELINE, "SnapshotPipeline", source.toString());
+
+        // Construire le pipeline
+        pipeline = buildPipeline(source.toString());
+
+        // Mettre en place le bus
+        setupBus(pipeline);
+
+        // Mettre en pause la pipeline pour obtenir le preroll
+        pausePipeline();
+
+        // Obtenir la durée
+        long duration = getDuration();
+
+        // Déplacer le pipeline à une position représentative de 5% de la vidéo (ou 1s si durée inconnue)
+        seekToPreviewFrame(duration);
+
+        // Extraire l'échantillon à l'endroit où on s'est placé
+        Sample sample = extractSample();
+
+        // Lire caps pour connaître largeur/hauteur
+        Structure s = sample.getCaps().getStructure(0);
+        int width  = s.getInteger("width");
+        int height = s.getInteger("height");
+
+        // Transformer les données brutes du Sample en un BufferedImage
+        BufferedImage thumbnail = convertSampleToImage(sample, width, height);
+
+        // Sauver en PNG uniquement pour les tests à enlever plus tard
+        saveSnapshot(thumbnail);
+
+        // Libération et sortie
+        sample.getBuffer().unmap();
+        sample.dispose();
+        cleanup();
+
+        // Créer un clip avec les données extraites
+        return new ImportedClip(source, Duration.ofNanos(duration), width, height, thumbnail);
+    }
+
+    /**
+     * Construit le pipeline GStreamer pour lire la vidéo.
+     * @param uri URI de la vidéo à importer.
+     * @return Un objet {@link Pipeline} configuré pour lire la vidéo.
+     */
+    private static Pipeline buildPipeline(String uri) {
 
         // Construire le pipeline : uridecodebin → videoconvert → videoscale → appsink
         String caps = "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1";
@@ -42,11 +92,15 @@ public class GStreamerVideoImporter implements VideoImporter {
                 "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"%s\"",
                 uri, caps
         );
-        pipeline = (Pipeline) Gst.parseLaunch(launch);
 
-        // Récupérer l'AppSink
-        AppSink sink = (AppSink) pipeline.getElementByName("sink");
+        return (Pipeline) Gst.parseLaunch(launch);
+    }
 
+    /**
+     * Configure le bus pour gérer les messages d'erreur et EOS.
+     * @param pipeline Le pipeline GStreamer à configurer.
+     */
+    private static void setupBus(Pipeline pipeline) {
         // Gérer les messages d'erreur / EOS
         Bus bus = pipeline.getBus();
         bus.connect((Bus.ERROR) (sources, b,  m) -> {
@@ -57,18 +111,35 @@ public class GStreamerVideoImporter implements VideoImporter {
             System.out.println("Fin du flux vidéo.");
             Gst.quit();
         });
+    }
 
-        // Mettre en PAUSED pour obtenir le preroll
+    /**
+     * Met le pipeline en pause pour obtenir le preroll.
+     */
+    private static void pausePipeline() {
         pipeline.setState(State.PAUSED);
+
         // Attendre la mise en preroll (optionnellement, on pourrait mieux faire avec un MainLoop)
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        // Obtenir la durée et chercher à 5% (ou à 1 s si durée inconnue)
-        long duration = pipeline.queryDuration(Format.TIME);
+    /**
+     * Récupère la durée du pipeline.
+     * @return La durée de la vidéo en nanosecondes.
+     */
+    private long getDuration() {
+        return pipeline.queryDuration(Format.TIME);
+    }
+
+    /**
+     * Déplace le pipeline à une position représentative de 5% de la vidéo ou 1 seconde si la durée est inconnue.
+     * @param duration La durée de la vidéo en nanosecondes.
+     */
+    private void seekToPreviewFrame(long duration) {
         long position = (duration > 0)
                 ? duration * 5 / 100
                 : TimeUnit.SECONDS.toNanos(1);;
@@ -76,20 +147,36 @@ public class GStreamerVideoImporter implements VideoImporter {
                 EnumSet.of(SeekFlags.FLUSH, SeekFlags.KEY_UNIT),
                 position
         );
+    }
 
-        // Extraire le sample (bloquant jusqu'au preroll)
+    /**
+     * Récupère un échantillon vidéo (sample) à partir de l'élément AppSink.
+     * @return Un objet {@link Sample} contenant l'échantillon vidéo.
+     * @throws RuntimeException si l'échantillon est nul.
+     */
+    private Sample extractSample() {
+        // Récupérer l'AppSink
+        AppSink sink = (AppSink) pipeline.getElementByName("sink");
+
         Sample sample = sink.pullPreroll();
+
         if (sample == null) {
             System.err.println("Impossible de récupérer un échantillon vidéo.");
             cleanup();
             throw new RuntimeException("Échantillon nul");
         }
+        else
+            return sample;
+    }
 
-        // Lire caps pour connaître largeur/hauteur
-        Structure s = sample.getCaps().getStructure(0);
-        int width  = s.getInteger("width");
-        int height = s.getInteger("height");
-
+    /**
+     * Convertit un échantillon vidéo en BufferedImage.
+     * @param sample L'échantillon vidéo à convertir.
+     * @param width  La largeur de l'image.
+     * @param height La hauteur de l'image.
+     * @return Un objet {@link BufferedImage} représentant l'échantillon vidéo.
+     */
+    private BufferedImage convertSampleToImage(Sample sample, int width, int height) {
         // Accéder au buffer et mapper les données
         Buffer buffer = sample.getBuffer();
 
@@ -111,7 +198,23 @@ public class GStreamerVideoImporter implements VideoImporter {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         img.setRGB(0, 0, width, height, pixels, 0, width);
 
-        // Sauver en PNG uniquement pour les tests à enlever plus tard
+        return img;
+    }
+
+    /**
+     * Libère les ressources et quitte GStreamer.
+     */
+    private static void cleanup() {
+        pipeline.setState(State.NULL);
+        pipeline.dispose();
+        Gst.quit();
+    }
+
+    /** Méthode temporaire pour les tests
+     * Sauvegarde la miniature en tant que fichier PNG.
+     * @param img L'image à sauvegarder.
+     */
+    private void saveSnapshot(BufferedImage img){
         try {
             ImageIO.write(img, "png", new File("snapshot.png"));
         } catch (IOException e) {
@@ -119,26 +222,6 @@ public class GStreamerVideoImporter implements VideoImporter {
             throw new RuntimeException(e);
         }
         System.out.println("snapshot.png généré.");
-
-        // Libération et sortie
-        buffer.unmap();
-        sample.dispose();
-        cleanup();
-
-        // Créer un clip avec les données extraites
-        // TODO : récupérer la taille du fichier source
-        // TODO : récupérer le type du fichier source
-        // TODO : récupérer la date de création du fichier source
-        // TODO : récupérer la longueur et la largeur du fichier source (ici c'est celui
-        //  de la thumbnail qui est utilisé)
-        // TODO : rendre le code plus propre en séparant en plusieurs méthodes
-        return new ImportedClip(source, Duration.ofNanos(duration), width, height, img,
-                1_000, "MP4", LocalDate.now());
     }
 
-    private static void cleanup() {
-        pipeline.setState(State.NULL);
-        pipeline.dispose();
-        Gst.quit();
-    }
 }
