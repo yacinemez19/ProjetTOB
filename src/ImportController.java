@@ -12,9 +12,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -41,8 +39,9 @@ public class ImportController implements Initializable {
 
     @FXML
     void search(ActionEvent event) {
-        // TODO : implémenter la recherche
-        System.out.println("Recherche...");
+        clipTable.getItems().clear();
+        List<Clip> clips = searchList(searchBar.getText(), videoProject.getAllClips());
+        clipTable.getItems().addAll(clips);
     }
 
     @FXML
@@ -190,19 +189,19 @@ public class ImportController implements Initializable {
     }
 
     /**
-     * Filtre la liste de chaînes de caractères en fonction des mots-clés fournis.
+     * Filtre la liste de clips en fonction des mots-clés fournis et des noms des Clips.
      *
      * @param searchWords   Mots-clés à rechercher
-     * @param listOfStrings Liste de chaînes de caractères à filtrer
+     * @param clips Liste de clips à filtrer
      * @return Liste filtrée contenant uniquement les éléments qui contiennent tous les mots-clés
      */
-    private List<String> searchList(String searchWords, List<String> listOfStrings) {
+    private List<Clip> searchList(String searchWords, Collection<Clip> clips) {
 
         List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
 
-        return listOfStrings.stream().filter(input -> {
+        return clips.stream().filter(input -> {
             return searchWordsArray.stream().allMatch(word ->
-                    input.toLowerCase().contains(word.toLowerCase()));
+                    input.getName().toLowerCase().contains(word.toLowerCase()));
         }).collect(Collectors.toList());
     }
 }
