@@ -57,7 +57,6 @@ public class ImportController implements Initializable {
     @FXML private TableColumn<Clip, String> colDuration;
     @FXML private TableColumn<Clip, String> colResolution;
     @FXML private TableColumn<Clip, String> colSize;
-    @FXML private TableColumn<Clip, String> colType;
     @FXML private TableColumn<Clip, String> colDate;
 
     @FXML private ListView<String>      listView;
@@ -175,6 +174,9 @@ public class ImportController implements Initializable {
      * Configure le tableClip pour afficher convenablement les données.
      */
     private void ConfigureClipTable(){
+        colName.setCellValueFactory(cell ->
+                new ReadOnlyStringWrapper(cell.getValue().getName())
+        );
         colDuration.setCellValueFactory(cell -> {
             Duration d = cell.getValue().getDuration();
             long h = d.toHours();
@@ -206,10 +208,10 @@ public class ImportController implements Initializable {
             return new ReadOnlyStringWrapper(human);
         });
 
-        // 5. Type
-        colType.setCellValueFactory(cell ->
-                new ReadOnlyStringWrapper(cell.getValue().getType())
-        );
+
+
+
+
 
         // 6. Date (format court local)
         colDate.setCellValueFactory(cell -> {
@@ -231,6 +233,17 @@ public class ImportController implements Initializable {
                         iv.setFitHeight(56);
                         iv.setPreserveRatio(true);
                     }
+
+                @Override
+                protected void updateItem(Image img, boolean empty) {
+                    super.updateItem(img, empty);
+                    if (empty || img == null) {
+                        setGraphic(null);
+                    } else {
+                        iv.setImage(img);
+                        setGraphic(iv);
+                    }
+                }
         });
     }
 
