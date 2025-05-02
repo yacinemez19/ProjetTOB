@@ -15,15 +15,20 @@ import org.freedesktop.gstreamer.Structure;
 import org.freedesktop.gstreamer.event.SeekFlags;
 import org.freedesktop.gstreamer.Format;
 
+import java.awt.Graphics2D;
+
 /**
  * Classe d'importation de clips utilisant GStreamer.
- * Cette classe extrait une image de la vidéo et la sauvegarde en tant que fichier PNG
- * (uniquement pour les tests sera enlevé plus tard), permet aussi de récupérer toutes les
- * informations nécessaires à l'instanciation d'un clip à partir d'un URI.
+ *
+ * Cette classe extrait une image de la vidéo.
+ * Permet aussi de récupérer toutes les informations nécessaires
+ * à l'instanciation d'un clip à partir d'un URI.
  */
 public class GStreamerVideoImporter implements VideoImporter {
 
     private static Pipeline pipeline;
+
+    // TODO : La largeur et la hauteur sont pas les bonnes : c'est la taille de la miniature
 
     /**
      * Importe une vidéo à partir d'un URI, extrait une miniature et retourne un clip.
@@ -67,8 +72,8 @@ public class GStreamerVideoImporter implements VideoImporter {
         // Transformer les données brutes du Sample en un BufferedImage
         BufferedImage thumbnail = convertSampleToImage(sample, width, height);
 
-        // Sauver en PNG uniquement pour les tests à enlever plus tard
-        saveSnapshot(thumbnail);
+        // Redimensionner la miniature à 160x90 pour qu'elle prenne moins de place
+        thumbnail = resizeImage(thumbnail, 160, 90);
 
         // Libération et sortie
         sample.getBuffer().unmap();
@@ -87,7 +92,7 @@ public class GStreamerVideoImporter implements VideoImporter {
     private static Pipeline buildPipeline(String uri) {
 
         // Construire le pipeline : uridecodebin → videoconvert → videoscale → appsink
-        String caps = "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1";
+        String caps = "video/x-raw,format=RGB,pixel-aspect-ratio=1/1";
         String launch = String.format(
                 "uridecodebin uri=%s ! videoconvert ! videoscale ! appsink name=sink caps=\"%s\"",
                 uri, caps
@@ -201,6 +206,14 @@ public class GStreamerVideoImporter implements VideoImporter {
         return img;
     }
 
+    private BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        g.dispose();
+        return resizedImage;
+    }
+
     /**
      * Libère les ressources et quitte GStreamer.
      */
@@ -208,20 +221,6 @@ public class GStreamerVideoImporter implements VideoImporter {
         pipeline.setState(State.NULL);
         pipeline.dispose();
         Gst.quit();
-    }
-
-    /** Méthode temporaire pour les tests
-     * Sauvegarde la miniature en tant que fichier PNG.
-     * @param img L'image à sauvegarder.
-     */
-    private void saveSnapshot(BufferedImage img){
-        try {
-            ImageIO.write(img, "png", new File("snapshot.png"));
-        } catch (IOException e) {
-            System.err.println("Erreur lors de l'écriture de la miniature : " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        System.out.println("snapshot.png généré.");
     }
 
 }
