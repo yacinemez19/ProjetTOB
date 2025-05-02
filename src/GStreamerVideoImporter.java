@@ -72,8 +72,8 @@ public class GStreamerVideoImporter implements VideoImporter {
         // Transformer les données brutes du Sample en un BufferedImage
         BufferedImage thumbnail = convertSampleToImage(sample, width, height);
 
-        // Redimensionner la miniature pour qu'elle prenne moins de place
-        thumbnail = resizeImage(thumbnail, (int) Math.round(0.1 * width), (int) Math.round(0.1 * height));
+        // Redimensionner la miniature en fonction de la largeur pour qu'elle prenne moins de place
+        thumbnail = resizeImage(thumbnail, 192);
 
         // Libération et sortie
         sample.getBuffer().unmap();
@@ -206,7 +206,11 @@ public class GStreamerVideoImporter implements VideoImporter {
         return img;
     }
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+    private BufferedImage resizeImage(BufferedImage originalImage, int targetWidth) {
+        // Calcul des proportions
+        double ratio = (double) targetWidth / (double)originalImage.getWidth();
+        int targetHeight = (int) Math.round(originalImage.getHeight() * ratio);
+
         BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
