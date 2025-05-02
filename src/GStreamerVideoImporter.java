@@ -72,8 +72,8 @@ public class GStreamerVideoImporter implements VideoImporter {
         // Transformer les données brutes du Sample en un BufferedImage
         BufferedImage thumbnail = convertSampleToImage(sample, width, height);
 
-        // Redimensionner la miniature à 160x90 pour qu'elle prenne moins de place
-        thumbnail = resizeImage(thumbnail, 160, 90);
+        // Redimensionner la miniature pour qu'elle prenne moins de place
+        thumbnail = resizeImage(thumbnail, (int) Math.round(0.1 * width), (int) Math.round(0.1 * height));
 
         // Libération et sortie
         sample.getBuffer().unmap();
