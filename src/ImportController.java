@@ -39,8 +39,6 @@ public class ImportController implements Initializable {
     @FXML private TableColumn<Clip, String> colSize;
     @FXML private TableColumn<Clip, String> colDate;
 
-    @FXML private ListView<String>      listView;
-
     @FXML
     void search(ActionEvent event) {
         // TODO : implémenter la recherche
