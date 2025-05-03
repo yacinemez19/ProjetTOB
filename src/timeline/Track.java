@@ -83,7 +83,7 @@ public class Track {
      * @return Duration totalDuration
      */
     public Duration getTotalDuration(){
-        //TODO : Implémenter la fonction
+        // TODO : Implémenter la fonction
         return null;
     }
 
