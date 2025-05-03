@@ -11,7 +11,7 @@
         prefWidth="1920" prefHeight="1080">
   <!-- Inclusion de la barre de menu en haut -->
   <top>
-    <fx:include source="MenuBar.fxml"/>
+    <fx:include fx:id="menuBar" source="MenuBar.fxml"/>
   </top>
 
   <!-- Zone centrale avec la structure split pane -->
