@@ -72,6 +72,7 @@ public class VideoProject {
      * @param clip Le clip à supprimer.
      */
     public void deleteVideo(Clip clip) {
+
         clipRegistry.unregister(clip);
     }
 
@@ -82,6 +83,7 @@ public class VideoProject {
      * @return Le clip correspondant à l'URI.
      */
     public Clip getClip(URI uri) {
+
         return clipRegistry.getClip(uri);
     }
 
@@ -95,20 +97,12 @@ public class VideoProject {
     }
 
     /**
-     * Obtenir le gestionnaire de pistes.
-     *
-     * @return Le gestionnaire de pistes.
-     */
-    public TrackManager getTrackManager() {
-        return trackManager;
-    }
-
-    /**
      * Obtenir le registre des clips.
      *
      * @return Le registre des clips.
      */
     public ClipRegistry getClipRegistry() {
+
         return clipRegistry;
     }
 
@@ -118,7 +112,33 @@ public class VideoProject {
      * @return L'importateur vidéo.
      */
     public VideoImporter getVideoImporter() {
+
         return videoImporter;
+    }
+
+    /**
+     * Obtenir le gestionnaire de pistes.
+     *
+     * @return Le gestionnaire de pistes.
+     */
+    public TrackManager getTrackManager() {
+
+        return trackManager;
+    }
+
+    /**
+     * Obtenir la liste des tracks du projet
+     *
+     * @return liste des tracks
+     */
+    public List<Track> getTracks(){
+
+        return this.getTrackManager().getTracks();
+    }
+
+    public void addTrack(Track track) {
+
+        this.getTrackManager().addTrack(track);
     }
 
     /**
@@ -127,6 +147,7 @@ public class VideoProject {
      * @return La durée maximale de la timeline.
      */
     public Duration getMaxDuration() {
+
         return trackManager.getMaxDuration();
     }
 
