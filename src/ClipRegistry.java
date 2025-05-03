@@ -43,4 +43,11 @@ public class ClipRegistry {
     public Collection<Clip> getAllClips() {
         return clipsByURI.values();
     }
+
+    /**
+     * Obtenir tous les URI des clips enregistrés.
+     */
+    public Collection<URI> getAllClipURIs() {
+        return clipsByURI.keySet();
+    }
 }
