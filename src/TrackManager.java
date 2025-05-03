@@ -72,5 +72,7 @@ public class TrackManager {
         return maxDuration;
     }
 
-
+    public String toString() {
+        return this.getTracks().toString();
+    }
 }
