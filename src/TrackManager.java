@@ -2,7 +2,6 @@ import timeline.Track;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TrackManager {
 
@@ -30,8 +29,14 @@ public class TrackManager {
     }
 
     public Duration getMaxDuration() {
-        System.out.println("Max duration :");
-        return null;
+        Duration maxDuration = Duration.ZERO;
+        for (Track track : this.tracks) {
+            Duration trackTotalDuration = track.getTotalDuration();
+            if (trackTotalDuration.compareTo(maxDuration) > 0) {
+                maxDuration = trackTotalDuration;
+            }
+        }
+        return maxDuration;
     }
 
 
