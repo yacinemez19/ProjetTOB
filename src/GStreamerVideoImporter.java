@@ -28,8 +28,6 @@ public class GStreamerVideoImporter implements VideoImporter {
 
     private static Pipeline pipeline;
 
-    // TODO : La largeur et la hauteur sont pas les bonnes : c'est la taille de la miniature
-
     /**
      * Importe une vidéo à partir d'un URI, extrait une miniature et retourne un clip.
      *
@@ -206,6 +204,12 @@ public class GStreamerVideoImporter implements VideoImporter {
         return img;
     }
 
+    /**
+     * Redimensionne une image à une largeur cible tout en conservant les proportions.
+     * @param originalImage L'image d'origine à redimensionner.
+     * @param targetWidth   La largeur cible de l'image redimensionnée.
+     * @return Une nouvelle image redimensionnée.
+     */
     private BufferedImage resizeImage(BufferedImage originalImage, int targetWidth) {
         // Calcul des proportions
         double ratio = (double) targetWidth / (double)originalImage.getWidth();
