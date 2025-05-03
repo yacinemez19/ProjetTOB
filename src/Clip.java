@@ -53,7 +53,9 @@ public interface Clip {
      */
     LocalDate getDateCreated();
 
-    // Méthode utilitaire par défaut pour formater la taille en Mo/Ko
+    /**
+     * Méthode utilitaire par défaut pour formater la taille en Mo/Ko.
+     */
     default String getSizeLabel() {
         long bytes = getSizeBytes();
         if (bytes < 1_024) return bytes + " o";
