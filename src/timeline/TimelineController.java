@@ -43,4 +43,14 @@ public class TimelineController {
         controller.setTrackName(name);
         timelineSplitPane.getItems().add(trackNode);
     }
+
+    @FXML
+    private void addTrack() {
+
+    }
+
+    @FXML
+    private void separer() {
+
+    }
 }
