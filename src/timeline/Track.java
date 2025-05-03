@@ -1,6 +1,7 @@
 package timeline;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +21,14 @@ public class Track {
     }
 
     public void addTimelineObject(TimelineObject obj) {
-       // TO DO : il faut que les objets de la timelines soient dans l'ordre (obj.start)
+       // TODO : il faut que les objets de la timelines soient dans l'ordre (obj.start)
         int j=0;
         while (j<elements.size() && elements.get(j).getStart()[0] < obj.getStart()[0]) j += 1;
         elements.add(j, obj);
     }
 
     public TimelineObject getObjectAtTime(long[] timing) {
-        // TO DO : Retourne l'objet à la position timing
+        // TODO : Retourne l'objet à la position timing
         if (timing==null) return null;
         for (TimelineObject object : elements) {
             long start = object.getStart()[0];
@@ -73,7 +74,16 @@ public class Track {
         return name;
     }
     public void changeTimelineName(String newName) {
-        // TO DO : Changer le nom de la Timeline
+        // TODO : Changer le nom de la Timeline
         this.name = newName;
+    }
+
+    /**
+     * Fonction retournant la durée totale de la track
+     * @return Duration totalDuration
+     */
+    public Duration getTotalDuration(){
+        //TODO : Implémenter la fonction
+        return null;
     }
 }
