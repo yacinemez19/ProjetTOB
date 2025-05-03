@@ -40,7 +40,7 @@ public class ClipRegistry {
         return clipsByURI.get(uri);
     }
 
-    public Collection <Clip> getAllClips() {
+    public Collection<Clip> getAllClips() {
         return clipsByURI.values();
     }
 }
