@@ -105,7 +105,7 @@ public class ComplexPipeline {
                         // On récupère le type de fichier
                         Caps caps = pad.getCurrentCaps();
                         String type = caps.getStructure(0).getName();
-                        System.out.println(type);
+                        System.out.println("Le type : " + type);
 
                         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
                             pad.link(audioSinkPad);

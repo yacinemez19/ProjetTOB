@@ -10,11 +10,9 @@
  *
  */
 
-import java.sql.Struct;
 import java.util.concurrent.TimeUnit;
 
 import org.freedesktop.gstreamer.*;
-import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.Message;
 
 /**
@@ -61,7 +59,7 @@ public class BasicPipeline {
         Element videoConverter = ElementFactory.make("videoconvert", "videoconverter");
 
         Element fxSink = ElementFactory.make("autovideosink", "videosink");
-        // On créé une pipelin vide et on lui ajoute tout les éléments
+        // On crée un pipeline vide et on lui ajoute tous les éléments
         pipeline = new Pipeline("testPipeline");
         pipeline.add(source);
         pipeline.add(videoConverter);
