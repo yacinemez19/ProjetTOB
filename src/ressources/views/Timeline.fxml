@@ -6,9 +6,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            prefHeight="50.0" prefWidth="50.0" >
-
-    <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="10.0" style="&#10;" text="Timeline" textAlignment="CENTER">
-    </Label>
-</AnchorPane>
+    <SplitPane fx:id="timelineSplitPane" orientation="VERTICAL"
+               AnchorPane.topAnchor="0.0"
+               AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0"
+               fx:controller="timeline.TimelineController"
+               xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <!-- Ici on insert les tracks (cf le controller + timeline/Track.fxml -->
+    </SplitPane>
