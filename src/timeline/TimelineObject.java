@@ -1,5 +1,7 @@
 package timeline;
 
+import java.util.HashMap;
+
 public class TimelineObject {
     /* Information sur l'objet */
     private String name;
@@ -42,10 +44,45 @@ public class TimelineObject {
     public void setDuration(long[] duration) {
         this.duration = duration;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getClipId() {
+        return clipId;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public int getSrcId() {
+        return srcId;
+    }
+
+    public long[] getOffset() {
+        return offset;
+    }
+
     public long[] getStart() {
         return start;
     }
+
     public long[] getDuration() {
         return duration;
     }
+
+    public String toString(){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("clipId", clipId);
+        data.put("mediaType", mediaType);
+        data.put("srcId", srcId);
+        data.put("offset", offset);
+        data.put("start", start);
+        return data.toString();
+    }
+
+
 }
