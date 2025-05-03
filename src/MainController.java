@@ -14,6 +14,9 @@ public class MainController {
     @FXML
     private ImportController importPaneController;
 
+    @FXML
+    private MenuBarController menuBarController;
+
     private VideoProject videoProject;
 
     private PreviewController previewController;
@@ -21,6 +24,7 @@ public class MainController {
     public void setVideoProject(VideoProject videoProject) {
         this.videoProject = videoProject;
         importPaneController.setVideoProject(videoProject);
+        menuBarController.setVideoProject(videoProject);
     }
 
     public void initialize() {
