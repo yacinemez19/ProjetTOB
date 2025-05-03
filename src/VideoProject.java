@@ -1,7 +1,17 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import timeline.Track;
+
+import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+
+import java.nio.file.Path;
+
+import com.fasterxml.jackson.core.ObjectCodec;
 
 /**
  * Représente un projet vidéo, source de vérité sur les clips importés et les pistes de la
@@ -121,6 +131,15 @@ public class VideoProject {
     }
 
     /**
+     * Obtenir le nom du projet vidéo.
+     *
+     * @return Le nom du projet vidéo.
+     */
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /**
      * Construit une Map avec toutes les infos serialisables du projet vidéo.
      */
     private HashMap<String, Object> toMap() {
@@ -129,18 +148,45 @@ public class VideoProject {
         data.put("name", projectName);
 
         // Ajouter les clips importés
-        Collection<Clip> clips = getAllClips();
+        Collection<URI> clipURIs = clipRegistry.getAllClipURIs();
+        data.put("clips", clipURIs.toString());
 
+        //Ajouter les tracks
 
-        return null;
+        //data.put("tracks", trackManager.toString());
+        return data;
     }
 
+    /**
+     * Sauvegarder le projet vidéo sous forme de fichier JSON.
+     *
+     * @param filePath Le chemin du fichier où sauvegarder le projet.
+     * @param contentToSave Le contenu à sauvegarder dans le fichier JSON.
+     * @throws IOException Si une erreur d'entrée/sortie se produit.
+     */
+    public void makeJson(Path filePath,
+                         HashMap<String, Object> contentToSave)
+            throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .enable(SerializationFeature.INDENT_OUTPUT);
+
+        objectMapper.writeValue(filePath.toFile(), toMap());
+    }
 
     /**
      * Sauvegarder le projet vidéo sous forme d'un fichier.
+     *
+     * @param saveFilePath Le chemin du fichier où sauvegarder le projet.
      */
-    public void saveProject() {
+    public void saveProject(Path saveFilePath) {
+        // TODO : Enlever le log
+        System.out.println(toMap());
 
+        try {
+            makeJson(saveFilePath, toMap());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
