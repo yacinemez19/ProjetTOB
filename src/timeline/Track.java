@@ -86,4 +86,20 @@ public class Track {
         //TODO : Implémenter la fonction
         return null;
     }
+
+    public List<TimelineObject> getItems() {
+        return elements;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public String toString() {
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("name",this.getName());
+        data.put("elements",this.getItems());
+        data.put("currentIndex",this.getCurrentIndex());
+        return data.toString();
+    }
 }
