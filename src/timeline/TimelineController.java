@@ -21,10 +21,7 @@ public class TimelineController {
 
     @FXML
     public void initialize() {
-        try {
-            addTrack("Track 1");
-            addTrack("Track 2");
-            addTrack("Audio 1");
+
             initializeTimer();
 
             // Répartir équitablement les tracks dans l'espace alloué
@@ -36,10 +33,6 @@ public class TimelineController {
             }
             timelineSplitPane.setDividerPositions(positions);
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addTrack(String name) throws IOException {
@@ -53,6 +46,15 @@ public class TimelineController {
 
     @FXML
     private void addTrack() {
+        try{
+            addTrack("Track");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void supprimerTrack() {
 
     }
 
