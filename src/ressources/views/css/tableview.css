@@ -1,0 +1,4 @@
+/* Centre le contenu de toutes les cellules */
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+}
