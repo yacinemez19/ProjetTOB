@@ -69,4 +69,37 @@ public class ClipTableDragAndDrop {
         BufferedImage thumb = clip.getThumbnail();
         return SwingFXUtils.toFXImage(thumb, null);
     }
+
+    /**
+     * .
+     */
+    public void enableDrop(final Timeline timeline) {
+        // Quand un élément est au-dessus de la timeline
+        timeline.setOnDragOver(event -> {
+            // vérifie contient des données au bon format
+            if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
+                // on fais une copie
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+        // Quand on lâche l'élément
+        timeline.setOnDragDropped(event -> {
+            if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
+                String uri = (String) event.getDragboard().getContent(CLIP_URI_FORMAT);
+                // on va charger un Clip
+                Clip clip = getClip(uri); // dans ClipRegistry
+
+                if (clip != null) {
+                    timeline.addClip(clip);//a faire
+                    event.setDropCompleted(true);
+                } else {
+                    // si le chargement du clip a échoué
+                    event.setDropCompleted(false);
+                }
+            }
+            event.consume();
+        });
+    }
+
 }
