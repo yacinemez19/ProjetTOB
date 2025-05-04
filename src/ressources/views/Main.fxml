@@ -19,11 +19,15 @@
     <SplitPane orientation="VERTICAL">
       <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
       <SplitPane>
-        <AnchorPane fx:id="importPanel" prefWidth="300">
-          <fx:include fx:id="importPane" source="Import.fxml"/>
+        <AnchorPane fx:id="importPanel" prefWidth="300" >
+          <fx:include fx:id="importPane" source="Import.fxml"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0"/>
         </AnchorPane>
         <AnchorPane fx:id="previewPanel" prefWidth="800">
-          <fx:include source="Preview.fxml"/>
+<!--IMPORT DYNAMIQUE DANS LE MAIN CONTROLLER -->
         </AnchorPane>
         <AnchorPane fx:id="inspectorPanel" prefWidth="300">
          <fx:include source="Inspector.fxml"/>
