@@ -1,6 +1,9 @@
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -38,21 +41,37 @@ public class MainController {
             } else {
                 // Si la scène n'est pas encore disponible, attendre un peu
                 previewPanel.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                    if (newScene != null) {
                         setupKeyboardShortcuts(newScene);
-                    }
                 });
             }
-
+            Platform.runLater(() -> {
+                previewPanel.requestFocus(); // ou un parent direct plus global
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void setupKeyboardShortcuts(Scene scene) {
-        scene.getAccelerators().put(
-                new KeyCodeCombination(KeyCode.SPACE),
-                () -> previewController.togglePlayPause()
-        );
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (!(scene.getFocusOwner() instanceof TextField)) { // évite que le raccourci se lance dans la barre de recherche
+                switch (event.getCode()) {
+                    case SPACE:
+                        previewController.togglePlayPause();
+                        event.consume(); // évite que le bouton soit activé par espace
+                        break;
+                    case LEFT:
+                        previewController.handleLastFrame();
+                        event.consume();
+                        break;
+                    case RIGHT:
+                        previewController.handleNextFrame();
+                        event.consume();
+                        break;
+                }
+            }
+        });
     }
+
 }
+
