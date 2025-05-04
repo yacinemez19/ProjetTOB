@@ -38,7 +38,7 @@ public class GStreamerVideoImporter implements VideoImporter {
     @Override
     public Clip importVideo(URI source) throws IllegalArgumentException {
 
-        // Configure native paths (cf. BasicPipeline)
+        // Configure native paths (cf. examples.BasicPipeline)
         Utils.configurePaths();
 
         // Initialiser GStreamer

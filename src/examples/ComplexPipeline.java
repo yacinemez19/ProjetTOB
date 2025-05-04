@@ -1,4 +1,4 @@
-/*
+package examples;/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2021 Neil C Smith - Codelerity Ltd.
@@ -13,7 +13,6 @@
 import java.util.concurrent.TimeUnit;
 
 import org.freedesktop.gstreamer.*;
-import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.Message;
 
 /**
@@ -46,7 +45,7 @@ public class ComplexPipeline {
          * throw an exception in the bindings even if the actual native library
          * is a higher version.
          */
-        Gst.init(Version.BASELINE, "BasicPipeline", args);
+        Gst.init(Version.BASELINE, "examples.BasicPipeline", args);
 
         /**
          * Use Gst.parseLaunch() to create a pipeline from a GStreamer string
