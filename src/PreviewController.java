@@ -144,7 +144,7 @@ public class PreviewController {
          * throw an exception in the bindings even if the actual native library
          * is a higher version.
          */
-        Gst.init(Version.BASELINE, "BasicPipeline");
+        Gst.init(Version.BASELINE, "PreviewPipeline");
 
         /**
          * ON cook ici
