@@ -9,7 +9,12 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="PreviewController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+>
     <Label layoutX="14.0" layoutY="14.0" text="Preview" />
     <Label fx:id="timerLabel"
            AnchorPane.leftAnchor="14.0"
@@ -24,7 +29,7 @@
                AnchorPane.rightAnchor="0.0"
                AnchorPane.bottomAnchor="50.0"/>
 
-    <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
+    <HBox spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
         <Button fx:id="lastFrameButton" onAction="#handleLastFrame" text="⏮" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
         <Button fx:id="reverseButton" text="◀" onAction="#handleReverse" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
         <Button fx:id="pauseButtoon" text="⏸" onAction="#handlePause" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
