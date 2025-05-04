@@ -68,7 +68,7 @@ public class PreviewController {
 
     // Affiche l’image précédente en mettant la vidéo en pause
     @FXML
-    private void handleLastFrame() {
+    public void handleLastFrame() {
         pipeline.pause();
         long currentPosition = pipeline.queryPosition(Format.TIME);
         long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
@@ -88,7 +88,7 @@ public class PreviewController {
 
     // Affiche l’image suivante en mettant la vidéo en pause
     @FXML
-    private void handleNextFrame() {
+    public void handleNextFrame() {
         pipeline.pause();
         long currentPosition = pipeline.queryPosition(Format.TIME);
         long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
