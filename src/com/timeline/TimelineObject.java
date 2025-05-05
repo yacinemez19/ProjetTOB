@@ -1,4 +1,4 @@
-package timeline;
+package com.timeline;
 
 import java.util.HashMap;
 
@@ -8,7 +8,7 @@ public class TimelineObject {
     private int clipId;
     private String mediaType; // Deux options video ou audio
     private int srcId; // Quand il y a plusieurs sources videos/audios
-    /* Information sur sa positon dans la timeline */
+    /* Information sur sa positon dans la com.timeline */
     private long[] offset;
     private long[] start;
     private long[] duration;

@@ -1,3 +1,5 @@
+package com;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +33,7 @@ public class MainController {
     public void initialize() {
         try {
             // Charger Preview.fxml dynamiquement
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ressources/views/Preview.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../ressources/views/Preview.fxml"));
             AnchorPane previewContent = loader.load();
             previewController = loader.getController();
             previewPanel.getChildren().add(previewContent);

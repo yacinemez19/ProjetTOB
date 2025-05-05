@@ -45,4 +45,4 @@ RUN cp -r src/ressources ./ressources
 ENV DISPLAY=host.docker.internal:0
 
 # Commande de lancement (JavaFX a besoin du module path)
-CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "Main"]
+CMD ["java", "--module-path", "/opt/javafx/lib", "--add-modules", "javafx.controls,javafx.fxml,javafx.media", "-cp", ".:libs/*:/opt/javafx/lib/*", "com.Main"]

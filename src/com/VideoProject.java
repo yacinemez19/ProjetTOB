@@ -1,22 +1,21 @@
+package com;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import timeline.Track;
+import com.timeline.Track;
 
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import java.nio.file.Path;
 
-import com.fasterxml.jackson.core.ObjectCodec;
-
 /**
  * Représente un projet vidéo, source de vérité sur les clips importés et les pistes de la
- * timeline.
+ * com.timeline.
  */
 public class VideoProject {
     private ClipRegistry clipRegistry;
@@ -26,7 +25,7 @@ public class VideoProject {
     private String projectName;
 
     /**
-     * Constructeur de la classe VideoProject.
+     * Constructeur de la classe com.VideoProject.
      *
      * @param clipRegistry   Le registre des clips.
      * @param trackManager   Le gestionnaire de pistes.
@@ -42,7 +41,7 @@ public class VideoProject {
     }
 
     /**
-     * Constructeur de la classe VideoProject.
+     * Constructeur de la classe com.VideoProject.
      *
      * @param clipRegistry   Le registre des clips.
      * @param trackManager   Le gestionnaire de pistes.
@@ -143,9 +142,9 @@ public class VideoProject {
     }
 
     /**
-     * Obtenir la durée maximale de la timeline.
+     * Obtenir la durée maximale de la com.timeline.
      *
-     * @return La durée maximale de la timeline.
+     * @return La durée maximale de la com.timeline.
      */
     public Duration getMaxDuration() {
 

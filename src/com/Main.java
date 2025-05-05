@@ -1,3 +1,5 @@
+package com;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,14 +30,14 @@ public class Main extends Application {
 
         // Charger le fichier FXML
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
-                getClass().getResource("ressources/views/Main.fxml")));
+                getClass().getResource("../ressources/views/Main.fxml")));
         Parent root = loader.load();
 
 
         // Injecter le modèle dans le contrôleur
         MainController mainController = loader.getController();
         mainController.setVideoProject(videoProject);
-        System.out.println("On a set VideoProject dans le MainController");
+        System.out.println("On a set com.VideoProject dans le com.MainController");
 
         // Créer la scène avec le root obtenu
         Scene scene = new Scene(root);

@@ -1,21 +1,15 @@
+package com;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.freedesktop.gstreamer.*;
-import org.freedesktop.gstreamer.elements.PlayBin;
 import org.freedesktop.gstreamer.event.SeekFlags;
 import org.freedesktop.gstreamer.event.SeekType;
 import org.freedesktop.gstreamer.fx.FXImageSink;
-import org.freedesktop.gstreamer.message.Message;
 import org.freedesktop.gstreamer.message.StateChangedMessage;
 
 import java.io.File;
@@ -122,7 +116,7 @@ public class PreviewController {
     // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
-        // Création d'une timeline pour l'animation du timer
+        // Création d'une com.timeline pour l'animation du timer
         timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
             position[0] = pipeline.queryPosition(Format.TIME);
@@ -130,7 +124,7 @@ public class PreviewController {
                 timerLabel.setText(String.format(ClockTime.toString(position[0])));
             }
         }));
-        timerTimeline.setCycleCount(Timeline.INDEFINITE); // on lance la timeline que quand la vidéo est prête
+        timerTimeline.setCycleCount(Timeline.INDEFINITE); // on lance la com.timeline que quand la vidéo est prête
 
         /**
          * Set up paths to native GStreamer libraries - see adjacent file.
