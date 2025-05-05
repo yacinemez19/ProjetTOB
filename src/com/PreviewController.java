@@ -188,12 +188,12 @@ public class PreviewController {
                         System.out.println(type);
                         // On link l'audio
                         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
-                            System.out.println("Audio Sink Pad not linked");
+                            System.out.println("Audio Sink Pad linked");
                             pad.link(audioSinkPad);
                         }
                         // On link la vidéo
                         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
-                            System.out.println("Video Sink Pad not linked");
+                            System.out.println("Video Sink Pad linked");
                             pad.link(videoSinkPad);
                         }
                     }
