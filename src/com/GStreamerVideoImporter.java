@@ -1,12 +1,11 @@
-import java.io.File;
-import java.io.IOException;
+package com;
+
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 import org.freedesktop.gstreamer.*;

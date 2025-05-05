@@ -1,7 +1,8 @@
+package com;
+
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.time.Duration;
-import java.time.LocalDate;
 
 public class TestVideoImporter implements VideoImporter {
     @Override

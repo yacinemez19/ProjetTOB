@@ -1,4 +1,4 @@
-/*
+package com;/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2021 Neil C Smith - Codelerity Ltd.
@@ -30,7 +30,7 @@ class Utils {
      * link to each other). On both, the gstreamer.path system property can be
      * used to override. On Linux, assumes GStreamer is in the path already.
      */
-    static void configurePaths() {
+    public static void configurePaths() {
         if (Platform.isWindows()) {
             String gstPath = System.getProperty("gstreamer.path", findWindowsLocation());
             if (!gstPath.isEmpty()) {

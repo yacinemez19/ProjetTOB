@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.HBox?>
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ImportController" >
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ImportController" >
     <TextField fx:id="searchBar" layoutX="104.0" layoutY="8.0" prefHeight="35.0" prefWidth="380.0" onAction="#search" />
     <TableView fx:id="clipTable"
                AnchorPane.topAnchor="49.0" AnchorPane.bottomAnchor="0"

@@ -1,16 +1,10 @@
-package timeline;
+package com.timeline;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.Node;
-import javafx.util.Duration;
-import org.freedesktop.gstreamer.ClockTime;
-import org.freedesktop.gstreamer.Format;
 
 import java.io.IOException;
 
@@ -35,9 +29,9 @@ public class TimelineController {
 
     }
 
-    private void addTrack(String name) throws IOException {
-        //System.out.println("======TRACK FXML : " + getClass().getResource("../ressources/views/timeline/Track.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../ressources/views/timeline/Track.fxml"));
+    private void addTrackButton(String name) throws IOException {
+        //System.out.println("======TRACK FXML : " + getClass().getResource("../ressources/views/com.timeline/Track.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../ressources/views/timeline/Track.fxml"));
         Node trackNode = loader.load();
         TrackController controller = loader.getController();
         controller.setTrackName(name);
@@ -45,9 +39,9 @@ public class TimelineController {
     }
 
     @FXML
-    private void addTrack() {
+    private void addTrackButton() {
         try{
-            addTrack("Track");
+            addTrackButton("Track");
         } catch (IOException e) {
             e.printStackTrace();
         }

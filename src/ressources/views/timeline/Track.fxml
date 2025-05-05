@@ -5,7 +5,7 @@
 
 <GridPane fx:id="timelineGrid" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-          fx:controller="timeline.TrackController"
+          fx:controller="com.timeline.TrackController"
           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" >
 
     <!-- On définit ici toutes les contraintes des cases du Pane-->
@@ -21,7 +21,7 @@
     <VBox GridPane.columnIndex="0" maxHeight="Infinity">
         <Label fx:id="trackLabel" text="Track 1" />
     </VBox>
-    <!-- Colonne timeline, contient les médias -->
+    <!-- Colonne com.timeline, contient les médias -->
     <Pane fx:id="mediaPane" GridPane.columnIndex="1" style="-fx-background-color: lightgray;" maxHeight="Infinity">
     </Pane>
 </GridPane>

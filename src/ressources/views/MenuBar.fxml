@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:controller="MenuBarController" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<MenuBar fx:controller="com.MenuBarController" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <Menu text="Fichier">
         <MenuItem text="Nouveau"/>
         <MenuItem text="Ouvrir"/>
