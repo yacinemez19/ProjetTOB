@@ -1,5 +1,6 @@
-package com;
+package com.preview;
 
+import com.Utils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;

@@ -1,5 +1,6 @@
 package com;
 
+import com.preview.PreviewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
