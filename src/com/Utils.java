@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * Utility methods for use in examples.
  */
-class Utils {
+public class Utils {
 
     private Utils() {
     }
