@@ -55,6 +55,9 @@ public class ComplexPipeline {
         //pipeline = (Pipeline) Gst.parseLaunch("videotestsrc ! autovideosink");
 
         Element source = ElementFactory.make("uridecodebin", "source");
+        // Les linker dynmaiques
+        Element videoSelector = ElementFactory.make("input-selector", "videoSelector");
+        Element audioSelector = ElementFactory.make("input-selector", "audioSelector");
         // Audio Sink
         Element converter = ElementFactory.make("audioconvert", "audioconverter");
         if (converter == null) {
@@ -74,15 +77,19 @@ public class ComplexPipeline {
         // On créé une pipelin vide et on lui ajoute tout les éléments
         pipeline = new Pipeline("testPipeline");
         pipeline.add(source);
+        pipeline.add(videoSelector);
+        pipeline.add(audioSelector);
         pipeline.add(converter);
         pipeline.add(resample);
         pipeline.add(audioSink);
         pipeline.add(videoConverter);
         pipeline.add(fxSink);
         // On link l'audio
+        audioSelector.link(converter);
         converter.link(resample);
         resample.link(audioSink);
         // On link la vidéo
+        videoSelector.link(videoConverter);
         videoConverter.link(fxSink);
         // On set la source et on ajoute le pad-added signal
         source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
@@ -90,8 +97,8 @@ public class ComplexPipeline {
                 new Element.PAD_ADDED() {
                     @Override
                     public void padAdded(Element element, Pad pad) {
-                        Pad audioSinkPad = converter.getStaticPad("sink");
-                        Pad videoSinkPad = videoConverter.getStaticPad("sink");
+                        Pad audioSinkPad = audioSelector.getRequestPad("sink_%u");
+                        Pad videoSinkPad = videoSelector.getRequestPad("sink_%u");
                         if (audioSinkPad == null) {
                             System.err.println("audioSinkPad est null !");
                         }
@@ -108,10 +115,12 @@ public class ComplexPipeline {
 
                         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
                             pad.link(audioSinkPad);
+                            audioSelector.set("active-pad", audioSinkPad);
                             System.out.println("Audio Sink Pad linked");
                         }
                         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
                             pad.link(videoSinkPad);
+                            videoSelector.set("active-pad", videoSinkPad);
                             System.out.println("Video Sink Pad linked");
                         }
                     }
