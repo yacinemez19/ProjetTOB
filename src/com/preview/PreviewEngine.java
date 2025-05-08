@@ -47,6 +47,9 @@ public class PreviewEngine {
          * audioconvert et audioresample permette d'avoir un son correct en sortie dans le audiosink
          */
         Element source = ElementFactory.make("uridecodebin", "source");
+        // Les linker dynmaiques
+        Element videoSelector = ElementFactory.make("input-selector", "videoSelector");
+        Element audioSelector = ElementFactory.make("input-selector", "audioSelector");
         // Audio Sink
         Element converter = ElementFactory.make("audioconvert", "audioconverter");
         Element resample = ElementFactory.make("audioresample", "audiosample");
@@ -57,15 +60,19 @@ public class PreviewEngine {
         // On créé une pipelin vide et on lui ajoute tout les éléments
         pipeline = new Pipeline("testPipeline");
         pipeline.add(source);
+        pipeline.add(videoSelector);
+        pipeline.add(audioSelector);
         pipeline.add(converter);
         pipeline.add(resample);
         pipeline.add(audioSink);
         pipeline.add(videoConverter);
         pipeline.add(fxSink.getSinkElement());
-        // On link la fin de la pipeline audio converter->resample->audiosink
+        // On link la fin de la pipeline audio input-selector->converter->resample->audiosink
+        audioSelector.link(converter);
         converter.link(resample);
         resample.link(audioSink);
-        // On link la vidéo videoConverter->fxSink
+        // On link la vidéo input-selector->videoConverter->fxSink
+        videoSelector.link(videoConverter);
         videoConverter.link(fxSink.getSinkElement());
         System.out.println("videoView: " + videoView);
         videoView.imageProperty().bind(fxSink.imageProperty());
@@ -79,8 +86,8 @@ public class PreviewEngine {
                 new Element.PAD_ADDED() {
                     @Override
                     public void padAdded(Element element, Pad pad) {
-                        Pad audioSinkPad = converter.getSinkPads().getFirst();
-                        Pad videoSinkPad = videoConverter.getSinkPads().getFirst();
+                        Pad audioSinkPad = audioSelector.getRequestPad("sink_%u");
+                        Pad videoSinkPad = videoSelector.getRequestPad("sink_%u");
 
                         System.out.println("New pad received " + pad.getName() + " from " + element.getName());
 
@@ -91,11 +98,13 @@ public class PreviewEngine {
                         // On link l'audio
                         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
                             System.out.println("Audio Sink Pad linked");
+                            audioSelector.set("active-pad", audioSinkPad);
                             pad.link(audioSinkPad);
                         }
                         // On link la vidéo
                         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
                             System.out.println("Video Sink Pad linked");
+                            videoSelector.set("active-pad", videoSinkPad);
                             pad.link(videoSinkPad);
                         }
                     }
@@ -105,7 +114,7 @@ public class PreviewEngine {
         // attendre que les pads soient liés
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter.");
-            pipeline.setState(State.PLAYING);
+            //pipeline.setState(State.PLAYING);
         });
 
         // loop on EOS if button selected
@@ -146,7 +155,7 @@ public class PreviewEngine {
      */
     public void engineResume() {
         if (isStarted) {
-            pipeline.setState(State.PAUSED);
+            pipeline.setState(State.PLAYING);
         }
     }
     /**
