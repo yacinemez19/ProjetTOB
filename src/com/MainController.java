@@ -1,5 +1,7 @@
 package com;
 
+import com.timeline.TimelineController;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +22,9 @@ public class MainController {
     @FXML
     private MenuBarController menuBarController;
 
+    @FXML
+    private TimelineController timelineController;
+
     private VideoProject videoProject;
 
     private PreviewController previewController;
@@ -28,6 +33,7 @@ public class MainController {
         this.videoProject = videoProject;
         importPaneController.setVideoProject(videoProject);
         menuBarController.setVideoProject(videoProject);
+        timelineController.setVideoProject(videoProject);
     }
 
     public void initialize() {

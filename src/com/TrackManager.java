@@ -10,6 +10,13 @@ public class TrackManager {
     private ArrayList<Track> tracks;
 
     /**
+     * Constructeur de la classe TrackManager
+     */
+    public TrackManager() {
+        this.tracks = new ArrayList<>();
+    }
+
+    /**
      * getter liste des tracks
      * @return ArrayList<Track> tracks
      */
@@ -19,11 +26,13 @@ public class TrackManager {
     }
 
     /**
-     * ajoute une track
+     * Ajoute une track
      * @param track
      */
     public void addTrack(Track track) {
-
+        if (track == null) {
+            throw new IllegalArgumentException("Track ne peut pas être nulle");
+        }
         this.tracks.add(track);
     }
 
@@ -38,6 +47,19 @@ public class TrackManager {
             System.out.println("La track n'existe pas");
         }
 
+    }
+
+    /**
+     * Fonction retournant la track à l'index donné
+     *
+     * @param index
+     */
+    public Track getTrack(int index) {
+        if (index >= 0 && index < this.tracks.size()) {
+            return this.tracks.get(index);
+        } else {
+            throw new IndexOutOfBoundsException("Index de la track hors limites : " + index);
+        }
     }
 
     public void moveTrack(Track track) {

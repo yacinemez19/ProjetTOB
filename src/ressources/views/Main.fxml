@@ -34,8 +34,8 @@
         </AnchorPane>
       </SplitPane>
       <!-- Partie inférieure : par exemple la com.timeline -->
-      <AnchorPane fx:id="timelinePanel" prefHeight="200">
-        <fx:include source="Timeline.fxml"/>
+      <AnchorPane fx:id="timelinePane" prefHeight="200">
+        <fx:include fx:id="timeline" source="Timeline.fxml"/>
       </AnchorPane>
     </SplitPane>
   </center>
