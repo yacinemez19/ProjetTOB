@@ -14,6 +14,7 @@ import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.StateChangedMessage;
 
 import java.io.File;
+import java.util.EnumSet;
 
 public class PreviewEngine {
 
@@ -137,7 +138,87 @@ public class PreviewEngine {
      */
     public void enginePause() {
         if (isStarted) {
-            pipeline.pause();
+            pipeline.setState(State.PAUSED);
+        }
+    }
+    /**
+     * Permet de mettre en pause le preview en play si il avait été mis en pause
+     */
+    public void engineResume() {
+        if (isStarted) {
+            pipeline.setState(State.PAUSED);
+        }
+    }
+    /**
+     * Permet de passer de play à pause ou inversement sans se soucier de l'état actuel
+     */
+    public void engineTogglePlayPause() {
+        if (isStarted) {
+            State currentState = pipeline.getState();
+            if (currentState == State.PAUSED) {
+                pipeline.setState(State.PLAYING);
+            } else {
+                pipeline.setState(State.PAUSED);
+            }
+        }
+    }
+    /**
+     * Avance d'une frame dans la timeline et la met en pause si elle l'était pas
+     */
+    public void engineNextFrame() {
+        // On vérifie que le preview a bien démarré avant de manipuler la pipeline
+        if (!isStarted) {
+            System.out.println("[Preview Engine] engine not ready");
+            return;
+        }
+        // Pour éviter les soucis on s'assure qu'elle est en pause
+        pipeline.setState(State.PAUSED);
+
+        // On cherche la frame actuelle
+        long currentPosition = pipeline.queryPosition(Format.TIME);
+        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
+
+        // On avance d'une frame
+        long newPosition = currentPosition + frameDuration;
+        boolean result = pipeline.seek(
+                1.0,
+                Format.TIME,
+                EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
+                SeekType.SET, newPosition,
+                SeekType.NONE, -1
+        );
+        if (!result) {
+            System.out.println("[Preview Engine] Next frame seek failed");
+        }
+    }
+
+    /**
+     * Recule d'une frame dans la timeline et la met en pause si elle l'était pas
+     */
+    public void engineLastFrame() {
+        // On vérifie que le preview a bien démarré avant de manipuler la pipeline
+        if (!isStarted) {
+            System.out.println("[Preview Engine] engine not ready");
+            return;
+        }
+        // Pour éviter les soucis on s'assure qu'elle est en pause
+        pipeline.setState(State.PAUSED);
+
+        // On cherche la frame actuelle
+        long currentPosition = pipeline.queryPosition(Format.TIME);
+        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
+
+        // On recule d'une frame
+        long newPosition = Math.max(0, currentPosition - frameDuration);
+        boolean result = pipeline.seek(
+                1.0,
+                Format.TIME,
+                EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
+                SeekType.SET, newPosition,
+                SeekType.NONE, -1
+        );
+        if (!result) {
+            System.out.println("[Preview Engine] Next frame seek failed");
         }
     }
     /**
@@ -148,6 +229,16 @@ public class PreviewEngine {
             pipeline.setState(State.NULL);
             pipeline = null;
             isStarted = false;
+        }
+    }
+    /**
+     * Permet de récupérer la position temporel actuelle
+     */
+    public long engineGetCurrentPosition() {
+        if (isStarted) {
+            return pipeline.queryPosition(Format.TIME);
+        } else {
+            return 0;
         }
     }
 }

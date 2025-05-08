@@ -30,19 +30,19 @@ public class PreviewController {
     private ImageView videoView;
 
     // Pipeline GStreamer et son sink vidéo pour l’intégration JavaFX
-    private Pipeline pipeline;
-    private FXImageSink fxSink;
+    PreviewEngine previewEngine;
 
     // Lance la lecture de la vidéo
     @FXML
     private void handlePlay() {
-        pipeline.play();
+        previewEngine.engineResume();
     }
 
     // Lance la lecture en reverse à vitesse normale
     @FXML
     private void handleReverse() {
-        pipeline.play();
+        previewEngine.enginePause();
+/*        pipeline.play();
         boolean result = pipeline.seek(
                 -1.0, // Lecture en arrière
                 Format.TIME,
@@ -52,63 +52,29 @@ public class PreviewController {
         );
         if (!result) {
             System.out.println("Seek reverse failed");
-        }
+        }*/
     }
 
     // Met la vidéo en pause
     @FXML
     private void handlePause() {
-        pipeline.setState(State.PAUSED);
+        previewEngine.enginePause();
     }
 
     // Affiche l’image précédente en mettant la vidéo en pause
     @FXML
     public void handleLastFrame() {
-        pipeline.pause();
-        long currentPosition = pipeline.queryPosition(Format.TIME);
-        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
-        long newPosition = Math.max(0, currentPosition - frameDuration);
-
-        boolean result = pipeline.seek(
-                1.0, // Lecture normale
-                Format.TIME,
-                EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
-                SeekType.SET, newPosition,
-                SeekType.NONE, -1
-        );
-        if (!result) {
-            System.out.println("Previous frame seek failed");
-        }
+        previewEngine.engineNextFrame();
     }
 
     // Affiche l’image suivante en mettant la vidéo en pause
     @FXML
     public void handleNextFrame() {
-        pipeline.pause();
-        long currentPosition = pipeline.queryPosition(Format.TIME);
-        long frameDuration = (long) (1_000_000_000 / 25.0); // Durée d'une frame à 25 fps
-        long newPosition = currentPosition + frameDuration;
-
-        boolean result = pipeline.seek(
-                1.0,
-                Format.TIME,
-                EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
-                SeekType.SET, newPosition,
-                SeekType.NONE, -1
-        );
-        if (!result) {
-            System.out.println("Next frame seek failed");
-        }
+        previewEngine.engineNextFrame();
     }
 
     public void togglePlayPause(){
-        System.out.println("togglePlayPause");
-        State currentState = pipeline.getState();
-        if (currentState == State.PAUSED) {
-            pipeline.setState(State.PLAYING);
-        } else {
-            pipeline.setState(State.PAUSED);
-        }
+        previewEngine.engineTogglePlayPause();
     }
 
     // Compteur en secondes depuis le début de la vidéo
@@ -117,10 +83,13 @@ public class PreviewController {
     // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
+        // On créér un Preview engine
+        previewEngine = new PreviewEngine();
+
         // Création d'une com.timeline pour l'animation du timer
         timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
-            position[0] = pipeline.queryPosition(Format.TIME);
+            position[0] = previewEngine.engineGetCurrentPosition();
             if(position[0] != -1) {
                 timerLabel.setText(String.format(ClockTime.toString(position[0])));
             }
@@ -131,14 +100,13 @@ public class PreviewController {
         PreviewListener myPreviewListener = new PreviewListener() {
             @Override
             public void onPlaying() {
-                System.out.println("Lecture en cours...");
+                timerTimeline.play();
             }
             @Override
             public void onPaused() {
-                System.out.println("Lecture en pause.");
+                timerTimeline.play();
             }
         };
-        PreviewEngine previewEngine = new PreviewEngine();
         previewEngine.engineStart(videoView, myPreviewListener);
     }
 }
