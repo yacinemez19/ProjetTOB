@@ -1,5 +1,7 @@
 package com.timeline;
 
+import com.Clip;
+
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -8,39 +10,141 @@ import java.util.List;
 
 public class Track {
     private String name;
-    private List<TimelineObject> elements;
+    private ArrayList<TimelineObject> elements;
     int currentIndex;
 
     public Track(String name) {
         this.elements = new ArrayList<>();
         this.name = name;
     }
+
     public Track() {
         this.elements = new ArrayList<>();
         this.name = "New Track";
         this.currentIndex = 0;
     }
 
-    public void addTimelineObject(TimelineObject obj) {
-       // TODO : il faut que les objets de la timelines soient dans l'ordre (obj.start)
-        int j=0;
-        while (j<elements.size() && elements.get(j).getStart()[0] < obj.getStart()[0]) j += 1;
-        elements.add(j, obj);
+    /**
+     * Fonction ajoutant un objet au bout de la piste.
+     * @param obj l'objet à ajouter
+     */
+    public void addTimelineObjectAtEnd(Clip obj) {
+       elements.add(new TimelineObject(obj,
+               "video",
+               0,
+               getTotalDuration().toNanos()));
     }
 
-    public TimelineObject getObjectAtTime(long[] timing) {
-        // TODO : Retourne l'objet à la position timing
-        if (timing==null) return null;
+    /**
+     * Fonction ajoutant un objet à la piste à un moment donné.
+     *
+     * @param obj l'objet à ajouter
+     * @param timing le moment donné
+     * @throws IllegalArgumentException si le timing est négatif ou si l'espace n'est pas libre
+     * @return TimelineObject
+     */
+    public TimelineObject addTimelineObject(Clip obj, long timing) {
+        if (timing < 0) {
+            throw new IllegalArgumentException("Le timing ne peut pas être négatif");
+        }
+
+        // Trouver l'index où insérer l'objet dans le tableau d'éléments
+        int index = elements.indexOf(getFirstAfter(timing));
+        if (index == -1) {
+            index = elements.size();
+        }
+
+        TimelineObject timelineObject = new TimelineObject(obj, "video", 0, timing);
+
+        // Décaler tous les objets après le timing si l'espace n'est pas suffisant
+        if (!isPlaceEnough(timing, timelineObject)) {
+            shiftAfter(timing, obj.getDuration().toNanos());
+        }
+
+        elements.add(index, timelineObject);
+
+        // TODO : Supprimer l'affichage de test
+        System.out.println("Début des clips dans ma timeline : ");
+        for (TimelineObject element : elements) {
+            System.out.println(element.getStart());
+        }
+
+        return timelineObject;
+    }
+
+    public void shiftAfter(long timing, long delta) {
+        System.out.println("Shift après " + timing + " de " + delta);
         for (TimelineObject object : elements) {
-            long start = object.getStart()[0];
-            long end = object.getDuration()[0] + start ;
-            if (timing[0] < end && timing[0]>=start ) {
+            long start = object.getStart();
+            if (timing <= start) {
+                System.out.println("Je deplace l'objet " + object.getName() + " de " + delta);
+                object.shift(delta);
+            }
+        }
+    }
+
+    public boolean isPlaceEnough(long timing, TimelineObject timelineObject) {
+        TimelineObject obj = getFirstAfter(timing);
+
+        if (obj == null) {
+            return true;
+        }
+
+        return (timing + timelineObject.getDuration() < obj.getStart());
+    }
+
+    public boolean isShiftPossible(TimelineObject objToShift, long delta) {
+        long start = objToShift.getStart();
+        long end = objToShift.getDuration() + start;
+
+        for (TimelineObject object : elements) {
+            if (object == objToShift) {
+                continue;
+            }
+
+            long start2 = object.getStart();
+            long end2 = object.getDuration() + start2;
+            if (start2 < end && end2 > start) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Fonction retournant le premier objet après un moment donné.
+     * Retourne null si aucun objet n'est trouvé.
+     *
+     * @param timing le moment donné
+     * @return TimelineObject
+     */
+    private TimelineObject getFirstAfter(long timing) {
+        for (TimelineObject object : elements) {
+            long start = object.getStart();
+            if (timing <= start) {
                 return object;
             }
         }
         return null;
     }
-    public boolean modifyTimelineObject(long[] timing, String propertyName, Object newValue) {
+
+    /*
+     * Fonction retournant l'objet à un moment donné.
+     * @param timing le moment donné
+     * @return TimelineObject l'objet à ce moment
+     */
+    public TimelineObject getObjectAtTime(long timing) {
+        for (TimelineObject object : elements) {
+            long start = object.getStart();
+            long end = object.getDuration() + start;
+            if (timing < end && timing >= start) {
+                return object;
+            }
+        }
+        return null;
+    }
+
+    public boolean modifyTimelineObject(long timing, String propertyName, Object newValue) {
         TimelineObject obj = getObjectAtTime(timing);
         if (obj == null) return false;
 
@@ -62,7 +166,7 @@ public class Track {
         return false;
     }
 
-    public void removeTimelineObject(long[] timing) {
+    public void removeTimelineObject(long timing) {
         TimelineObject object = getObjectAtTime(timing);
         if (object == null) return;
         else {

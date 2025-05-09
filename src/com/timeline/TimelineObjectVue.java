@@ -1,6 +1,10 @@
 package com.timeline;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class TimelineObjectVue extends StackPane {
 
@@ -11,18 +15,30 @@ public class TimelineObjectVue extends StackPane {
     private TimelineObject model;
 
     public TimelineObjectVue(TimelineObject model,
-                             float zoom,
+                             double zoom,
                              int px_s,
                              double height) {
+
         this.setStyle("-fx-background-color: cornflowerblue; -fx-border-color: black;");
         this.setPrefHeight(height); // toute la hauteur
 
         double inv_scale = SECOND / ( px_s * zoom);
 
-        this.setPrefWidth(model.getDuration()[0]/inv_scale);
-        this.setLayoutX(model.getStart()[0] / inv_scale);
+        this.setPrefWidth(model.getDuration()/inv_scale);
+        this.setLayoutX(model.getStart() / inv_scale);
 
-        enableDrag(px_s);
+        // ** nouvelle partie : ajouter un label **
+        Label nameLabel = new Label(model.getName());
+        // optionnel : couleur de texte, marge interne, police…
+        nameLabel.setTextFill(Color.WHITE);
+        nameLabel.setPadding(new Insets(2, 4, 2, 4));
+        // on aligne à gauche-centre
+        StackPane.setAlignment(nameLabel, Pos.CENTER_LEFT);
+        this.getChildren().add(nameLabel);
+
+        this.model = model;
+
+        //enableDrag(px_s);
     }
 
     private void enableDrag(double pxPerSecond) {
@@ -39,5 +55,10 @@ public class TimelineObjectVue extends StackPane {
             setLayoutX(newLayoutX);
             evt.consume();
         });
+    }
+
+    public void updatePosition(int px_s, double zoom) {
+        double inv_scale = SECOND / ( px_s * zoom);
+        this.setLayoutX(model.getStart() / inv_scale);
     }
 }

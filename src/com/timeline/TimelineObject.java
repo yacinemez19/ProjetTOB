@@ -22,6 +22,10 @@ public class TimelineObject {
         this.duration = source.getDuration().toNanos();
     }
 
+    public void shift(long delta) {
+        this.start += delta;
+    }
+
     public void setOffset(long offset) {
         this.offset = offset;
     }
@@ -34,6 +38,10 @@ public class TimelineObject {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMediaType() {
