@@ -17,7 +17,8 @@ public class TimelineObject {
     private long start;
     private long duration;
 
-    TimelineObject(Clip source, String mediaType, long offset, long start) {
+    public TimelineObject(Clip source, String mediaType, long offset, long start) {
+        this.source = source;
         this.name = source.getName();
         this.mediaType = "video"; // en vrai on appellera la classe clip pour avoir l'info
         this.offset = offset; // décalage par rapport au t0 de la vidéo

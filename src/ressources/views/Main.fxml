@@ -27,7 +27,7 @@
                       AnchorPane.rightAnchor="0"/>
         </AnchorPane>
         <AnchorPane fx:id="previewPanel" prefWidth="800">
-<!--IMPORT DYNAMIQUE DANS LE MAIN CONTROLLER -->
+            <!--IMPORT DYNAMIQUE DANS LE MAIN CONTROLLER -->
         </AnchorPane>
         <AnchorPane fx:id="inspectorPanel" prefWidth="300">
          <fx:include source="Inspector.fxml"/>
