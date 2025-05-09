@@ -1,6 +1,8 @@
 package com.timeline;
 
 import com.Clip;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -10,17 +12,16 @@ import java.util.List;
 
 public class Track {
     private String name;
-    private ArrayList<TimelineObject> elements;
+    private ObservableList<TimelineObject> elements;
     int currentIndex;
 
     public Track(String name) {
-        this.elements = new ArrayList<>();
+        this.elements = FXCollections.observableArrayList();
         this.name = name;
     }
 
     public Track() {
-        this.elements = new ArrayList<>();
-        this.name = "New Track";
+        this("Timeline");
         this.currentIndex = 0;
     }
 
@@ -32,7 +33,7 @@ public class Track {
        elements.add(new TimelineObject(obj,
                "video",
                0,
-               getTotalDuration().toNanos()));
+               getTotalDuration()));
     }
 
     /**
@@ -185,11 +186,15 @@ public class Track {
 
     /**
      * Fonction retournant la durée totale de la track
-     * @return Duration totalDuration
+     * @return long totalDuration
      */
-    public Duration getTotalDuration(){
-        // TODO : Implémenter la fonction
-        return null;
+    public long getTotalDuration(){
+        long totalDuration = 0;
+
+        for (TimelineObject object : elements) {
+            totalDuration += object.getDuration() + object.getStart();
+        }
+        return totalDuration;
     }
 
     public List<TimelineObject> getItems() {
@@ -198,6 +203,10 @@ public class Track {
 
     public int getCurrentIndex() {
         return currentIndex;
+    }
+
+    public ObservableList<TimelineObject> getElements() {
+        return elements;
     }
 
     public String toString() {

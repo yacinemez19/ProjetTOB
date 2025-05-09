@@ -51,7 +51,7 @@ public class TimelineController implements Initializable {
         TrackController controller = loader.getController();
         controller.setTrackName(name);
         timelineSplitPane.getItems().add(trackNode);
-        videoProject.addTrack(new Track(name));
+        videoProject.addTrack(controller.getTrack());
     }
 
     @FXML

@@ -163,8 +163,7 @@ public class VideoProject {
      *
      * @return La durée maximale de la com.timeline.
      */
-    public Duration getMaxDuration() {
-
+    public long getMaxDuration() {
         return trackManager.getMaxDuration();
     }
 

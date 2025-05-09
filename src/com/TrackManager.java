@@ -1,33 +1,35 @@
 package com;
 
 import com.timeline.Track;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrackManager {
 
-    private ArrayList<Track> tracks;
+    private ObservableList<Track> tracks;
 
     /**
      * Constructeur de la classe TrackManager
      */
     public TrackManager() {
-        this.tracks = new ArrayList<>();
+        this.tracks = FXCollections.observableArrayList();
     }
 
     /**
-     * getter liste des tracks
-     * @return ArrayList<Track> tracks
+     * Getter liste des tracks
+     * @return tracks
      */
-    public ArrayList<Track> getTracks() {
-
+    public ObservableList<Track> getTracks() {
         return this.tracks;
     }
 
     /**
      * Ajoute une track
-     * @param track
+     * @param track à ajouter
      */
     public void addTrack(Track track) {
         if (track == null) {
@@ -80,16 +82,13 @@ public class TrackManager {
      * Fonction retournant la durée max des tracks
      * @return maxDuration
      */
-    public Duration getMaxDuration() {
-
-        Duration maxDuration = Duration.ZERO;
+    public long getMaxDuration() {
+        long maxDuration = 0;
 
         for (Track track : this.tracks) {
+            long trackTotalDuration = track.getTotalDuration();
 
-            Duration trackTotalDuration = track.getTotalDuration();
-
-            if (trackTotalDuration.compareTo(maxDuration) > 0) {
-
+            if (trackTotalDuration > maxDuration) {
                 maxDuration = trackTotalDuration;
             }
         }

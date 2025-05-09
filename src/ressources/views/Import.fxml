@@ -8,6 +8,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.CustomMenuItem?>
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ImportController" >
     <TextField fx:id="searchBar" layoutX="104.0" layoutY="8.0" prefHeight="35.0" prefWidth="380.0" onAction="#search" />
     <TableView fx:id="clipTable"
@@ -23,9 +26,11 @@
         </columns>
     </TableView>
     <Button layoutX="489.0" layoutY="8.0" mnemonicParsing="false" onAction="#search" prefHeight="35.0" prefWidth="88.0" text="Rechercher" />
-    <Button layoutX="10.0" layoutY="8.0" mnemonicParsing="false" onAction="#addFile" prefHeight="35.0" prefWidth="85.0" text="Ajouter" />
+    <Button layoutX="10.0" layoutY="8.0" mnemonicParsing="false" onAction="#addFile" prefHeight="35.0" prefWidth="85.0" text="Importer" />
     <HBox spacing="10" alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10">
         <Button fx:id="btnDelete" text="Supprimer" />
+        <MenuButton fx:id="trackChooser" text="Ajouter à la piste" onShowing="#configureTrackChooser"/>
+
     </HBox>
 
 

@@ -5,6 +5,7 @@ import com.VideoProject;
 import com.timeline.Track;
 import com.Clip;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;
@@ -38,6 +39,17 @@ public class TrackController {
 
     public void initialize() {
         model = new Track();
+
+        model.getElements().addListener((ListChangeListener<TimelineObject>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (TimelineObject obj : change.getAddedSubList()) {
+                        // afficher dans la piste sélectionnée
+                        addTimelineObjectVue(obj, 1.0);
+                    }
+                }
+            }
+        });
     }
 
     public void setTrackName(String name) {
@@ -54,18 +66,30 @@ public class TrackController {
         TimelineObject timelineObject = model.addTimelineObject(clip, timing);
 
         // Obtenir un nombre aléatoire entre 0 et 255
+        // TODO : a remplacer par un vrai nom
         int randomColor = (int) (Math.random() * 99);
         timelineObject.setName("Clip " + randomColor);
 
-        TimelineObjectVue mediaBlock = new TimelineObjectVue(timelineObject,
+        addTimelineObjectVue(timelineObject, zoom);
+
+        System.out.println(model);
+    }
+
+    /**
+     * Ajout un TimelineObjectVue à la track
+     * @param obj le modèle de l'object à ajouter
+     */
+    public void addTimelineObjectVue(TimelineObject obj, double zoom) {
+        TimelineObjectVue mediaBlock = new TimelineObjectVue(obj,
                 zoom,
                 px_s,
                 mediaPane.getHeight());
 
         mediaPane.getChildren().add(mediaBlock);
 
-        makeDraggable(mediaBlock, timelineObject);
+        makeDraggable(mediaBlock, obj);
     }
+
 
     public void addMediaButton(ActionEvent actionEvent) {
         Clip media = ImportedClip.test();
@@ -137,15 +161,12 @@ public class TrackController {
         });
     }
 
+    public Track getTrack() {
+        return model;
+    }
+
     /** Petit objet pour mémoriser l’état entre press/drag/release */
     private static class Delta {
         double startX, origLayoutX;
-    }
-
-    /** Largeur totale des contenus, pour éviter de sortir de l’écran */
-    private double computeMaxContentWidth() {
-        return mediaPane.getChildren().stream()
-                .mapToDouble(n -> n.getLayoutX() + n.getBoundsInParent().getWidth())
-                .max().orElse(mediaPane.getWidth());
     }
 }
