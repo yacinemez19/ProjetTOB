@@ -1,6 +1,7 @@
 package com.preview;
 
 import com.Utils;
+import com.timeline.TimelineObject;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -22,10 +23,14 @@ public class PreviewEngine {
     private boolean isStarted = false;
     private Pipeline pipeline;
     private FXImageSink fxSink;
+    private PadManager padManager = new PadManager();
+    private Element audioSelector;
+    private Element videoSelector;
 
     /**
      * Permet de lancer le rendu dans le Preview
-     * @param videoView Le sink ou on affichera la vidéo
+     *
+     * @param videoView       Le sink ou on affichera la vidéo
      * @param previewListener Permet de définir des comportements spécifiques pour quand le preview est mis en pause/play
      */
     public void engineStart(ImageView videoView, PreviewListener previewListener) {
@@ -46,10 +51,9 @@ public class PreviewEngine {
          * Création des éléments GStreamer (source, convertisseurs, sinks audio et vidéo)
          * audioconvert et audioresample permette d'avoir un son correct en sortie dans le audiosink
          */
-        Element source = ElementFactory.make("uridecodebin", "source");
         // Les linker dynmaiques
-        Element videoSelector = ElementFactory.make("input-selector", "videoSelector");
-        Element audioSelector = ElementFactory.make("input-selector", "audioSelector");
+        videoSelector = ElementFactory.make("input-selector", "videoSelector");
+        audioSelector = ElementFactory.make("input-selector", "audioSelector");
         // Audio Sink
         Element converter = ElementFactory.make("audioconvert", "audioconverter");
         Element resample = ElementFactory.make("audioresample", "audiosample");
@@ -59,7 +63,7 @@ public class PreviewEngine {
         fxSink = new FXImageSink();
         // On créé une pipelin vide et on lui ajoute tout les éléments
         pipeline = new Pipeline("testPipeline");
-        pipeline.add(source);
+
         pipeline.add(videoSelector);
         pipeline.add(audioSelector);
         pipeline.add(converter);
@@ -76,46 +80,6 @@ public class PreviewEngine {
         videoConverter.link(fxSink.getSinkElement());
         System.out.println("videoView: " + videoView);
         videoView.imageProperty().bind(fxSink.imageProperty());
-        // On set la source et on ajoute le pad-added signal qui permettera de connecter la source aux sorties son et audio
-        File videoFile = new File("videos/nuuuuuul.MTS");
-        System.out.println("Path: " + videoFile.getAbsolutePath());
-        System.out.println("Exists: " + videoFile.exists());
-        source.set("uri", videoFile.toURI().toString());
-        //source.set("uri", "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm");
-        source.connect(
-                new Element.PAD_ADDED() {
-                    @Override
-                    public void padAdded(Element element, Pad pad) {
-                        Pad audioSinkPad = audioSelector.getRequestPad("sink_%u");
-                        Pad videoSinkPad = videoSelector.getRequestPad("sink_%u");
-
-                        System.out.println("New pad received " + pad.getName() + " from " + element.getName());
-
-                        // On récupère le type de fichier
-                        Caps caps = pad.getCurrentCaps();
-                        String type = caps.getStructure(0).getName();
-                        System.out.println(type);
-                        // On link l'audio
-                        if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
-                            System.out.println("Audio Sink Pad linked");
-                            audioSelector.set("active-pad", audioSinkPad);
-                            pad.link(audioSinkPad);
-                        }
-                        // On link la vidéo
-                        if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
-                            System.out.println("Video Sink Pad linked");
-                            videoSelector.set("active-pad", videoSinkPad);
-                            pad.link(videoSinkPad);
-                        }
-                    }
-                }
-        );
-        pipeline.setState(State.PAUSED);
-        // attendre que les pads soient liés
-        source.connect((Element.NO_MORE_PADS) (elem) -> {
-            System.out.println("Plus de pads à ajouter.");
-            //pipeline.setState(State.PLAYING);
-        });
 
         // loop on EOS if button selected
         pipeline.getBus().connect((Bus.MESSAGE) (bus, message) -> {
@@ -142,6 +106,31 @@ public class PreviewEngine {
         isStarted = true;
 
     }
+
+    public void preloadClip(TimelineObject newClip) {
+
+        Element source = ElementFactory.make("uridecodebin", "source"+newClip.getName());
+        pipeline.add(source);
+        source.set("uri", newClip.getSource().getSource().toString());
+        source.connect(
+                new Element.PAD_ADDED() {
+                    @Override
+                    public void padAdded(Element element, Pad pad) {
+                        System.out.println("On passe par la ");
+                        padManager.padLinker(element, pad, audioSelector, videoSelector, newClip);
+                    }
+                }
+        );
+        pipeline.setState(State.PAUSED);
+        // attendre que les pads soient liés
+        source.connect((Element.NO_MORE_PADS) (elem) -> {
+            System.out.println("Plus de pads à ajouter.");
+            pipeline.setState(State.PLAYING);
+        });
+
+        newClip.setGstreamerSource(source);
+    }
+
     /**
      * Permet de mettre en pause le preview peut importe la source
      */
@@ -150,6 +139,7 @@ public class PreviewEngine {
             pipeline.setState(State.PAUSED);
         }
     }
+
     /**
      * Permet de mettre en pause le preview en play si il avait été mis en pause
      */
@@ -158,6 +148,7 @@ public class PreviewEngine {
             pipeline.setState(State.PLAYING);
         }
     }
+
     /**
      * Permet de passer de play à pause ou inversement sans se soucier de l'état actuel
      */
@@ -171,6 +162,7 @@ public class PreviewEngine {
             }
         }
     }
+
     /**
      * Avance d'une frame dans la timeline et la met en pause si elle l'était pas
      */
@@ -230,6 +222,7 @@ public class PreviewEngine {
             System.out.println("[Preview Engine] Next frame seek failed");
         }
     }
+
     /**
      * Permet de fermer proprement le Preview en désallouant la mémoire utilisée
      */
@@ -240,6 +233,7 @@ public class PreviewEngine {
             isStarted = false;
         }
     }
+
     /**
      * Permet de récupérer la position temporel actuelle
      */

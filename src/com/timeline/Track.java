@@ -24,7 +24,7 @@ public class Track {
     public void addTimelineObject(TimelineObject obj) {
        // TODO : il faut que les objets de la timelines soient dans l'ordre (obj.start)
         int j=0;
-        while (j<elements.size() && elements.get(j).getStart()[0] < obj.getStart()[0]) j += 1;
+        while (j<elements.size() && elements.get(j).getStart() < obj.getStart()) j += 1;
         elements.add(j, obj);
     }
 
@@ -32,8 +32,8 @@ public class Track {
         // TODO : Retourne l'objet à la position timing
         if (timing==null) return null;
         for (TimelineObject object : elements) {
-            long start = object.getStart()[0];
-            long end = object.getDuration()[0] + start ;
+            long start = object.getStart();
+            long end = object.getDuration() + start ;
             if (timing[0] < end && timing[0]>=start ) {
                 return object;
             }

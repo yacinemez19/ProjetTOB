@@ -1,6 +1,7 @@
 package com;
 
 import com.preview.PreviewController;
+import com.preview.PreviewEngine;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -76,6 +77,10 @@ public class MainController {
                 }
             }
         });
+    }
+
+    public PreviewEngine getPreviewEngine() {
+        return previewController != null ? previewController.getPreviewEngine() : null;
     }
 
 }

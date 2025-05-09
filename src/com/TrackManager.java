@@ -9,6 +9,11 @@ public class TrackManager {
 
     private ArrayList<Track> tracks;
 
+
+    TrackManager() {
+        tracks = new ArrayList<>();
+    }
+
     /**
      * getter liste des tracks
      * @return ArrayList<Track> tracks
