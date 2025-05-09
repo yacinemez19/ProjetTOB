@@ -1,12 +1,15 @@
 package com.timeline;
 
 import java.util.HashMap;
-
+import org.freedesktop.gstreamer.*;
 import com.Clip;
 
 public class TimelineObject {
     /* Information sur l'objet */
     private Clip source;
+    private Element gstreamerSource;
+    private Pad videoPad;
+    private Pad audioPad;
     private String name;
     private String mediaType; // Deux options video ou audio
     /* Information sur sa positon dans la com.timeline */
@@ -17,7 +20,7 @@ public class TimelineObject {
     TimelineObject(Clip source, String mediaType, long offset, long start) {
         this.name = source.getName();
         this.mediaType = "video"; // en vrai on appellera la classe clip pour avoir l'info
-        this.offset = offset; // TODO : ca veut dire quoi offset ?
+        this.offset = offset; // décalage par rapport au t0 de la vidéo
         this.start = start;
         this.duration = source.getDuration().toNanos();
     }
@@ -30,6 +33,18 @@ public class TimelineObject {
     }
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public void setGstreamerSource(Element gstreamerSource) {
+        this.gstreamerSource = gstreamerSource;
+    }
+
+    public void setvideoPad(Pad videoPad) {
+        this.videoPad = videoPad;
+    }
+
+    public void setAudioPad(Pad audioPad) {
+        this.audioPad = audioPad;
     }
 
     public String getName() {
