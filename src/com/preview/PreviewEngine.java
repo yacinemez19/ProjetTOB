@@ -23,13 +23,14 @@ public class PreviewEngine {
     private boolean isStarted = false;
     private Pipeline pipeline;
     private FXImageSink fxSink;
-    private  PadManager padManager = new PadManager();
+    private PadManager padManager = new PadManager();
     private Element audioSelector;
-    private  Element videoSelector;
+    private Element videoSelector;
 
     /**
      * Permet de lancer le rendu dans le Preview
-     * @param videoView Le sink ou on affichera la vidéo
+     *
+     * @param videoView       Le sink ou on affichera la vidéo
      * @param previewListener Permet de définir des comportements spécifiques pour quand le preview est mis en pause/play
      */
     public void engineStart(ImageView videoView, PreviewListener previewListener) {
@@ -80,8 +81,6 @@ public class PreviewEngine {
         System.out.println("videoView: " + videoView);
         videoView.imageProperty().bind(fxSink.imageProperty());
 
-        pipeline.setState(State.PAUSED);
-
         // loop on EOS if button selected
         pipeline.getBus().connect((Bus.MESSAGE) (bus, message) -> {
             switch (message.getType()) {
@@ -107,22 +106,26 @@ public class PreviewEngine {
         isStarted = true;
 
     }
+
     public void preloadClip(TimelineObject newClip) {
-        Element source = ElementFactory.make("uridecodebin", "source");
+
+        Element source = ElementFactory.make("uridecodebin", "source"+newClip.getName());
         pipeline.add(source);
         source.set("uri", newClip.getSource().getSource().toString());
         source.connect(
                 new Element.PAD_ADDED() {
                     @Override
                     public void padAdded(Element element, Pad pad) {
+                        System.out.println("On passe par la ");
                         padManager.padLinker(element, pad, audioSelector, videoSelector, newClip);
                     }
                 }
         );
+        pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter.");
-            //pipeline.setState(State.PLAYING);
+            pipeline.setState(State.PLAYING);
         });
 
         newClip.setGstreamerSource(source);
@@ -136,6 +139,7 @@ public class PreviewEngine {
             pipeline.setState(State.PAUSED);
         }
     }
+
     /**
      * Permet de mettre en pause le preview en play si il avait été mis en pause
      */
@@ -144,6 +148,7 @@ public class PreviewEngine {
             pipeline.setState(State.PLAYING);
         }
     }
+
     /**
      * Permet de passer de play à pause ou inversement sans se soucier de l'état actuel
      */
@@ -157,6 +162,7 @@ public class PreviewEngine {
             }
         }
     }
+
     /**
      * Avance d'une frame dans la timeline et la met en pause si elle l'était pas
      */
@@ -216,6 +222,7 @@ public class PreviewEngine {
             System.out.println("[Preview Engine] Next frame seek failed");
         }
     }
+
     /**
      * Permet de fermer proprement le Preview en désallouant la mémoire utilisée
      */
@@ -226,6 +233,7 @@ public class PreviewEngine {
             isStarted = false;
         }
     }
+
     /**
      * Permet de récupérer la position temporel actuelle
      */

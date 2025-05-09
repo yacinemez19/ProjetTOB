@@ -30,7 +30,7 @@ public class PreviewController {
     private ImageView videoView;
 
     // Pipeline GStreamer et son sink vidéo pour l’intégration JavaFX
-    PreviewEngine previewEngine;
+    private PreviewEngine previewEngine;
 
     // Lance la lecture de la vidéo
     @FXML
@@ -108,5 +108,9 @@ public class PreviewController {
             }
         };
         previewEngine.engineStart(videoView, myPreviewListener);
+    }
+
+    public PreviewEngine getPreviewEngine() {
+        return previewEngine;
     }
 }
