@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.Node;
+import javafx.scene.control.Slider;
 
 import java.io.IOException;
 
@@ -14,9 +15,18 @@ public class TimelineController {
     private SplitPane timelineSplitPane;
 
     @FXML
+    private Slider timeSlider;
+
+    private Curseur curseur;
+
+    @FXML
     public void initialize() {
 
             initializeTimer();
+
+            // Initialisation correcte avec le slider FXML
+            curseur = new Curseur(timeSlider);
+            curseur.setPosition(0);
 
             // Répartir équitablement les tracks dans l'espace alloué
             int trackCount = timelineSplitPane.getItems().size();
@@ -26,6 +36,11 @@ public class TimelineController {
                 positions[i - 1] = (1.0 / trackCount) * i;
             }
             timelineSplitPane.setDividerPositions(positions);
+
+        // Lier le slider au curseur
+        timeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            curseur.setPosition(newVal.doubleValue()); // Position en secondes ou unités de temps
+        });
 
     }
 
