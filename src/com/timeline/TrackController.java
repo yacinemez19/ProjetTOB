@@ -34,4 +34,9 @@ public class TrackController {
 
         mediaPane.getChildren().add(mediaBlock);
     }
+
+    public Pane getMediaPane() {
+        return mediaPane;
+    }
+
 }

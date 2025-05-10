@@ -75,9 +75,10 @@ public class ClipTableDragAndDrop {
     /**
      * .
      */
-    public void enableDrop(final Timeline timeline) {
+    public void enableDrop(final TrackController track) {
+        Pane mediaPane = track.getMediaPane();
         // Quand un élément est au-dessus de la timeline
-        timeline.setOnDragOver(event -> {
+        mediaPane.setOnDragOver(event -> {
             // vérifie contient des données au bon format
             if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
                 // on fais une copie
@@ -86,14 +87,16 @@ public class ClipTableDragAndDrop {
             event.consume();
         });
         // Quand on lâche l'élément
-        timeline.setOnDragDropped(event -> {
+        mediaPane.setOnDragDropped(event -> {
             if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
                 String uri = (String) event.getDragboard().getContent(CLIP_URI_FORMAT);
                 // on va charger un Clip
                 Clip clip = getClip(uri); // dans ClipRegistry
 
                 if (clip != null) {
-                    timeline.addClip(clip);//a faire
+                    double totalDuration = 100.0; // à verif
+                    Duration duration = clip.getDuration();
+                    addMediaBlock(0.0, duration, totalDuration);
                     event.setDropCompleted(true);
                 } else {
                     // si le chargement du clip a échoué
