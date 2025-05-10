@@ -1,4 +1,4 @@
-/*
+package examples;/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2021 Neil C Smith - Codelerity Ltd.
@@ -54,7 +54,7 @@ public class FXCamera extends Application {
          * throw an exception in the bindings even if the actual native library
          * is a higher version.
          */
-        Gst.init(Version.BASELINE, "FXCamera");
+        Gst.init(Version.BASELINE, "examples.FXCamera");
     }
 
     @Override

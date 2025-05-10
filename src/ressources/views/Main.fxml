@@ -7,11 +7,11 @@
 <BorderPane
         xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="MainController"
+        fx:controller="com.MainController"
         prefWidth="1920" prefHeight="1080">
   <!-- Inclusion de la barre de menu en haut -->
   <top>
-    <fx:include source="MenuBar.fxml"/>
+    <fx:include fx:id="menuBar" source="MenuBar.fxml"/>
   </top>
 
   <!-- Zone centrale avec la structure split pane -->
@@ -19,17 +19,21 @@
     <SplitPane orientation="VERTICAL">
       <!-- Partie supérieure : SplitPane horizontal en 3 panneaux -->
       <SplitPane>
-        <AnchorPane fx:id="importPanel" prefWidth="300">
-          <fx:include source="Import.fxml"/>
+        <AnchorPane fx:id="importPanel" prefWidth="300" >
+          <fx:include fx:id="importPane" source="Import.fxml"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0"/>
         </AnchorPane>
         <AnchorPane fx:id="previewPanel" prefWidth="800">
-          <fx:include source="Preview.fxml"/>
+            <!--IMPORT DYNAMIQUE DANS LE MAIN CONTROLLER -->
         </AnchorPane>
         <AnchorPane fx:id="inspectorPanel" prefWidth="300">
          <fx:include source="Inspector.fxml"/>
         </AnchorPane>
       </SplitPane>
-      <!-- Partie inférieure : par exemple la timeline -->
+      <!-- Partie inférieure : par exemple la com.timeline -->
       <AnchorPane fx:id="timelinePanel" prefHeight="200">
         <fx:include source="Timeline.fxml"/>
       </AnchorPane>

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="PreviewController"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="com.preview.PreviewController"
+            prefHeight="400.0" prefWidth="600.0"
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+>
     <Label layoutX="14.0" layoutY="14.0" text="Preview" />
     <Label fx:id="timerLabel"
+           text="00:00:00"
            AnchorPane.leftAnchor="14.0"
            AnchorPane.bottomAnchor="0.0"
            style="-fx-font-size: 18px; -fx-text-fill: black;" />
@@ -24,7 +28,7 @@
                AnchorPane.rightAnchor="0.0"
                AnchorPane.bottomAnchor="50.0"/>
 
-    <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
+    <HBox spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
         <Button fx:id="lastFrameButton" onAction="#handleLastFrame" text="⏮" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
         <Button fx:id="reverseButton" text="◀" onAction="#handleReverse" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
         <Button fx:id="pauseButtoon" text="⏸" onAction="#handlePause" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
