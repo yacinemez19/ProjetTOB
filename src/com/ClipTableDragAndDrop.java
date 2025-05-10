@@ -96,8 +96,8 @@ public class ClipTableDragAndDrop {
             if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
                 String uristring = (String) event.getDragboard().getContent(CLIP_URI_FORMAT);
                 URI uri = URI.create(uristring);
-                // on va charger un Clip
-                Clip clip = getClip(uri); // dans ClipRegistry
+
+                Clip clip = getClip(uri); //
 
                 if (clip != null) {
                     double totalDuration = 100.0; // à verif
