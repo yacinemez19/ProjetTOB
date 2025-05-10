@@ -40,6 +40,9 @@ public class MainController {
             previewController = loader.getController();
             previewPanel.getChildren().add(previewContent);
 
+            //Curseur sliderController = loader.getController();
+            //Curseur.setPreviewEngine(previewEngine);
+
             // Configurer les raccourcis une fois que la scène est prête
             Scene scene = previewPanel.getScene();
             if (scene != null) {

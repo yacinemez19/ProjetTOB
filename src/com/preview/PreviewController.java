@@ -99,9 +99,7 @@ public class PreviewController {
         // Pour gérer pause/play
         PreviewListener myPreviewListener = new PreviewListener() {
             @Override
-            public void onPlaying() {
-                timerTimeline.play();
-            }
+            public void onPlaying() {timerTimeline.play();}
             @Override
             public void onPaused() {
                 timerTimeline.play();
