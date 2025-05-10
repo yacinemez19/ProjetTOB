@@ -1,3 +1,5 @@
+package com;
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,11 +13,11 @@ public class ClipRegistry {
 
     public void register(Clip clip) {
         if (clip == null) {
-            throw new IllegalArgumentException("Clip ne peut pas être null");
+            throw new IllegalArgumentException("com.Clip ne peut pas être null");
         }
         URI uri = clip.getSource();
         if (clipsByURI.containsKey(uri)) {
-            throw new IllegalArgumentException("Clip déjà enregistré avec cette URI");
+            throw new IllegalArgumentException("com.Clip déjà enregistré avec cette URI");
         }
         clipsByURI.put(uri, clip);
 
@@ -25,13 +27,13 @@ public class ClipRegistry {
 
     public void unregister(Clip clip) {
         if (clip == null) {
-            throw new IllegalArgumentException("Clip ne peut pas être null");
+            throw new IllegalArgumentException("com.Clip ne peut pas être null");
         }
         URI uri = clip.getSource();
         if (clipsByURI.containsKey(uri)) {
             clipsByURI.remove(uri);
         } else {
-            throw new IllegalArgumentException("Clip n'est pas enregistré avec cette URI");
+            throw new IllegalArgumentException("com.Clip n'est pas enregistré avec cette URI");
         }
 
     }
@@ -40,7 +42,14 @@ public class ClipRegistry {
         return clipsByURI.get(uri);
     }
 
-    public Collection <Clip> getAllClips() {
+    public Collection<Clip> getAllClips() {
         return clipsByURI.values();
+    }
+
+    /**
+     * Obtenir tous les URI des clips enregistrés.
+     */
+    public Collection<URI> getAllClipURIs() {
+        return clipsByURI.keySet();
     }
 }

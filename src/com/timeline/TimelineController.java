@@ -1,9 +1,9 @@
-package timeline;
+package com.timeline;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 
 import java.io.IOException;
@@ -15,10 +15,8 @@ public class TimelineController {
 
     @FXML
     public void initialize() {
-        try {
-            addTrack("Track 1");
-            addTrack("Track 2");
-            addTrack("Audio 1");
+
+            initializeTimer();
 
             // Répartir équitablement les tracks dans l'espace alloué
             int trackCount = timelineSplitPane.getItems().size();
@@ -29,18 +27,43 @@ public class TimelineController {
             }
             timelineSplitPane.setDividerPositions(positions);
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    private void addTrack(String name) throws IOException {
-        //System.out.println("======TRACK FXML : " + getClass().getResource("../ressources/views/timeline/Track.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../ressources/views/timeline/Track.fxml"));
+    private void addTrackButton(String name) throws IOException {
+        //System.out.println("======TRACK FXML : " + getClass().getResource("../ressources/views/com.timeline/Track.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../ressources/views/timeline/Track.fxml"));
         Node trackNode = loader.load();
         TrackController controller = loader.getController();
         controller.setTrackName(name);
         timelineSplitPane.getItems().add(trackNode);
     }
+
+    @FXML
+    private void addTrackButton() {
+        try{
+            addTrackButton("Track");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void supprimerTrack() {
+
+    }
+
+    @FXML
+    private void separer() {
+
+    }
+
+    // Label pour afficher le temps écoulé
+    @FXML
+    private Label timerLabel;
+
+    @FXML
+    public void initializeTimer() {
+        timerLabel.setText("00:00:00");
+    }
+
 }

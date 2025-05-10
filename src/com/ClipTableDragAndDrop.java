@@ -1,3 +1,5 @@
+package com;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.scene.control.TableRow;
@@ -12,12 +14,12 @@ import javafx.scene.input.TransferMode;
 import java.awt.image.BufferedImage;
 
 /**
- * Configure une TableView<Clip> pour qu’elle soit
- * source de drag & drop (export) vers un autre composant (timeline, etc.).
+ * Configure une TableView<com.Clip> pour qu’elle soit
+ * source de drag & drop (export) vers un autre composant (com.timeline, etc.).
  */
 public class ClipTableDragAndDrop {
 
-    /** Format de données utilisé pour transporter l’URI du Clip. */
+    /** Format de données utilisé pour transporter l’URI du com.Clip. */
     private static final DataFormat CLIP_URI_FORMAT = DataFormat.PLAIN_TEXT;
 
     /**

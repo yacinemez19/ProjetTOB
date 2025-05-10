@@ -1,3 +1,5 @@
+package examples;
+
 import org.freedesktop.gstreamer.*;
 import org.freedesktop.gstreamer.elements.AppSink;
 import org.freedesktop.gstreamer.Buffer;
@@ -12,14 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 
 public class VideoMetadataExample {
     private static final String CAPS = "video/x-raw,format=RGB,width=160,pixel-aspect-ratio=1/1";
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            System.err.println("Usage: java VideoMetadataExample <uri or filepath>");
+            System.err.println("Usage: java examples.VideoMetadataExample <uri or filepath>");
             System.exit(-1);
         }
         String uri = args[0];
@@ -27,7 +28,7 @@ public class VideoMetadataExample {
         File file = filepath.toFile();
 
         // --- 1. Initialisation GStreamer ---
-        Gst.init("VideoMetadataExample", args);
+        Gst.init("examples.VideoMetadataExample", args);
 
         // --- 2. Construction du pipeline ---
         String launchDesc = String.format(

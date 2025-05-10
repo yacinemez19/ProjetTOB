@@ -1,4 +1,4 @@
-/*
+package examples;/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2021 Neil C Smith - Codelerity Ltd.
@@ -12,6 +12,7 @@
 
 import com.sun.jna.Platform;
 import com.sun.jna.platform.win32.Kernel32;
+
 import java.io.File;
 import java.util.stream.Stream;
 

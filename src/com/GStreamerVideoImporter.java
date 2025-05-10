@@ -1,12 +1,11 @@
-import java.io.File;
-import java.io.IOException;
+package com;
+
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 import org.freedesktop.gstreamer.*;
@@ -38,7 +37,7 @@ public class GStreamerVideoImporter implements VideoImporter {
     @Override
     public Clip importVideo(URI source) throws IllegalArgumentException {
 
-        // Configure native paths (cf. BasicPipeline)
+        // Configure native paths (cf. examples.BasicPipeline)
         Utils.configurePaths();
 
         // Initialiser GStreamer

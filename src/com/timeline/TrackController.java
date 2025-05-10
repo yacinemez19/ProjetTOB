@@ -1,4 +1,4 @@
-package timeline;
+package com.timeline;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

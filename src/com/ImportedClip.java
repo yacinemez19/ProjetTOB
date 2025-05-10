@@ -1,3 +1,5 @@
+package com;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +19,7 @@ import java.time.ZoneId;
 
 
 /**
- * Implémentation de l'interface Clip pour représenter un clip importé.
+ * Implémentation de l'interface com.Clip pour représenter un clip importé.
  */
 public class ImportedClip implements Clip {
 
@@ -30,7 +32,7 @@ public class ImportedClip implements Clip {
     private final File file;
 
     /**
-     * Construit un ImportedClip.
+     * Construit un com.ImportedClip.
      *
      * @param source       URI du fichier source
      * @param duration     Durée de la vidéo
@@ -134,7 +136,7 @@ public class ImportedClip implements Clip {
 
     @Override
     public String toString() {
-        return "ImportedClip{" +
+        return "com.ImportedClip{" +
                 "name=" + getName() +
                 ", duration=" + duration +
                 ", resolution=" + width + "x" + height +
