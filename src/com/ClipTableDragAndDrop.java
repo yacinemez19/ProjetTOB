@@ -1,4 +1,9 @@
 package com;
+import java.net.URI;
+import java.time.Duration;
+import javafx.scene.layout.Pane;
+import javafx.scene.input.TransferMode;
+
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
@@ -89,14 +94,15 @@ public class ClipTableDragAndDrop {
         // Quand on lâche l'élément
         mediaPane.setOnDragDropped(event -> {
             if (event.getDragboard().hasContent(CLIP_URI_FORMAT)) {
-                String uri = (String) event.getDragboard().getContent(CLIP_URI_FORMAT);
+                String uristring = (String) event.getDragboard().getContent(CLIP_URI_FORMAT);
+                URI uri = URI.create(uristring);
                 // on va charger un Clip
                 Clip clip = getClip(uri); // dans ClipRegistry
 
                 if (clip != null) {
                     double totalDuration = 100.0; // à verif
                     Duration duration = clip.getDuration();
-                    addMediaBlock(0.0, duration, totalDuration);
+                    track.addMediaBlock(0.0, duration.toSeconds(), totalDuration);
                     event.setDropCompleted(true);
                 } else {
                     // si le chargement du clip a échoué
