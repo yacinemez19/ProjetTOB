@@ -7,25 +7,42 @@ public class Curseur {
     private Slider timeSlider;
     private double position;
 
+
+    /**
+     * Constructeur de la classe Curseur
+     * @param timeSlider
+     */
     public Curseur(Slider timeSlider) {
         this.timeSlider = timeSlider;
 
-        // Écoute les changements manuels du curseur par l'utilisateur
-        this.timeSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
-            if (!isChanging) {
-                // L'utilisateur vient de finir de déplacer le curseur
-                this.position = timeSlider.getValue();
-            }
+        initListeners();
+    }
+
+    /**
+     * Fonction d initialisation des listeners
+     */
+    private void initListeners() {
+        timeSlider.setOnMouseReleased(e -> {
+            double value = timeSlider.getValue();
+            // TODO : enlever ca
+            System.out.println(value);
         });
     }
 
+    /**
+     * Fonction qui permet de mettre à jour la position du curseur
+     * @param position
+     */
     public void setPosition(double position) {
         this.position = position;
         timeSlider.setValue(position);
     }
 
+    /**
+     * Fonction qui retourne la position du curseur
+     * @return position
+     */
     public double getPosition() {
         return position;
     }
-
 }
