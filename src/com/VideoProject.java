@@ -136,9 +136,26 @@ public class VideoProject {
         return this.getTrackManager().getTracks();
     }
 
+    /**
+     * Ajouter une track au projet vidéo.
+     *
+     * @param track La track à ajouter.
+     */
     public void addTrack(Track track) {
-
+        if (track == null) {
+            throw new IllegalArgumentException("La track ne peut pas être nulle.");
+        }
         this.getTrackManager().addTrack(track);
+    }
+
+    /**
+     * Obtenir une track à partir de son index.
+     *
+     * @param index
+     * @return
+     */
+    public Track getTrack(int index) {
+        return this.getTrackManager().getTrack(index);
     }
 
     /**
@@ -146,8 +163,7 @@ public class VideoProject {
      *
      * @return La durée maximale de la com.timeline.
      */
-    public Duration getMaxDuration() {
-
+    public long getMaxDuration() {
         return trackManager.getMaxDuration();
     }
 

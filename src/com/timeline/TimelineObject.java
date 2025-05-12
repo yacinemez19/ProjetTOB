@@ -21,9 +21,13 @@ public class TimelineObject {
         this.source = source;
         this.name = source.getName();
         this.mediaType = "video"; // en vrai on appellera la classe clip pour avoir l'info
-        this.offset = offset; // décalage par rapport au t0 de la vidéo
+        this.offset = offset; // TODO : ca veut dire quoi offset ?
         this.start = start;
         this.duration = source.getDuration().toNanos();
+    }
+
+    public void shift(long delta) {
+        this.start += delta;
     }
 
     public void setOffset(long offset) {
@@ -52,6 +56,10 @@ public class TimelineObject {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getMediaType() {
         return mediaType;
     }
@@ -76,6 +84,7 @@ public class TimelineObject {
         HashMap<String,Object> data = new HashMap<>();
         data.put("clip", source);
         data.put("mediaType", mediaType);
+        data.put("srcId", srcId);
         data.put("offset", offset);
         data.put("start", start);
         return data.toString();
