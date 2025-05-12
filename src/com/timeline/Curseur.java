@@ -1,5 +1,6 @@
 package com.timeline;
 
+import com.VideoProject;
 import javafx.scene.control.Slider;
 
 public class Curseur {
@@ -7,14 +8,15 @@ public class Curseur {
     private Slider timeSlider;
     private double position;
 
+    private VideoProject videoProject;
 
     /**
      * Constructeur de la classe Curseur
      * @param timeSlider
      */
-    public Curseur(Slider timeSlider) {
+    public Curseur(Slider timeSlider, VideoProject videoProject) {
         this.timeSlider = timeSlider;
-
+        this.videoProject = videoProject;
         initListeners();
     }
 
@@ -24,8 +26,7 @@ public class Curseur {
     private void initListeners() {
         timeSlider.setOnMouseReleased(e -> {
             double value = timeSlider.getValue();
-            // TODO : enlever ca
-            System.out.println(value);
+            this.position = value;
         });
     }
 

@@ -32,7 +32,7 @@ public class TimelineController implements Initializable {
             initializeTimer();
 
             // Initialisation correcte avec le slider FXML
-            curseur = new Curseur(timeSlider);
+            curseur = new Curseur(timeSlider, videoProject);
             curseur.setPosition(0);
 
             // Répartir équitablement les tracks dans l'espace alloué
