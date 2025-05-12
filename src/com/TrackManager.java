@@ -12,11 +12,6 @@ public class TrackManager {
 
     private ObservableList<Track> tracks;
 
-
-    TrackManager() {
-        tracks = new ArrayList<>();
-    }
-
     /**
      * Constructeur de la classe TrackManager
      */
