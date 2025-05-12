@@ -1,5 +1,6 @@
 package com;
 
+import com.timeline.Track;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -27,6 +28,9 @@ public class ImportController implements Initializable {
 
     // Le projet vidéo associé
     VideoProject videoProject;
+
+    @FXML
+    private MenuButton trackChooser;
 
     @FXML
     private TextField searchBar;
@@ -73,7 +77,6 @@ public class ImportController implements Initializable {
             System.out.println("Supprimer le fichier");
         }
         updateClipList();
-
     }
 
     /**
@@ -112,9 +115,40 @@ public class ImportController implements Initializable {
 
         ConfigureDeleteButton();
 
+        trackChooser.setDisable(true);
+        clipTable.getSelectionModel().selectedItemProperty().addListener((obs, oldClip, newClip) -> {
+            trackChooser.setDisable(newClip == null);
+        });
+
         ClipTableDragAndDrop clipTableDragAndDrop = new ClipTableDragAndDrop();
 
         clipTableDragAndDrop.enableDrag(clipTable);
+    }
+
+    /**
+     * Ajoute une piste au menu de sélection.
+     *
+     * @param track La piste à ajouter
+     */
+    private void addTrackToMenu(Track track) {
+        // Ajouter un button pour chaque piste
+        MenuItem item = new MenuItem(track.getName());
+        trackChooser.getItems().add(item);
+
+        // Ajouter un listener pour ajouter le clip à la piste
+        item.setOnAction(event -> {
+            Clip selected = clipTable.getSelectionModel().getSelectedItem();
+            track.addTimelineObjectAtEnd(selected);
+        });
+
+        System.out.println(track);
+    }
+
+    @FXML
+    public void configureTrackChooser() {
+        trackChooser.getItems().clear();
+        videoProject.getTracks().forEach(this::addTrackToMenu);
+        System.out.println("Mes maxis clipos : " + videoProject.getTracks());
     }
 
     private void ConfigureFileChooser() {

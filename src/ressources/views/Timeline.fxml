@@ -13,6 +13,7 @@
                AnchorPane.rightAnchor="0.0"
                fx:controller="com.timeline.TimelineController"
                xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
     <!-- Ici on insert les tracks (cf le controller + com.timeline/Track.fxml -->
     <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
         <Button fx:id="addTrackButton" onAction="#addTrackButton" text="AddTrack" />
@@ -42,7 +43,4 @@
                 minorTickCount="5"
                 maxWidth="Infinity" />
     </GridPane>
-
-
-
 </SplitPane>

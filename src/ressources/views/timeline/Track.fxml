@@ -20,8 +20,18 @@
 
     <VBox GridPane.columnIndex="0" maxHeight="Infinity">
         <Label fx:id="trackLabel" text="Track 1" />
+        <Button fx:id="addMediaButton" text="Add Media" onAction="#addMediaButton"/>
     </VBox>
     <!-- Colonne com.timeline, contient les médias -->
-    <Pane fx:id="mediaPane" GridPane.columnIndex="1" style="-fx-background-color: lightgray;" maxHeight="Infinity">
-    </Pane>
+    <ScrollPane fx:id="scrollPane"
+                GridPane.columnIndex="1"
+                vbarPolicy="NEVER"
+                pannable="true"
+                fitToHeight="true">
+        <content>
+            <Pane fx:id="mediaPane" style="-fx-background-color: lightgray;" maxHeight="Infinity">
+            </Pane>
+        </content>
+    </ScrollPane>
+
 </GridPane>

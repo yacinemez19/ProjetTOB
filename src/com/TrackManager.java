@@ -1,34 +1,40 @@
 package com;
 
 import com.timeline.Track;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrackManager {
 
-    private ArrayList<Track> tracks;
+    private ObservableList<Track> tracks;
 
-
-    TrackManager() {
-        tracks = new ArrayList<>();
+    /**
+     * Constructeur de la classe TrackManager
+     */
+    public TrackManager() {
+        this.tracks = FXCollections.observableArrayList();
     }
 
     /**
-     * getter liste des tracks
-     * @return ArrayList<Track> tracks
+     * Getter liste des tracks
+     * @return tracks
      */
-    public ArrayList<Track> getTracks() {
-
+    public ObservableList<Track> getTracks() {
         return this.tracks;
     }
 
     /**
-     * ajoute une track
-     * @param track
+     * Ajoute une track
+     * @param track à ajouter
      */
     public void addTrack(Track track) {
-
+        if (track == null) {
+            throw new IllegalArgumentException("Track ne peut pas être nulle");
+        }
         this.tracks.add(track);
     }
 
@@ -43,6 +49,19 @@ public class TrackManager {
             System.out.println("La track n'existe pas");
         }
 
+    }
+
+    /**
+     * Fonction retournant la track à l'index donné
+     *
+     * @param index
+     */
+    public Track getTrack(int index) {
+        if (index >= 0 && index < this.tracks.size()) {
+            return this.tracks.get(index);
+        } else {
+            throw new IndexOutOfBoundsException("Index de la track hors limites : " + index);
+        }
     }
 
     public void moveTrack(Track track) {
@@ -63,16 +82,13 @@ public class TrackManager {
      * Fonction retournant la durée max des tracks
      * @return maxDuration
      */
-    public Duration getMaxDuration() {
-
-        Duration maxDuration = Duration.ZERO;
+    public long getMaxDuration() {
+        long maxDuration = 0;
 
         for (Track track : this.tracks) {
+            long trackTotalDuration = track.getTotalDuration();
 
-            Duration trackTotalDuration = track.getTotalDuration();
-
-            if (trackTotalDuration.compareTo(maxDuration) > 0) {
-
+            if (trackTotalDuration > maxDuration) {
                 maxDuration = trackTotalDuration;
             }
         }

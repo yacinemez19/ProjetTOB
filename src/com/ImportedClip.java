@@ -54,6 +54,15 @@ public class ImportedClip implements Clip {
         this.file        = path.toFile();
     }
 
+    // TODO : remove this test method
+    public static ImportedClip test() {
+        return new ImportedClip(URI.create("file:///home/adam/Downloads/test.mp4"),
+                Duration.ofSeconds(10),
+                1920,
+                1080,
+                new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB));
+    }
+
     @Override
     public URI getSource() {
         return source;
