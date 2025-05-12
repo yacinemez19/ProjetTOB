@@ -84,7 +84,6 @@ public class TimelineObject {
         HashMap<String,Object> data = new HashMap<>();
         data.put("clip", source);
         data.put("mediaType", mediaType);
-        data.put("srcId", srcId);
         data.put("offset", offset);
         data.put("start", start);
         return data.toString();
