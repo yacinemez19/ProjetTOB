@@ -1,22 +1,39 @@
 package com.timeline;
 
+import com.VideoProject;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.Node;
+import javafx.scene.control.Slider;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class TimelineController {
+public class TimelineController implements Initializable {
+
+    private VideoProject videoProject;
 
     @FXML
     private SplitPane timelineSplitPane;
 
     @FXML
-    public void initialize() {
+    private Slider timeSlider;
+
+    private Curseur curseur;
+
+    @FXML
+    public void initialize(URL location, ResourceBundle resources) {
 
             initializeTimer();
+
+            // Initialisation correcte avec le slider FXML
+            curseur = new Curseur(timeSlider, videoProject);
+            curseur.setPosition(0);
 
             // Répartir équitablement les tracks dans l'espace alloué
             int trackCount = timelineSplitPane.getItems().size();
@@ -27,6 +44,19 @@ public class TimelineController {
             }
             timelineSplitPane.setDividerPositions(positions);
 
+        // Lier le slider au curseur
+        timeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            curseur.setPosition(newVal.doubleValue()); // Position en secondes ou unités de temps
+        });
+
+    }
+
+    /*
+     * Setter pour le projet vidéo
+     * @param videoProject le projet vidéo à définir
+     */
+    public void setVideoProject(VideoProject videoProject) {
+        this.videoProject = videoProject;
     }
 
     private void addTrackButton(String name) throws IOException {
@@ -36,6 +66,7 @@ public class TimelineController {
         TrackController controller = loader.getController();
         controller.setTrackName(name);
         timelineSplitPane.getItems().add(trackNode);
+        videoProject.addTrack(controller.getTrack());
     }
 
     @FXML

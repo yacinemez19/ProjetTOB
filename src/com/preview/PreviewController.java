@@ -83,9 +83,16 @@ public class PreviewController {
     // Méthode appelée automatiquement par JavaFX après le chargement du FXML
     @FXML
     public void initialize() {
-        // On créér un Preview engine
-        previewEngine = new PreviewEngine();
+        // On attend de recevoir le previewEngine du videoProject
+    }
 
+    public PreviewEngine getPreviewEngine() {
+        return previewEngine;
+    }
+
+    public void setPreviewEngine(PreviewEngine previewEngine) {
+        // On récupère le previewEngine et on le lance
+        this.previewEngine = previewEngine;
         // Création d'une com.timeline pour l'animation du timer
         timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
@@ -99,18 +106,12 @@ public class PreviewController {
         // Pour gérer pause/play
         PreviewListener myPreviewListener = new PreviewListener() {
             @Override
-            public void onPlaying() {
-                timerTimeline.play();
-            }
+            public void onPlaying() {timerTimeline.play();}
             @Override
             public void onPaused() {
                 timerTimeline.play();
             }
         };
         previewEngine.engineStart(videoView, myPreviewListener);
-    }
-
-    public PreviewEngine getPreviewEngine() {
-        return previewEngine;
     }
 }

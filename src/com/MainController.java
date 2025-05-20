@@ -2,6 +2,8 @@ package com;
 
 import com.preview.PreviewController;
 import com.preview.PreviewEngine;
+import com.timeline.TimelineController;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,9 @@ public class MainController {
     @FXML
     private MenuBarController menuBarController;
 
+    @FXML
+    private TimelineController timelineController;
+
     private VideoProject videoProject;
 
     private PreviewController previewController;
@@ -30,6 +35,8 @@ public class MainController {
         this.videoProject = videoProject;
         importPaneController.setVideoProject(videoProject);
         menuBarController.setVideoProject(videoProject);
+        timelineController.setVideoProject(videoProject);
+        previewController.setPreviewEngine(videoProject.getPreviewEngine());
     }
 
     public void initialize() {
@@ -39,6 +46,9 @@ public class MainController {
             AnchorPane previewContent = loader.load();
             previewController = loader.getController();
             previewPanel.getChildren().add(previewContent);
+
+            //Curseur sliderController = loader.getController();
+            //Curseur.setPreviewEngine(previewEngine);
 
             // Configurer les raccourcis une fois que la scène est prête
             Scene scene = previewPanel.getScene();

@@ -13,16 +13,34 @@
                AnchorPane.rightAnchor="0.0"
                fx:controller="com.timeline.TimelineController"
                xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+
     <!-- Ici on insert les tracks (cf le controller + com.timeline/Track.fxml -->
     <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
         <Button fx:id="addTrackButton" onAction="#addTrackButton" text="AddTrack" />
         <Button fx:id="supprimerTrack" onAction="#supprimerTrack" text="SupprimerTrack" />
         <Button fx:id="separer" text="Separer" onAction="#separer" />
     </HBox>
-    <HBox layoutX="14.0" layoutY="50.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0">
+
+    <GridPane layoutX="14.0" layoutY="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="25.0" hgap="10.0">
+        <!-- Contraintes des colonnes : 20% pour le Label, 80% pour le Slider -->
+        <columnConstraints>
+            <ColumnConstraints percentWidth="19"/>
+            <ColumnConstraints percentWidth="81"/>
+        </columnConstraints>
+
+        <!-- Label compteur -->
         <Label fx:id="timerLabel"
-               AnchorPane.leftAnchor="14.0"
-               AnchorPane.bottomAnchor="0.0"
+               GridPane.columnIndex="0"
                style="-fx-font-size: 18px; -fx-text-fill: black;" />
-    </HBox>
-    </SplitPane>
+
+        <!-- Curseur de timeline -->
+        <Slider fx:id="timeSlider"
+                GridPane.columnIndex="1"
+                min="0" max="100" value="0"
+                showTickMarks="true"
+                showTickLabels="true"
+                majorTickUnit="10"
+                minorTickCount="5"
+                maxWidth="Infinity" />
+    </GridPane>
+</SplitPane>

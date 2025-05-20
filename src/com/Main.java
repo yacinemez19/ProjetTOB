@@ -30,7 +30,9 @@ public class Main extends Application {
         VideoProject videoProject = new VideoProject(
                 new ClipRegistry(),
                 new TrackManager(),
-                new GStreamerVideoImporter()
+                new GStreamerVideoImporter(),
+                new PreviewEngine()
+
         );
 
         // Charger le fichier FXML
@@ -56,7 +58,7 @@ public class Main extends Application {
         // Petit scénario de test
         Track track = new Track();
         // on importe un fichier pour test
-        File videoFile = new File("videos/nuuuuuul.MTS");
+        File videoFile = new File("videos/nuuuuuul.MP4");
         // on ajoute dans le video project
         videoProject.importVideo(videoFile.toURI());
         videoProject.addTrack(track);
@@ -68,7 +70,7 @@ public class Main extends Application {
         new Thread(() -> {
             try {
                 Thread.sleep(3_000); // 3 secondes
-                File videoFile2 = new File("videos/ptitsdej.MXF");
+                File videoFile2 = new File("videos/ptitsdej.MP4");
                 System.out.println("Path: " + videoFile2.getAbsolutePath());
                 System.out.println("Exists: " + videoFile2.exists());
                 videoProject.importVideo(videoFile2.toURI());
