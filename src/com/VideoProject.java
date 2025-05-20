@@ -2,11 +2,13 @@ package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.preview.PreviewEngine;
 import com.timeline.Track;
 
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ public class VideoProject {
     private ClipRegistry clipRegistry;
     private TrackManager trackManager;
     private VideoImporter videoImporter;
+    private PreviewEngine previewEngine;
 
     private String projectName;
 
@@ -32,12 +35,8 @@ public class VideoProject {
      * @param videoImporter  L'importateur vidéo.
      */
     public VideoProject(ClipRegistry clipRegistry, TrackManager trackManager,
-                        VideoImporter videoImporter) {
-        this.clipRegistry = clipRegistry;
-        this.trackManager = trackManager;
-        this.videoImporter = videoImporter;
-
-        this.projectName = "Video Project";
+                        VideoImporter videoImporter, PreviewEngine previewEngine) {
+        this(clipRegistry, trackManager, videoImporter, previewEngine, "Video Project");
     }
 
     /**
@@ -48,11 +47,11 @@ public class VideoProject {
      * @param videoImporter  L'importateur vidéo.
      */
     public VideoProject(ClipRegistry clipRegistry, TrackManager trackManager,
-                        VideoImporter videoImporter, String projectName) {
+                        VideoImporter videoImporter, PreviewEngine previewEngine, String projectName) {
         this.clipRegistry = clipRegistry;
         this.trackManager = trackManager;
         this.videoImporter = videoImporter;
-
+        this.previewEngine = previewEngine;
         this.projectName = projectName;
     }
 
@@ -165,6 +164,13 @@ public class VideoProject {
      */
     public long getMaxDuration() {
         return trackManager.getMaxDuration();
+    }
+    /**
+     *
+     * Obtenir le previewEngine associé
+     */
+    public PreviewEngine getPreviewEngine() {
+        return previewEngine;
     }
 
     /**

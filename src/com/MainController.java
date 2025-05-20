@@ -36,6 +36,7 @@ public class MainController {
         importPaneController.setVideoProject(videoProject);
         menuBarController.setVideoProject(videoProject);
         timelineController.setVideoProject(videoProject);
+        previewController.setPreviewEngine(videoProject.getPreviewEngine());
     }
 
     public void initialize() {
