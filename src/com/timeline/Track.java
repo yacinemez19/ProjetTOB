@@ -138,14 +138,43 @@ public class Track {
      * @return TimelineObject l'objet à ce moment
      */
     public TimelineObject getObjectAtTime(long timing) {
+
+        if (elements.isEmpty()) {
+            endCurrentObject = 0;
+            currentIndex = -1; // Indiquer qu'aucun objet n'est courant
+            return null;
+        }
+
         if (timing > endCurrentObject) {
-            for (TimelineObject object : elements) {
+            for (int i = 0; i < elements.size(); i++) {
+                TimelineObject object = elements.get(i);
                 long start = object.getStart();
                 long end = object.getDuration() + start;
-                if (timing < end && timing >= start) {
+                if (timing >= start && timing < end) {
                     currentIndex = elements.indexOf(object);
                     endCurrentObject = end;
                     return object;
+                } else if (timing < start && currentIndex == -1) {
+                    // Si le timing est avant le début du premier objet trouvé
+                    endCurrentObject = start;
+                    return null;
+                } else if (timing >= end && i == elements.size() - 1) {
+                    // Si le timing est après la fin du dernier objet
+                    endCurrentObject = Long.MAX_VALUE;
+                    return null;
+                } else if (timing >= end) {
+                    // Vérifier l'espace entre cet objet et le suivant
+                    if (i + 1 < elements.size()) {
+                        long nextStart = elements.get(i + 1).getStart();
+                        if (timing >= end && timing < nextStart) {
+                            endCurrentObject = nextStart;
+                            return null;
+                        }
+                    } else {
+                        // Si c'est le dernier élément, la période de "noir" dure indéfiniment après
+                        endCurrentObject = Long.MAX_VALUE;
+                        return null;
+                    }
                 }
             }
             return null;
