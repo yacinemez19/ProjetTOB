@@ -278,11 +278,21 @@ public class PreviewEngine {
     }
 
     private void updatePreview(long newPosition) {
-        System.out.println("[Preview Engine] updatePreview position : " + newPosition);
+        //System.out.println("[Preview Engine] updatePreview position : " + newPosition);
         if (currentPlayingTrack.newClipToRender(newPosition)) {
             System.out.println("[Preview Engine] updatePreview ON UPDATE LE CLIP EN COURS ");
             TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
             padManager.padSwapper(audioSelector, videoSelector, curr);
+            boolean result = pipeline.seek(
+                    1.0,
+                    Format.TIME,
+                    EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
+                    SeekType.SET, curr.getOffset(),
+                    SeekType.NONE, -1
+            );
+            if (!result) {
+                System.out.println("[Preview Engine] Next frame seek failed");
+            }
         }
     }
 }
