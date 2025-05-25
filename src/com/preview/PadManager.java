@@ -22,14 +22,12 @@ public class PadManager {
             System.out.println("Audio Sink Pad linked pour " + timelineObject.getName());
             pad.link(audioSinkPad);
             timelineObject.setAudioPad(audioSinkPad);
-            audioSelector.set("active-pad", timelineObject.getAudioPad());
         }
         // On link la vidéo
         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
             System.out.println("Video Sink Pad linked pour " + timelineObject.getName());
             pad.link(videoSinkPad);
             timelineObject.setVideoPad(videoSinkPad);
-            videoSelector.set("active-pad", timelineObject.getVideoPad());
         }
     }
 

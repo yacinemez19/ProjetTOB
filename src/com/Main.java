@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -63,25 +64,17 @@ public class Main extends Application {
         videoProject.importVideo(videoFile.toURI());
         videoProject.addTrack(track);
         Clip testClip = videoProject.getClip(videoFile.toURI());
-        TimelineObject testObject = new TimelineObject(testClip, "video", 0, 0);
-        PreviewEngine previewEngine = mainController.getPreviewEngine();
-        previewEngine.preloadClip(testObject);
+        track.addTimelineObject(testClip, 0, 3000);
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(3_000); // 3 secondes
-                File videoFile2 = new File("videos/ptitsdej.MP4");
-                System.out.println("Path: " + videoFile2.getAbsolutePath());
-                System.out.println("Exists: " + videoFile2.exists());
-                videoProject.importVideo(videoFile2.toURI());
-                Clip newTestClip = videoProject.getClip(videoFile2.toURI());
-                TimelineObject newTestObject = new TimelineObject(newTestClip, "video", 0, 0);
-                previewEngine.preloadClip(newTestObject);
-            } catch (InterruptedException e) {
-                System.err.println("Thread interrompu !");
-                e.printStackTrace();
-            }
-        }).start();
+        File videoFile2 = new File("videos/ptitsdej.MP4");
+        System.out.println("Path: " + videoFile2.getAbsolutePath());
+        System.out.println("Exists: " + videoFile2.exists());
+        videoProject.importVideo(videoFile2.toURI());
+        Clip newTestClip = videoProject.getClip(videoFile2.toURI());
+        track.addTimelineObject(newTestClip, 3000, 5000);
+
+        PreviewEngine previewEngine = mainController.getPreviewEngine();
+        previewEngine.playTrack(track);
         /// ////////////////////
     }
 }

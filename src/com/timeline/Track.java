@@ -20,6 +20,7 @@ public class Track {
         this.elements = FXCollections.observableArrayList();
         this.name = name;
         timer = new TimelineTimer();
+        endCurrentObject = 0;
     }
 
     public Track() {
@@ -46,7 +47,7 @@ public class Track {
      * @throws IllegalArgumentException si le timing est négatif ou si l'espace n'est pas libre
      * @return TimelineObject
      */
-    public TimelineObject addTimelineObject(Clip obj, long timing) {
+    public TimelineObject addTimelineObject(Clip obj, long timing, long duration) {
         if (timing < 0) {
             throw new IllegalArgumentException("Le timing ne peut pas être négatif");
         }
@@ -57,7 +58,7 @@ public class Track {
             index = elements.size();
         }
 
-        TimelineObject timelineObject = new TimelineObject(obj, "video", 0, timing);
+        TimelineObject timelineObject = new TimelineObject(obj, "video", 0, timing, duration);
 
         // Décaler tous les objets après le timing si l'espace n'est pas suffisant
         if (!isPlaceEnough(timing, timelineObject)) {
@@ -166,6 +167,7 @@ public class Track {
      * @return boolean Vrai si et seulement si on a changé d'objet
      */
     public boolean newClipToRender(long timing) {
+        System.out.println("New clip to render end : " + endCurrentObject);
         return (timing > endCurrentObject);
     }
     public boolean modifyTimelineObject(long timing, String propertyName, Object newValue) {
@@ -236,6 +238,10 @@ public class Track {
         for (TimelineObject object : elements) {
             action.accept(object);
         }
+    }
+
+    public int getElementCount() {
+        return elements.size();
     }
 
     public TimelineTimer getTimer() {

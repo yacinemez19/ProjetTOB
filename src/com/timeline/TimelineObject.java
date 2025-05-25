@@ -17,13 +17,17 @@ public class TimelineObject {
     private long start;
     private long duration;
 
-    public TimelineObject(Clip source, String mediaType, long offset, long start) {
+    public TimelineObject(Clip source, String mediaType, long offset, long start, long duration) {
         this.source = source;
         this.name = source.getName();
         this.mediaType = "video"; // en vrai on appellera la classe clip pour avoir l'info
         this.offset = offset; // TODO : ca veut dire quoi offset ?
         this.start = start;
-        this.duration = source.getDuration().toNanos();
+        this.duration = duration;
+    }
+
+    public TimelineObject(Clip source, String mediaType, long offset, long start) {
+        this(source, mediaType, offset, start, source.getDuration().toMillis());
     }
 
     public void shift(long delta) {

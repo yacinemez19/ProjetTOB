@@ -63,7 +63,7 @@ public class TrackController {
      * @param zoom le niveau de zoom
      */
     public void addMediaBlock(Clip clip, double zoom, long timing) {
-        TimelineObject timelineObject = model.addTimelineObject(clip, timing);
+        TimelineObject timelineObject = model.addTimelineObject(clip, timing, clip.getDuration().toMillis());
 
         // Obtenir un nombre aléatoire entre 0 et 255
         // TODO : a remplacer par un vrai nom

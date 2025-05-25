@@ -18,6 +18,7 @@ import org.freedesktop.gstreamer.message.StateChangedMessage;
 
 import java.io.File;
 import java.util.EnumSet;
+import java.util.concurrent.CountDownLatch;
 
 public class PreviewEngine {
 
@@ -111,7 +112,7 @@ public class PreviewEngine {
 
     }
 
-    public void preloadClip(TimelineObject newClip) {
+    public void preloadClip(TimelineObject newClip, CountDownLatch latch) {
 
         Element source = ElementFactory.make("uridecodebin", "source"+newClip.getName());
         pipeline.add(source);
@@ -124,10 +125,11 @@ public class PreviewEngine {
                     }
                 }
         );
-        pipeline.setState(State.PAUSED);
+       //pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
         source.connect((Element.NO_MORE_PADS) (elem) -> {
             System.out.println("Plus de pads à ajouter pour " + newClip.getName());
+            latch.countDown();
         });
 
         newClip.setGstreamerSource(source);
@@ -139,6 +141,7 @@ public class PreviewEngine {
     public void enginePause() {
         if (isStarted) {
             pipeline.setState(State.PAUSED);
+            currentPlayingTrack.getTimer().pause();
         }
     }
 
@@ -148,6 +151,7 @@ public class PreviewEngine {
     public void engineResume() {
         if (isStarted) {
             pipeline.setState(State.PLAYING);
+            currentPlayingTrack.getTimer().play();
         }
     }
 
@@ -251,15 +255,32 @@ public class PreviewEngine {
      */
     public void playTrack(Track track) {
         currentPlayingTrack = track;
-        TimelineTimer timer = track.getTimer();
-        track.mapElements(this::preloadClip);
-        timer.currentTimeMsProperty().addListener((observable, oldValue, newValue) -> {
-            updatePreview(newValue.longValue());
-        });
+        CountDownLatch latch = new CountDownLatch(track.getElementCount());
+        System.out.println("[Preview Engine] playing track with " + track.getElementCount() + " elements");
+        track.mapElements((e) -> preloadClip(e, latch));
+        pipeline.setState(State.PAUSED);
+        new Thread(() -> {
+            try {
+                latch.await();
+                TimelineTimer timer = track.getTimer();
+                timer.setCurrentTimeMs(0);
+                updatePreview(0);
+                timer.play();
+                enginePause();
+                timer.currentTimeMsProperty().addListener((observable, oldValue, newValue) -> {
+                    updatePreview(newValue.longValue());
+                });
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
     private void updatePreview(long newPosition) {
+        System.out.println("[Preview Engine] updatePreview position : " + newPosition);
         if (currentPlayingTrack.newClipToRender(newPosition)) {
+            System.out.println("[Preview Engine] updatePreview ON UPDATE LE CLIP EN COURS ");
             TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
             padManager.padSwapper(audioSelector, videoSelector, curr);
         }
