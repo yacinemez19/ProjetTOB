@@ -44,7 +44,7 @@ public class TimelineObject {
         this.gstreamerSource = gstreamerSource;
     }
 
-    public void setvideoPad(Pad videoPad) {
+    public void setVideoPad(Pad videoPad) {
         this.videoPad = videoPad;
     }
 
@@ -54,6 +54,14 @@ public class TimelineObject {
 
     public String getName() {
         return name;
+    }
+
+    public Pad getVideoPad() {
+        return videoPad;
+    }
+
+    public Pad getAudioPad() {
+        return audioPad;
     }
 
     public void setName(String name) {

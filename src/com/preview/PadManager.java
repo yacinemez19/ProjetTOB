@@ -29,7 +29,14 @@ public class PadManager {
             System.out.println("Video Sink Pad linked");
             videoSelector.set("active-pad", videoSinkPad);
             pad.link(videoSinkPad);
-            timelineObject.setvideoPad(videoSinkPad);
+            timelineObject.setVideoPad(videoSinkPad);
         }
+    }
+
+    public void padSwapper(Element audioSelector, Element videoSelector, TimelineObject objectToPlay) {
+        if (objectToPlay.getMediaType().equals("video")) {
+            videoSelector.set("active-pad", objectToPlay.getVideoPad());
+        }
+        audioSelector.set("active-pad", objectToPlay.getAudioPad());
     }
 }

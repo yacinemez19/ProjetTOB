@@ -2,6 +2,8 @@ package com.preview;
 
 import com.Utils;
 import com.timeline.TimelineObject;
+import com.timeline.TimelineTimer;
+import com.timeline.Track;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -26,6 +28,7 @@ public class PreviewEngine {
     private PadManager padManager = new PadManager();
     private Element audioSelector;
     private Element videoSelector;
+    private Track currentPlayingTrack;
 
     /**
      * Permet de lancer le rendu dans le Preview
@@ -242,6 +245,23 @@ public class PreviewEngine {
             return pipeline.queryPosition(Format.TIME);
         } else {
             return 0;
+        }
+    }
+    /**
+     * Permet de récupérer la position temporel actuelle
+     */
+    public void playTrack(Track track) {
+        currentPlayingTrack = track;
+        TimelineTimer timer = track.getTimer();
+        timer.currentTimeMsProperty().addListener((observable, oldValue, newValue) -> {
+            updatePreview(newValue.longValue());
+        });
+    }
+
+    private void updatePreview(long newPosition) {
+        if (currentPlayingTrack.newClipToRender(newPosition)) {
+            TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
+            padManager.padSwapper(audioSelector, videoSelector, curr);
         }
     }
 }

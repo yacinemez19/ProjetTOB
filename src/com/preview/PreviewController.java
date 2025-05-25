@@ -64,7 +64,7 @@ public class PreviewController {
     // Affiche l’image précédente en mettant la vidéo en pause
     @FXML
     public void handleLastFrame() {
-        previewEngine.engineNextFrame();
+        previewEngine.engineLastFrame();
     }
 
     // Affiche l’image suivante en mettant la vidéo en pause

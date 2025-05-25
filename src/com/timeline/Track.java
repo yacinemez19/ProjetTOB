@@ -5,19 +5,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Track {
     private String name;
     private ObservableList<TimelineObject> elements;
-    int currentIndex;
+    private TimelineTimer timer;
+    private int currentIndex;
+    private long endCurrentObject;
 
     public Track(String name) {
         this.elements = FXCollections.observableArrayList();
         this.name = name;
+        timer = new TimelineTimer();
     }
 
     public Track() {
@@ -135,16 +136,37 @@ public class Track {
      * @return TimelineObject l'objet à ce moment
      */
     public TimelineObject getObjectAtTime(long timing) {
-        for (TimelineObject object : elements) {
-            long start = object.getStart();
-            long end = object.getDuration() + start;
-            if (timing < end && timing >= start) {
-                return object;
+        if (timing > endCurrentObject) {
+            for (TimelineObject object : elements) {
+                long start = object.getStart();
+                long end = object.getDuration() + start;
+                if (timing < end && timing >= start) {
+                    currentIndex = elements.indexOf(object);
+                    endCurrentObject = end;
+                    return object;
+                }
             }
+            return null;
+        } else {
+            return elements.get(currentIndex);
         }
-        return null;
+    }
+    /*
+     * Fonction retournant l'objet actuellement sous le curseur.
+     * @return TimelineObject l'objet à ce moment
+     */
+    public TimelineObject getCurrentObject() {
+        return getObjectAtTime(timer.getCurrentTimeMs());
     }
 
+    /**
+     * Fonction retournant si on a changé d'objet ou pas par rapport au temps dans la timeline
+     *
+     * @return boolean Vrai si et seulement si on a changé d'objet
+     */
+    public boolean newClipToRender(long timing) {
+        return (timing > endCurrentObject);
+    }
     public boolean modifyTimelineObject(long timing, String propertyName, Object newValue) {
         TimelineObject obj = getObjectAtTime(timing);
         if (obj == null) return false;
@@ -207,6 +229,10 @@ public class Track {
 
     public ObservableList<TimelineObject> getElements() {
         return elements;
+    }
+
+    public TimelineTimer getTimer() {
+        return timer;
     }
 
     public String toString() {
