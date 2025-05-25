@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Track {
     private String name;
@@ -229,6 +230,12 @@ public class Track {
 
     public ObservableList<TimelineObject> getElements() {
         return elements;
+    }
+
+    public void mapElements (Consumer<TimelineObject> action) {
+        for (TimelineObject object : elements) {
+            action.accept(object);
+        }
     }
 
     public TimelineTimer getTimer() {

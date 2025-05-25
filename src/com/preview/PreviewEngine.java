@@ -97,6 +97,7 @@ public class PreviewEngine {
                     StateChangedMessage stateChangedMsg = (StateChangedMessage) message;
                     //State oldState = stateChangedMsg.getOldState();
                     State newState = stateChangedMsg.getNewState();
+                    System.out.println("New state : " + newState);
                     if (newState == State.PLAYING) {
                         previewListener.onPlaying();
                     } else {
@@ -119,7 +120,6 @@ public class PreviewEngine {
                 new Element.PAD_ADDED() {
                     @Override
                     public void padAdded(Element element, Pad pad) {
-                        System.out.println("On passe par la ");
                         padManager.padLinker(element, pad, audioSelector, videoSelector, newClip);
                     }
                 }
@@ -127,8 +127,7 @@ public class PreviewEngine {
         pipeline.setState(State.PAUSED);
         // attendre que les pads soient liés
         source.connect((Element.NO_MORE_PADS) (elem) -> {
-            System.out.println("Plus de pads à ajouter.");
-            pipeline.setState(State.PLAYING);
+            System.out.println("Plus de pads à ajouter pour " + newClip.getName());
         });
 
         newClip.setGstreamerSource(source);
@@ -253,6 +252,7 @@ public class PreviewEngine {
     public void playTrack(Track track) {
         currentPlayingTrack = track;
         TimelineTimer timer = track.getTimer();
+        track.mapElements(this::preloadClip);
         timer.currentTimeMsProperty().addListener((observable, oldValue, newValue) -> {
             updatePreview(newValue.longValue());
         });

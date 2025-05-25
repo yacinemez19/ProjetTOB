@@ -19,17 +19,17 @@ public class PadManager {
         System.out.println(type);
         // On link l'audio
         if (!audioSinkPad.isLinked() && type.equals("audio/x-raw")) {
-            System.out.println("Audio Sink Pad linked");
-            audioSelector.set("active-pad", audioSinkPad);
+            System.out.println("Audio Sink Pad linked pour " + timelineObject.getName());
             pad.link(audioSinkPad);
             timelineObject.setAudioPad(audioSinkPad);
+            audioSelector.set("active-pad", timelineObject.getAudioPad());
         }
         // On link la vidéo
         if (!videoSinkPad.isLinked() && type.equals("video/x-raw")) {
-            System.out.println("Video Sink Pad linked");
-            videoSelector.set("active-pad", videoSinkPad);
+            System.out.println("Video Sink Pad linked pour " + timelineObject.getName());
             pad.link(videoSinkPad);
             timelineObject.setVideoPad(videoSinkPad);
+            videoSelector.set("active-pad", timelineObject.getVideoPad());
         }
     }
 
