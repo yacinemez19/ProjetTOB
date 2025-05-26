@@ -11,8 +11,9 @@ public class Curseur {
     private VideoProject videoProject;
 
     /**
-     * Constructeur de la classe Curseur
-     * @param timeSlider
+     * Constructeur de la classe Curseur.
+     * @param timeSlider Slider pour le curseur de temps
+     * @param videoProject Projet vidéo associé
      */
     public Curseur(Slider timeSlider, VideoProject videoProject) {
         this.timeSlider = timeSlider;
@@ -21,18 +22,17 @@ public class Curseur {
     }
 
     /**
-     * Fonction d initialisation des listeners
+     * Initialiser des listeners
      */
     private void initListeners() {
         timeSlider.setOnMouseReleased(e -> {
-            double value = timeSlider.getValue();
-            this.position = value;
+            this.position = timeSlider.getValue();
         });
     }
 
     /**
-     * Fonction qui permet de mettre à jour la position du curseur
-     * @param position
+     * Mettre à jour la position du curseur.
+     * @param position position du curseur
      */
     public void setPosition(double position) {
         this.position = position;
@@ -40,7 +40,7 @@ public class Curseur {
     }
 
     /**
-     * Fonction qui retourne la position du curseur
+     * Obtenir la position du curseur
      * @return position
      */
     public double getPosition() {
