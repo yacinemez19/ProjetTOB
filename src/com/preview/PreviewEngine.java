@@ -1,5 +1,7 @@
 package com.preview;
 
+import com.Clip;
+import com.ImportedClip;
 import com.Utils;
 import com.timeline.TimelineObject;
 import com.timeline.TimelineTimer;
@@ -9,16 +11,18 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 import org.freedesktop.gstreamer.*;
 import org.freedesktop.gstreamer.event.SeekFlags;
 import org.freedesktop.gstreamer.event.SeekType;
 import org.freedesktop.gstreamer.fx.FXImageSink;
 import org.freedesktop.gstreamer.message.StateChangedMessage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.time.Duration;
 import java.util.EnumSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class PreviewEngine {
 
@@ -29,6 +33,7 @@ public class PreviewEngine {
     private PadManager padManager = new PadManager();
     private Element audioSelector;
     private Element videoSelector;
+    private TimelineObject blackObject;
     private Track currentPlayingTrack;
 
     /**
@@ -133,6 +138,37 @@ public class PreviewEngine {
         });
 
         newClip.setGstreamerSource(source);
+    }
+
+    private void loadBlack () {
+        File videoFile = new File("ressources/assets/blackSource.mp4");
+
+                Clip blackVideo = new ImportedClip(videoFile.toURI(),
+                        Duration.ofSeconds(1),
+                                3840,
+                                2160,
+                                new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB));
+
+        blackObject = new TimelineObject(blackVideo, "video", 0, 0);
+        Element blackSource = ElementFactory.make("uridecodebin", "_blackSource");
+
+        pipeline.add(blackSource);
+        blackSource.set("uri", blackObject.getSource().getSource().toString());
+        blackSource.connect(
+                                new Element.PAD_ADDED() {
+                    @Override
+                    public void padAdded(Element element, Pad pad) {
+                        padManager.padLinker(element, pad, audioSelector, videoSelector, blackObject);
+                    }
+                }
+        );
+        //pipeline.setState(State.PAUSED);
+        // attendre que les pads soient liés
+        blackSource.connect((Element.NO_MORE_PADS) (elem) -> {
+            System.out.println("Plus de pads à ajouter pour le noir");
+        });
+
+        blackObject.setGstreamerSource(blackSource);
     }
 
     /**
@@ -258,6 +294,7 @@ public class PreviewEngine {
         CountDownLatch latch = new CountDownLatch(track.getElementCount());
         System.out.println("[Preview Engine] playing track with " + track.getElementCount() + " elements");
         track.mapElements((e) -> preloadClip(e, latch));
+        loadBlack();
         pipeline.setState(State.PAUSED);
         new Thread(() -> {
             try {
@@ -282,12 +319,18 @@ public class PreviewEngine {
         if (currentPlayingTrack.newClipToRender(newPosition)) {
             System.out.println("[Preview Engine] updatePreview ON UPDATE LE CLIP EN COURS ");
             TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
-            padManager.padSwapper(audioSelector, videoSelector, curr);
+            long offset = 0;
+            if (curr != null) {
+                    padManager.padSwapper(audioSelector, videoSelector, curr);
+                    offset = curr.getOffset();
+            } else {
+                    padManager.padSwapper(audioSelector, videoSelector, blackObject);
+            }
             boolean result = pipeline.seek(
                     1.0,
                     Format.TIME,
                     EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
-                    SeekType.SET, curr.getOffset(),
+                    SeekType.SET, offset,
                     SeekType.NONE, -1
             );
             if (!result) {

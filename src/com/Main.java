@@ -59,19 +59,19 @@ public class Main extends Application {
         // Petit scénario de test
         Track track = new Track();
         // on importe un fichier pour test
-        File videoFile = new File("videos/nuuuuuul.MP4");
+        File videoFile = new File("videos/nuuuuuul.MTS");
         // on ajoute dans le video project
         videoProject.importVideo(videoFile.toURI());
         videoProject.addTrack(track);
         Clip testClip = videoProject.getClip(videoFile.toURI());
         track.addTimelineObject(testClip, 0, 3000);
 
-        File videoFile2 = new File("videos/ptitsdej.MP4");
+        File videoFile2 = new File("videos/ptitsdej.MXF");
         System.out.println("Path: " + videoFile2.getAbsolutePath());
         System.out.println("Exists: " + videoFile2.exists());
         videoProject.importVideo(videoFile2.toURI());
         Clip newTestClip = videoProject.getClip(videoFile2.toURI());
-        track.addTimelineObject(newTestClip, 3000, 5000);
+        track.addTimelineObject(newTestClip, 4000, 6000);
 
         PreviewEngine previewEngine = mainController.getPreviewEngine();
         previewEngine.playTrack(track);
