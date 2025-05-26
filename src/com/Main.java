@@ -33,8 +33,13 @@ public class Main extends Application {
                 new TrackManager(),
                 new GStreamerVideoImporter(),
                 new PreviewEngine()
-
         );
+
+        // Créer la track principale
+        Track mainTrack = new Track("Track Principale");
+        videoProject.addTrack(mainTrack);
+        // TODO : On est vraiment pas sensé faire ça mais bon j'ai pas mieux
+        videoProject.getPreviewEngine().setCurrentTrack(mainTrack);
 
         // Charger le fichier FXML
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(
@@ -55,7 +60,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        /// /////////////////////
+        /* Pas dans main je t'en suuplie !!
         // Petit scénario de test
         Track track = new Track();
         // on importe un fichier pour test
@@ -72,9 +77,6 @@ public class Main extends Application {
         videoProject.importVideo(videoFile2.toURI());
         Clip newTestClip = videoProject.getClip(videoFile2.toURI());
         track.addTimelineObject(newTestClip, 3000, 5000);
-
-        PreviewEngine previewEngine = mainController.getPreviewEngine();
-        previewEngine.playTrack(track);
-        /// ////////////////////
+        /// ///////////////////*/
     }
 }

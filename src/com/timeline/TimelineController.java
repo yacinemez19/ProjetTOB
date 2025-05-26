@@ -1,6 +1,7 @@
 package com.timeline;
 
 import com.VideoProject;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,34 +49,54 @@ public class TimelineController implements Initializable {
         timeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             curseur.setPosition(newVal.doubleValue()); // Position en secondes ou unités de temps
         });
-
     }
 
     /*
      * Setter pour le projet vidéo
      * @param videoProject le projet vidéo à définir
      */
-    public void setVideoProject(VideoProject videoProject) {
-        this.videoProject = videoProject;
+    public void setVideoProject(VideoProject videoProjectToSet) {
+        this.videoProject = videoProjectToSet;
+        for (Track track : videoProject.getTracks()) {
+            try {
+                addTrackVue(track);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        videoProject.getTracks().addListener((ListChangeListener<Track>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (Track track : change.getAddedSubList()) {
+                        try {
+                            addTrackVue(track);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 
-    private void addTrackButton(String name) throws IOException {
-        //System.out.println("======TRACK FXML : " + getClass().getResource("../ressources/views/com.timeline/Track.fxml"));
+    private void addTrackVue(Track trackModel) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../ressources/views/timeline/Track.fxml"));
         Node trackNode = loader.load();
         TrackController controller = loader.getController();
-        controller.setTrackName(name);
+
+        controller.setModel(trackModel);
+        controller.setTrackName(trackModel.getName());
         timelineSplitPane.getItems().add(trackNode);
-        videoProject.addTrack(controller.getTrack());
     }
 
     @FXML
-    private void addTrackButton() {
-        try{
-            addTrackButton("Track");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void addTrackButton() throws IOException {
+        String name = "Track " + (timelineSplitPane.getItems().size() + 1);
+        Track model = new Track(name);
+        videoProject.addTrack(model);
+        addTrackVue(model);
     }
 
     @FXML

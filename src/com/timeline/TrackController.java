@@ -38,7 +38,10 @@ public class TrackController {
     private VideoProject project;
 
     public void initialize() {
-        model = new Track();
+    }
+
+    public void setModel(Track modelToSet) {
+        this.model = modelToSet;
 
         model.getElements().addListener((ListChangeListener<TimelineObject>) change -> {
             while (change.next()) {

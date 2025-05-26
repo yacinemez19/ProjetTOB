@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.preview.PreviewEngine;
 import com.timeline.Track;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.net.URI;
@@ -130,7 +131,7 @@ public class VideoProject {
      *
      * @return liste des tracks
      */
-    public List<Track> getTracks(){
+    public ObservableList<Track> getTracks(){
 
         return this.getTrackManager().getTracks();
     }

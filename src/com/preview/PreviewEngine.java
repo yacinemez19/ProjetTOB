@@ -1,6 +1,7 @@
 package com.preview;
 
 import com.Utils;
+import com.VideoProject;
 import com.timeline.TimelineObject;
 import com.timeline.TimelineTimer;
 import com.timeline.Track;
@@ -294,5 +295,10 @@ public class PreviewEngine {
                 System.out.println("[Preview Engine] Next frame seek failed");
             }
         }
+    }
+
+    // TODO : Corriger cette merde
+    public void setCurrentTrack(Track track) {
+        this.currentPlayingTrack = track;
     }
 }

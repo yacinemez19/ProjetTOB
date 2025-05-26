@@ -1,6 +1,7 @@
 package com.preview;
 
 import com.Utils;
+import com.VideoProject;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -31,6 +32,8 @@ public class PreviewController {
 
     // Pipeline GStreamer et son sink vidéo pour l’intégration JavaFX
     private PreviewEngine previewEngine;
+
+    private VideoProject videoProject;
 
     // Lance la lecture de la vidéo
     @FXML
@@ -92,7 +95,7 @@ public class PreviewController {
 
     public void setPreviewEngine(PreviewEngine previewEngine) {
         // On récupère le previewEngine et on le lance
-        this.previewEngine = previewEngine;
+        this.previewEngine = previewEngine; // TODO : A changer maintenant qu'on a accès au videoProject
         // Création d'une com.timeline pour l'animation du timer
         timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
@@ -113,5 +116,9 @@ public class PreviewController {
             }
         };
         previewEngine.engineStart(videoView, myPreviewListener);
+    }
+
+    public void setVideoProject(VideoProject videoProject) {
+        this.videoProject = videoProject;
     }
 }
