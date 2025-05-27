@@ -1,8 +1,11 @@
 package com.preview;
 
 import com.Utils;
+import com.VideoProject;
+import com.timeline.Track;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -17,6 +20,9 @@ import java.io.File;
 import java.util.EnumSet;
 
 public class PreviewController {
+
+    private VideoProject videoProject;
+    private Track currentTrack;
 
     // Label pour afficher le temps écoulé
     @FXML
@@ -41,7 +47,7 @@ public class PreviewController {
     // Lance la lecture en reverse à vitesse normale
     @FXML
     private void handleReverse() {
-        previewEngine.enginePause();
+        previewEngine.engineReset();
 /*        pipeline.play();
         boolean result = pipeline.seek(
                 -1.0, // Lecture en arrière
@@ -73,7 +79,7 @@ public class PreviewController {
         previewEngine.engineNextFrame();
     }
 
-    public void togglePlayPause(){
+    public void togglePlayPause() {
         previewEngine.engineTogglePlayPause();
     }
 
@@ -90,28 +96,53 @@ public class PreviewController {
         return previewEngine;
     }
 
+    public void bindTimerLabel() {
+        if (currentTrack != null && currentTrack.getTimer() != null) {
+            // Utilisation de Bindings.createStringBinding pour formater le temps
+            timerLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                            ClockTime.toString(currentTrack.getTimer().getCurrentTimeMs()),
+                    currentTrack.getTimer().currentTimeMsProperty()));
+        } else {
+            // Si aucun track n'est chargé, afficher une valeur par défaut
+            timerLabel.textProperty().unbind();
+            timerLabel.setText("00:00:00.000");
+        }
+    }
+
     public void setPreviewEngine(PreviewEngine previewEngine) {
         // On récupère le previewEngine et on le lance
         this.previewEngine = previewEngine;
         // Création d'une com.timeline pour l'animation du timer
-        timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+/*        timerTimeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             long[] position = new long[1];
             position[0] = previewEngine.engineGetCurrentPosition();
-            if(position[0] != -1) {
+            if (position[0] != -1) {
                 timerLabel.setText(String.format(ClockTime.toString(position[0])));
             }
         }));
-        timerTimeline.setCycleCount(Timeline.INDEFINITE); // on lance la com.timeline que quand la vidéo est prête
+        timerTimeline.setCycleCount(Timeline.INDEFINITE); // on lance la com.timeline que quand la vidéo est prête*/
 
         // Pour gérer pause/play
         PreviewListener myPreviewListener = new PreviewListener() {
             @Override
-            public void onPlaying() {timerTimeline.play();}
+            public void onPlaying() {
+                //timerTimeline.play();
+            }
+
             @Override
             public void onPaused() {
-                timerTimeline.play();
+                //timerTimeline.play();
             }
         };
         previewEngine.engineStart(videoView, myPreviewListener);
+    }
+
+
+    public void setVideoProject(VideoProject videoProject) {
+        this.videoProject = videoProject;
+    }
+
+    public void setCurrentTrack(Track currentTrack) {
+        this.currentTrack = currentTrack;
     }
 }

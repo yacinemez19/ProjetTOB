@@ -138,7 +138,7 @@ public class ImportController implements Initializable {
         // Ajouter un listener pour ajouter le clip à la piste
         item.setOnAction(event -> {
             Clip selected = clipTable.getSelectionModel().getSelectedItem();
-            track.addTimelineObjectAtEnd(selected);
+            track.addTimelineObjectAtEnd(selected, videoProject.getPreviewEngine());
         });
 
         System.out.println(track);

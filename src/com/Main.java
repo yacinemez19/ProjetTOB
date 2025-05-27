@@ -56,7 +56,7 @@ public class Main extends Application {
         primaryStage.show();
 
         /// /////////////////////
-        // Petit scénario de test
+/*        // Petit scénario de test
         Track track = new Track();
         // on importe un fichier pour test
         File videoFile = new File("videos/nuuuuuul.MTS");
@@ -74,7 +74,7 @@ public class Main extends Application {
         track.addTimelineObject(newTestClip, 4000, 6000);
 
         PreviewEngine previewEngine = mainController.getPreviewEngine();
-        previewEngine.playTrack(track);
+        previewEngine.playTrack(track);*/
         /// ////////////////////
     }
 }

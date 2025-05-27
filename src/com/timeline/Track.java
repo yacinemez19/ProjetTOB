@@ -1,6 +1,7 @@
 package com.timeline;
 
 import com.Clip;
+import com.preview.PreviewEngine;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -30,22 +31,25 @@ public class Track {
 
     /**
      * Fonction ajoutant un objet au bout de la piste.
+     *
      * @param obj l'objet à ajouter
      */
-    public void addTimelineObjectAtEnd(Clip obj) {
-       elements.add(new TimelineObject(obj,
-               "video",
-               0,
-               getTotalDuration()));
+    public void addTimelineObjectAtEnd(Clip obj, PreviewEngine engine) {
+        TimelineObject newTimelineObject = new TimelineObject(obj,
+                "video",
+                0,
+                getTotalDuration());
+        elements.add(newTimelineObject);
+        //engine.preloadClip(newTimelineObject);
     }
 
     /**
      * Fonction ajoutant un objet à la piste à un moment donné.
      *
-     * @param obj l'objet à ajouter
+     * @param obj    l'objet à ajouter
      * @param timing le moment donné
-     * @throws IllegalArgumentException si le timing est négatif ou si l'espace n'est pas libre
      * @return TimelineObject
+     * @throws IllegalArgumentException si le timing est négatif ou si l'espace n'est pas libre
      */
     public TimelineObject addTimelineObject(Clip obj, long timing, long duration) {
         if (timing < 0) {
@@ -145,43 +149,41 @@ public class Track {
             return null;
         }
 
-        if (timing > endCurrentObject) {
-            for (int i = 0; i < elements.size(); i++) {
-                TimelineObject object = elements.get(i);
-                long start = object.getStart();
-                long end = object.getDuration() + start;
-                if (timing >= start && timing < end) {
-                    currentIndex = elements.indexOf(object);
-                    endCurrentObject = end;
-                    return object;
-                } else if (timing < start && currentIndex == -1) {
-                    // Si le timing est avant le début du premier objet trouvé
-                    endCurrentObject = start;
-                    return null;
-                } else if (timing >= end && i == elements.size() - 1) {
-                    // Si le timing est après la fin du dernier objet
-                    endCurrentObject = Long.MAX_VALUE;
-                    return null;
-                } else if (timing >= end) {
-                    // Vérifier l'espace entre cet objet et le suivant
-                    if (i + 1 < elements.size()) {
-                        long nextStart = elements.get(i + 1).getStart();
-                        if (timing >= end && timing < nextStart) {
-                            endCurrentObject = nextStart;
-                            return null;
-                        }
-                    } else {
-                        // Si c'est le dernier élément, la période de "noir" dure indéfiniment après
-                        endCurrentObject = Long.MAX_VALUE;
+
+        for (int i = 0; i < elements.size(); i++) {
+            TimelineObject object = elements.get(i);
+            long start = object.getStart();
+            long end = object.getDuration() + start;
+            if (timing >= start && timing < end) {
+                currentIndex = elements.indexOf(object);
+                endCurrentObject = end;
+                return object;
+            } else if (timing < start) {
+                // Si le timing est avant le début du premier objet trouvé
+                endCurrentObject = start;
+                return null;
+            } else if (timing >= end && i == elements.size() - 1) {
+                // Si le timing est après la fin du dernier objet
+                endCurrentObject = Long.MAX_VALUE;
+                return null;
+            } else if (timing >= end) {
+                // Vérifier l'espace entre cet objet et le suivant
+                if (i + 1 < elements.size()) {
+                    long nextStart = elements.get(i + 1).getStart();
+                    if (timing >= end && timing < nextStart) {
+                        endCurrentObject = nextStart;
                         return null;
                     }
+                } else {
+                    // Si c'est le dernier élément, la période de "noir" dure indéfiniment après
+                    endCurrentObject = Long.MAX_VALUE;
+                    return null;
                 }
             }
-            return null;
-        } else {
-            return elements.get(currentIndex);
         }
+        return null;
     }
+
     /*
      * Fonction retournant l'objet actuellement sous le curseur.
      * @return TimelineObject l'objet à ce moment
@@ -199,6 +201,7 @@ public class Track {
         System.out.println("New clip to render end : " + endCurrentObject);
         return (timing > endCurrentObject);
     }
+
     public boolean modifyTimelineObject(long timing, String propertyName, Object newValue) {
         TimelineObject obj = getObjectAtTime(timing);
         if (obj == null) return false;
@@ -233,6 +236,7 @@ public class Track {
     public String getName() {
         return name;
     }
+
     public void changeTimelineName(String newName) {
         // TODO : Changer le nom de la Timeline
         this.name = newName;
@@ -240,9 +244,10 @@ public class Track {
 
     /**
      * Fonction retournant la durée totale de la track
+     *
      * @return long totalDuration
      */
-    public long getTotalDuration(){
+    public long getTotalDuration() {
         long totalDuration = 0;
 
         for (TimelineObject object : elements) {
@@ -263,7 +268,7 @@ public class Track {
         return elements;
     }
 
-    public void mapElements (Consumer<TimelineObject> action) {
+    public void mapElements(Consumer<TimelineObject> action) {
         for (TimelineObject object : elements) {
             action.accept(object);
         }
@@ -278,10 +283,10 @@ public class Track {
     }
 
     public String toString() {
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("name",this.getName());
-        data.put("elements",this.getItems());
-        data.put("currentIndex",this.getCurrentIndex());
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("name", this.getName());
+        data.put("elements", this.getItems());
+        data.put("currentIndex", this.getCurrentIndex());
         return data.toString();
     }
 }

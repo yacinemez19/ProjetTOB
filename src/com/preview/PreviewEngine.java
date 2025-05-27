@@ -35,6 +35,7 @@ public class PreviewEngine {
     private Element videoSelector;
     private TimelineObject blackObject;
     private Track currentPlayingTrack;
+    private PreviewController controller;
 
     /**
      * Permet de lancer le rendu dans le Preview
@@ -139,6 +140,27 @@ public class PreviewEngine {
 
         newClip.setGstreamerSource(source);
     }
+    public void preloadClip(TimelineObject newClip) {
+
+        Element source = ElementFactory.make("uridecodebin", "source"+newClip.getName());
+        pipeline.add(source);
+        source.set("uri", newClip.getSource().getSource().toString());
+        source.connect(
+                new Element.PAD_ADDED() {
+                    @Override
+                    public void padAdded(Element element, Pad pad) {
+                        padManager.padLinker(element, pad, audioSelector, videoSelector, newClip);
+                    }
+                }
+        );
+        //pipeline.setState(State.PAUSED);
+        // attendre que les pads soient liés
+        source.connect((Element.NO_MORE_PADS) (elem) -> {
+            System.out.println("Plus de pads à ajouter pour " + newClip.getName());
+        });
+
+        newClip.setGstreamerSource(source);
+    }
 
     private void loadBlack () {
         File videoFile = new File("ressources/assets/blackSource.mp4");
@@ -186,9 +208,18 @@ public class PreviewEngine {
      */
     public void engineResume() {
         if (isStarted) {
+            playTrack(currentPlayingTrack);
             pipeline.setState(State.PLAYING);
+            getAndSeekCurrent(currentPlayingTrack.getTimer().getCurrentTimeMs());
             currentPlayingTrack.getTimer().play();
         }
+    }
+
+    public void engineReset() {
+        currentPlayingTrack.getTimer().pause();
+        currentPlayingTrack.getTimer().setCurrentTimeMs(0);
+        pipeline.setState(State.PAUSED);
+        getAndSeekCurrent(currentPlayingTrack.getTimer().getCurrentTimeMs());
     }
 
     /**
@@ -291,6 +322,7 @@ public class PreviewEngine {
      */
     public void playTrack(Track track) {
         currentPlayingTrack = track;
+        controller.bindTimerLabel();
         CountDownLatch latch = new CountDownLatch(track.getElementCount());
         System.out.println("[Preview Engine] playing track with " + track.getElementCount() + " elements");
         track.mapElements((e) -> preloadClip(e, latch));
@@ -318,24 +350,37 @@ public class PreviewEngine {
         //System.out.println("[Preview Engine] updatePreview position : " + newPosition);
         if (currentPlayingTrack.newClipToRender(newPosition)) {
             System.out.println("[Preview Engine] updatePreview ON UPDATE LE CLIP EN COURS ");
-            TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
-            long offset = 0;
-            if (curr != null) {
-                    padManager.padSwapper(audioSelector, videoSelector, curr);
-                    offset = curr.getOffset();
-            } else {
-                    padManager.padSwapper(audioSelector, videoSelector, blackObject);
-            }
-            boolean result = pipeline.seek(
-                    1.0,
-                    Format.TIME,
-                    EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
-                    SeekType.SET, offset,
-                    SeekType.NONE, -1
-            );
-            if (!result) {
-                System.out.println("[Preview Engine] Next frame seek failed");
-            }
+            getAndSeekCurrent(newPosition);
+        }
+    }
+
+    public void setPreviewController(PreviewController previewController) {
+        controller = previewController;
+    }
+
+    public void setCurrentTrack(Track currentTrack) {
+        currentPlayingTrack = currentTrack;
+        controller.setCurrentTrack(currentTrack);
+    }
+
+    private void getAndSeekCurrent(long newPosition) {
+        TimelineObject curr = currentPlayingTrack.getObjectAtTime(newPosition);
+        long offset = 0;
+        if (curr != null) {
+            padManager.padSwapper(audioSelector, videoSelector, curr);
+            offset = curr.getOffset();
+        } else {
+            padManager.padSwapper(audioSelector, videoSelector, blackObject);
+        }
+        boolean result = pipeline.seek(
+                1.0,
+                Format.TIME,
+                EnumSet.of(SeekFlags.FLUSH, SeekFlags.ACCURATE),
+                SeekType.SET, offset,
+                SeekType.NONE, -1
+        );
+        if (!result) {
+            System.out.println("[Preview Engine] Next frame seek failed");
         }
     }
 }

@@ -144,7 +144,13 @@ public class VideoProject {
         if (track == null) {
             throw new IllegalArgumentException("La track ne peut pas être nulle.");
         }
-        this.getTrackManager().addTrack(track);
+        if (getTracks().isEmpty()) {
+            System.out.println("[Video Project] Add default track " + track.getName());
+            this.getTrackManager().addTrack(track);
+            previewEngine.setCurrentTrack(track);
+        } else {
+            this.getTrackManager().addTrack(track);
+        }
     }
 
     /**
