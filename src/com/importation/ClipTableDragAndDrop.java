@@ -1,5 +1,6 @@
-package com;
+package com.importation;
 
+import com.Clip;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.scene.control.TableRow;

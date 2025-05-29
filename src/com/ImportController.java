@@ -1,5 +1,6 @@
 package com;
 
+import com.importation.ClipTableDragAndDrop;
 import com.timeline.Track;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

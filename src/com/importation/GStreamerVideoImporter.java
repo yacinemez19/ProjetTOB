@@ -1,4 +1,4 @@
-package com;
+package com.importation;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import java.awt.image.BufferedImage;
 
+import com.Clip;
+import com.VideoClip;
+import com.Utils;
 import org.freedesktop.gstreamer.*;
 import org.freedesktop.gstreamer.elements.AppSink;
 import org.freedesktop.gstreamer.Structure;
@@ -78,7 +81,7 @@ public class GStreamerVideoImporter implements VideoImporter {
         cleanup();
 
         // Créer un clip avec les données extraites
-        return new ImportedClip(source, Duration.ofNanos(duration), width, height, thumbnail);
+        return new VideoClip(source, Duration.ofNanos(duration), width, height, thumbnail);
     }
 
     /**

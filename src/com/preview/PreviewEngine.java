@@ -1,15 +1,11 @@
 package com.preview;
 
 import com.Clip;
-import com.ImportedClip;
+import com.VideoClip;
 import com.Utils;
 import com.timeline.TimelineObject;
 import com.timeline.TimelineTimer;
 import com.timeline.Track;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import org.freedesktop.gstreamer.*;
 import org.freedesktop.gstreamer.event.SeekFlags;
@@ -22,7 +18,6 @@ import java.io.File;
 import java.time.Duration;
 import java.util.EnumSet;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class PreviewEngine {
 
@@ -165,7 +160,7 @@ public class PreviewEngine {
     private void loadBlack () {
         File videoFile = new File("ressources/assets/blackSource.mp4");
 
-                Clip blackVideo = new ImportedClip(videoFile.toURI(),
+                Clip blackVideo = new VideoClip(videoFile.toURI(),
                         Duration.ofSeconds(1),
                                 3840,
                                 2160,

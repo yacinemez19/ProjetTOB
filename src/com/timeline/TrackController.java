@@ -1,8 +1,7 @@
 package com.timeline;
 
-import com.ImportedClip;
+import com.VideoClip;
 import com.VideoProject;
-import com.timeline.Track;
 import com.Clip;
 
 import javafx.collections.ListChangeListener;
@@ -14,10 +13,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-
-import javax.xml.datatype.Duration;
 
 import static java.lang.Math.*;
 
@@ -92,7 +87,7 @@ public class TrackController {
 
 
     public void addMediaButton(ActionEvent actionEvent) {
-        Clip media = ImportedClip.test();
+        Clip media = VideoClip.test();
         addMediaBlock(media, 1.0, 0);
 
         for (Node timelinePane : mediaPane.getChildren()) {

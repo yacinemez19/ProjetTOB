@@ -21,7 +21,7 @@ import java.time.ZoneId;
 /**
  * Implémentation de l'interface com.Clip pour représenter un clip importé.
  */
-public class ImportedClip implements Clip {
+public class VideoClip implements Clip {
 
     private final URI source;
     private final Duration duration;
@@ -40,11 +40,11 @@ public class ImportedClip implements Clip {
      * @param height       Hauteur en pixels
      * @param thumbnail    Miniature générée
      */
-    public ImportedClip(URI source,
-                        Duration duration,
-                        int width,
-                        int height,
-                        BufferedImage thumbnail) {
+    public VideoClip(URI source,
+                     Duration duration,
+                     int width,
+                     int height,
+                     BufferedImage thumbnail) {
         this.source      = Objects.requireNonNull(source, "source ne peut être null");
         this.duration    = Objects.requireNonNull(duration, "duration ne peut être null");
         this.width       = width;
@@ -55,8 +55,8 @@ public class ImportedClip implements Clip {
     }
 
     // TODO : remove this test method
-    public static ImportedClip test() {
-        return new ImportedClip(URI.create("file:///home/adam/Downloads/test.mp4"),
+    public static VideoClip test() {
+        return new VideoClip(URI.create("file:///home/adam/Downloads/test.mp4"),
                 Duration.ofSeconds(10),
                 1920,
                 1080,
@@ -126,8 +126,8 @@ public class ImportedClip implements Clip {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof ImportedClip)) return false;
-        ImportedClip that = (ImportedClip) object;
+        if (!(object instanceof VideoClip)) return false;
+        VideoClip that = (VideoClip) object;
         return width == that.width &&
                 height == that.height &&
                 this.getSizeBytes() == that.getSizeBytes() &&

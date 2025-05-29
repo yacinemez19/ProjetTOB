@@ -1,4 +1,6 @@
-package com;
+package com.importation;
+
+import com.Clip;
 
 import java.net.URI;
 

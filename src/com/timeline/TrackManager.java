@@ -1,12 +1,7 @@
-package com;
+package com.timeline;
 
-import com.timeline.Track;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrackManager {
 
